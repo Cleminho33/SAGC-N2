@@ -5,7 +5,7 @@
    instantanément depuis le cache (utile en stage ou en déplacement, réseau incertain), et se met à
    jour en tâche de fond dès qu'une connexion est disponible. La clé de déchiffrement doit déjà être
    en localStorage (case "Rester connecté" cochée une première fois en ligne). */
-const CACHE = 'sagctout-v2';
+const CACHE = 'sagctout-v3';
 
 function navKey(){ return new Request(self.registration.scope); }
 
