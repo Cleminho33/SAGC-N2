@@ -1,45 +1,65 @@
 /* Service worker de SAGC'TOUT.
-   Le site se déchiffre entièrement dans le navigateur (voir verrou.html) : la page servie contient
-   déjà tout (texte, photos, vidéos) en un seul fichier, aucune requête séparée n'a lieu ensuite.
-   Stratégie « cache d'abord » : une fois la page chargée une première fois en ligne, elle se relance
-   instantanément depuis le cache (utile en stage ou en déplacement, réseau incertain), et se met à
-   jour en tâche de fond dès qu'une connexion est disponible. La clé de déchiffrement doit déjà être
-   en localStorage (case "Rester connecté" cochée une première fois en ligne). */
-const CACHE = 'sagctout-v3';
+   Réseau d'abord : dès qu'il y a du réseau, on sert toujours la dernière version publiée (vérification
+   rapide, rien n'est retéléchargé si le fichier n'a pas changé). Le cache ne sert qu'en cas d'échec réseau.
+   Chaque adresse a sa propre entrée de cache : l'appli et chaque deck ne se mélangent jamais. */
+const CACHE = 'sagctout-v4';
+const BAD_CACHES = ['sagctout-v3'];
 
-function navKey(){ return new Request(self.registration.scope); }
+function cacheKey(url){
+  const u = new URL(url);
+  let path = u.pathname;
+  if (path.endsWith('/')) path += 'index.html';
+  return u.origin + path;
+}
 
-self.addEventListener('install', e => {
-  self.skipWaiting();
-});
+function sameVersion(a, b){
+  const etag = b.headers.get('etag'), lm = b.headers.get('last-modified');
+  if (etag) return a.headers.get('etag') === etag;
+  return !!lm && a.headers.get('last-modified') === lm;
+}
+
+self.addEventListener('install', () => self.skipWaiting());
 
 self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
-  );
-  self.clients.claim();
+  e.waitUntil((async () => {
+    const keys = await caches.keys();
+    const hadBadCache = keys.some(k => BAD_CACHES.includes(k));
+    await Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)));
+    await self.clients.claim();
+    /* l'ancien cache mélangeait l'appli et les decks : on recharge une fois les pages ouvertes
+       pour qu'elles repartent de la bonne version, sans attendre une deuxième relance */
+    if (hadBadCache){
+      const wins = await self.clients.matchAll({ type: 'window' });
+      wins.forEach(c => c.navigate(c.url).catch(() => {}));
+    }
+  })());
 });
 
 self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET') return;
-  const url = new URL(e.request.url);
-  if (url.origin !== location.origin) return;
-  const isNav = e.request.mode === 'navigate';
-  const key = isNav ? navKey() : e.request;
+  const req = e.request;
+  if (req.method !== 'GET') return;
+  if (new URL(req.url).origin !== location.origin) return;
+  const key = cacheKey(req.url);
 
-  e.respondWith((async () => {
-    const cache = await caches.open(CACHE);
-    const cached = await cache.match(key);
-    const refresh = fetch(e.request).then(res => {
-      if (res && res.ok) cache.put(key, res.clone());
-      return res;
-    }).catch(() => null);
+  let stored;
+  e.waitUntil(new Promise(r => { stored = r; }));
+  const cacheP = caches.open(CACHE);
 
-    if (cached){
-      e.waitUntil(refresh); // sert le cache tout de suite, actualise en fond
-      return cached;
-    }
-    const fresh = await refresh;
-    return fresh || cached || Response.error();
-  })());
+  const network = fetch(req, { cache: 'no-cache' }).then(res => {
+    if (res && res.ok){
+      const copy = res.clone();
+      (async () => {
+        const cache = await cacheP;
+        const old = await cache.match(key);
+        if (old && sameVersion(old, copy)){ if (copy.body) copy.body.cancel(); return; }
+        await cache.put(key, copy);
+      })().catch(() => {}).finally(stored);
+    } else stored();
+    return res;
+  }, err => { stored(); throw err; });
+
+  e.respondWith(network.catch(async () => {
+    const cached = await cacheP.then(c => c.match(key)).catch(() => null);
+    return cached || Response.error();
+  }));
 });
