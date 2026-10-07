@@ -56,6 +56,24 @@ self.addEventListener('activate', e => {
   })());
 });
 
+/* Notifications envoyées par le service Cloudflare (notifs/worker.js) : {titre, texte, lien} */
+self.addEventListener('push', e => {
+  let d = {};
+  try { d = e.data ? e.data.json() : {}; } catch(err){ d = {texte: e.data ? e.data.text() : ''}; }
+  e.waitUntil(self.registration.showNotification(d.titre || "SAGC'TOUT", {body: d.texte || '', data: {lien: d.lien || '#/'}}));
+});
+/* toucher la notification : on rouvre l'appli déjà ouverte sur la bonne page, sinon on la lance */
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  const lien = (e.notification.data && e.notification.data.lien) || '#/';
+  e.waitUntil((async () => {
+    const wins = await self.clients.matchAll({type: 'window', includeUncontrolled: true});
+    const win = wins.find(c => c.url.startsWith(self.registration.scope));
+    if (win){ await win.focus().catch(() => {}); win.postMessage({sagc: 'aller', lien}); return; }
+    await self.clients.openWindow(self.registration.scope + lien);
+  })());
+});
+
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
