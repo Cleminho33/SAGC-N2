@@ -68,8 +68,10 @@ self.addEventListener('notificationclick', e => {
   const lien = (e.notification.data && e.notification.data.lien) || '#/';
   e.waitUntil((async () => {
     const wins = await self.clients.matchAll({type: 'window', includeUncontrolled: true});
-    const win = wins.find(c => c.url.startsWith(self.registration.scope));
-    if (win){ await win.focus().catch(() => {}); win.postMessage({sagc: 'aller', lien}); return; }
+    /* le score des supporters (lien « supporters/ ») ouvre leur page, jamais l'appli de l'équipe, et inversement */
+    const sup = !lien.startsWith('#'), page = self.registration.scope + 'supporters/';
+    const win = wins.find(c => c.url.startsWith(self.registration.scope) && c.url.startsWith(page) === sup);
+    if (win){ await win.focus().catch(() => {}); if (sup) win.navigate(page).catch(() => {}); else win.postMessage({sagc: 'aller', lien}); return; }
     await self.clients.openWindow(self.registration.scope + lien);
   })());
 });
