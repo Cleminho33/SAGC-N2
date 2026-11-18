@@ -56,6 +56,7 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .ecran{position:relative;aspect-ratio:16/9;background:#000;border-radius:var(--r-l);overflow:hidden;border:1px solid var(--line)}
 .ecran iframe,.ecran #yt{position:absolute;inset:0;width:100%;height:100%;border:0}
 .barre{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.barre[hidden]{display:none}
 .camp{display:inline-flex;border:1px solid var(--line-2);border-radius:var(--r-pill);padding:3px;margin-right:6px}
 .camp button{padding:9px 14px;border-radius:var(--r-pill);font:700 12px/1 Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .camp button.on[data-camp=nous]{background:var(--grass);color:var(--ink)}
@@ -109,10 +110,21 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .cq-bas .btn{box-shadow:0 6px 18px rgba(0,0,0,.45)}
 .cq-tx{position:absolute;min-width:160px;padding:8px 10px;border-radius:8px;border:2px solid var(--acid);background:rgba(11,15,12,.9);font:800 15px Inter,sans-serif;outline:none}
 .act.dess{border-style:dashed}
-.outils{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;border-radius:var(--r-s);background:var(--ink-2);border:1px solid var(--acid)}
+.outils{margin-top:12px;display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:var(--r-l);background:var(--ink-2);border:1px solid var(--acid)}
 .outils[hidden]{display:none}
-.outils .sur{flex-basis:100%;font-size:13px;color:var(--muted);margin:0 0 2px}
+.outils .sur{font-size:13px;color:var(--muted);margin:0}
 .outils .sur b{color:var(--bone)}
+.outils .sur b.choisi{color:var(--acid)}
+/* l'éditeur de dessin (18.11) : une ligne d'outils, une ligne de mise en forme, une ligne d'actions */
+.ou-l{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ou-f{padding:8px 10px;border-radius:var(--r-s);background:var(--ink-3)}
+.ou-g{display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap;padding-right:10px;margin-right:2px;border-right:1px solid var(--line-2)}
+.ou-g:last-child{border-right:0}
+.ou-g .lb{margin-right:2px}
+.ot.mini{padding:6px 9px;font-size:12.5px}
+.ot.sup{color:#FF9A8F;border-color:rgba(255,154,143,.45)}
+.ou-f .coul{width:24px;height:24px}
+.coul[data-co="#0b0f0c"]{box-shadow:0 0 0 1px var(--muted)}
 .ot{display:inline-flex;align-items:center;gap:6px;padding:9px 11px;border-radius:var(--r-s);border:1px solid var(--line-2);font-weight:600;font-size:13.5px}
 .ot.on{background:var(--bone);color:var(--ink);border-color:var(--bone)}
 .ot svg{width:16px;height:16px}
@@ -177,7 +189,7 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .tip small{color:var(--muted);font-size:12px}
 /* le score par-dessus la vidéo, tenu à jour par les buts tagués */
 .bug{position:absolute;left:12px;top:12px;z-index:3;display:flex;align-items:stretch;border-radius:8px;overflow:hidden;font:800 13px/1 Inter,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.45);pointer-events:none}
-.bug:empty{display:none}
+.bug:empty,.ecran:has(.calque.edit) .bug{display:none}
 .bug span{display:flex;align-items:center;gap:7px;padding:7px 10px;background:rgba(11,15,12,.9);text-transform:uppercase;letter-spacing:.02em}
 .bug .sc{background:var(--acid);color:var(--ink);font:400 19px/1 Anton,Impact,sans-serif;font-style:italic;padding:5px 11px;letter-spacing:.04em}
 .bug img,.bug .crest{width:20px;height:20px;border-radius:50%;object-fit:contain;background:#fff}
@@ -413,6 +425,7 @@ function dessiner(){
   v.innerHTML = tete + `<div class="grille">
     <section>
       <div class="ecran"><div id="yt"></div><div class="calque" id="calque" hidden></div><div class="bug" id="bug"></div></div>
+      <div class="outils" id="outils" hidden></div>
       <div class="fw">
         <div class="fw-haut"><span class="fw-eq n" id="eq-n"></span><span class="fw-eq e" id="eq-e"></span><span class="esp"></span>
           <span class="fw-z"><span id="fz-txt"></span><button type="button" class="ot" data-z="moins" aria-label="Dézoomer">−</button><button type="button" class="ot" data-z="plus" aria-label="Zoomer">+</button><button type="button" class="ot" data-z="tout">Tout</button></span></div>
@@ -425,7 +438,6 @@ function dessiner(){
         ${ACTIONS.map(([id, nom], i) => `<button type="button" class="act ${id}" data-act="${id}"><kbd>${i + 1}</kbd>${nom}</button>`).join('')}
         <button type="button" class="act dess" data-dessin="1"><kbd>D</kbd>✏️ Dessiner</button>
       </div>
-      <div class="outils" id="outils" hidden></div>
       <div id="qui"></div>
       <p class="aide">Clavier (clique d'abord hors de la vidéo) : <kbd>1</kbd> à <kbd>8</kbd> marquer · <kbd>C</kbd> Nous / Eux · <kbd>D</kbd> dessiner · <kbd>Espace</kbd> lecture · <kbd>←</kbd> <kbd>→</kbd> 5 s · <kbd>Maj</kbd>+<kbd>←</kbd> <kbd>→</kbd> 1 s.
         <button type="button" id="ch-lien" style="text-decoration:underline;color:var(--muted)">Changer le lien</button> ·
@@ -799,25 +811,56 @@ function panneauDurees(){
    Rattaché à un tag : celui qu'on vient de toucher ou de poser s'il est à 2 s près, sinon un tag « Moment » créé à l'instant.
    Coordonnées de 0 à 1 sur l'image (le service les garde ainsi), tracées dans un SVG de 1600 × 900, la taille de l'écran 16/9. */
 const VB = [1600, 900];
-const COULEURS = [['#f2e400', 'Jaune'], ['#eaf0e8', 'Blanc'], ['#3fa845', 'Vert'], ['#6fa8d8', 'Bleu'], ['#ff7a45', 'Orange']];
+/* ---------- l'éditeur de dessin (Clément, 18.11 : « un vrai éditeur, comme celui des schémas ») ----------
+   Comme l'atelier de schémas : on attrape un élément avec n'importe quel outil ; choisi, il montre ses poignées (flèche et
+   ligne : départ, milieu pour courber, arrivée ; rond, zone, trait à main levée : coin pour la taille ; texte : il se déplace,
+   double-clic pour le réécrire) ; la barre règle sa couleur, son trait (fin, moyen, épais), les pointillés, la taille et le
+   gras d'un texte ; Dupliquer, Supprimer. Sans élément choisi, ces réglages sont le style des suivants (le dernier sert).
+   Clavier : flèches pour déplacer (Maj × 5), Suppr, Ctrl+Z, Ctrl+D, Échap (désélectionne, puis ferme).
+   Une forme : {k, c, p, w?, d?, s?, b?, t?} ; k : fl flèche, li ligne, tr main levée, ce rond, re zone, tx texte ;
+   p : points de 0 à 1 (fl / li : départ, arrivée, milieu facultatif ; ce : centre, bord ; re : deux coins ; tr : le tracé) ;
+   w : trait 1 fin, 2 moyen, 3 épais ; d : pointillés ; s : taille du texte 1 à 3 ; b : gras. */
+const COULEURS = [['#f2e400', 'Jaune'], ['#eaf0e8', 'Blanc'], ['#3fa845', 'Vert'], ['#6fa8d8', 'Bleu'], ['#ff7a45', 'Orange'], ['#0b0f0c', 'Noir']];
+const SVGI = (d, plein) => `<svg viewBox="0 0 16 16">${plein ? `<path d="${d}" fill="currentColor"/>` : `<path d="${d}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`}</svg>`;
 const OUTILS = [
-  ['fl', 'Flèche', '<svg viewBox="0 0 16 16"><path d="M2 14L13 3M13 3H7M13 3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'],
-  ['tr', 'Trait', '<svg viewBox="0 0 16 16"><path d="M2 12c3-6 5 2 8-3s3-4 4-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'],
-  ['ce', 'Cercle', '<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>'],
-  ['tx', 'Texte', '<svg viewBox="0 0 16 16"><path d="M3 3h10M8 3v10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>']];
+  ['fl', 'Flèche', SVGI('M2 14L13 3M13 3H7M13 3v6')],
+  ['li', 'Ligne', SVGI('M2 14L14 2')],
+  ['tr', 'Main levée', SVGI('M2 12c3-6 5 2 8-3s3-4 4-5')],
+  ['ce', 'Rond', '<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>'],
+  ['re', 'Zone', '<svg viewBox="0 0 16 16"><rect x="2.5" y="3.5" width="11" height="9" rx="1.5" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.8"/></svg>'],
+  ['tx', 'Texte', SVGI('M3 3h10M8 3v10')]];
+const NOM_FORME = {fl: 'Flèche', li: 'Ligne', tr: 'Trait à main levée', ce: 'Rond', re: 'Zone', tx: 'Texte'};
+const EP = [0, 5, 8, 13], TX_T = [0, 38, 54, 78];
 const px = p => [p[0] * VB[0], p[1] * VB[1]];
-function forme(s){
-  const c = esc(s.c), trait = `stroke="${c}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"`;
-  if (s.k === 'tr') return `<polyline points="${s.p.map(q => px(q).map(v => v.toFixed(1)).join(',')).join(' ')}" ${trait}/>`;
-  const [a, b] = [px(s.p[0]), s.p[1] ? px(s.p[1]) : null];
-  if (s.k === 'ce') return `<circle cx="${a[0].toFixed(1)}" cy="${a[1].toFixed(1)}" r="${Math.hypot(b[0] - a[0], b[1] - a[1]).toFixed(1)}" ${trait}/>`;
-  if (s.k === 'tx') return `<text x="${a[0].toFixed(1)}" y="${a[1].toFixed(1)}" fill="${c}" stroke="#0b0f0c" stroke-width="9" paint-order="stroke" font-family="Inter,sans-serif" font-weight="800" font-size="52" dominant-baseline="middle">${esc(s.t)}</text>`;
-  /* flèche : le trait s'arrête au pied de la pointe, pointe pleine */
-  const ang = Math.atan2(b[1] - a[1], b[0] - a[0]), L = 38, W = 22, pied = [b[0] - Math.cos(ang) * L * .8, b[1] - Math.sin(ang) * L * .8];
-  const g = [b[0] - Math.cos(ang) * L + Math.sin(ang) * W, b[1] - Math.sin(ang) * L - Math.cos(ang) * W], d = [b[0] - Math.cos(ang) * L - Math.sin(ang) * W, b[1] - Math.sin(ang) * L + Math.cos(ang) * W];
-  return `<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${pied[0].toFixed(1)}" y2="${pied[1].toFixed(1)}" ${trait}/><polygon points="${[b, g, d].map(q => q.map(v => v.toFixed(1)).join(',')).join(' ')}" fill="${c}" stroke="${c}" stroke-width="3" stroke-linejoin="round"/>`;
+const f1 = v => v.toFixed(1);
+/* le chemin d'une flèche ou d'une ligne : droit, ou courbé par le point du milieu (le trait passe par lui) */
+function chemin(s){
+  const a = px(s.p[0]), b = px(s.p[1]);
+  if (!s.p[2]) return {d: `M${f1(a[0])} ${f1(a[1])}L${f1(b[0])} ${f1(b[1])}`, fin: [a, b]};
+  const m = px(s.p[2]), q = [2 * m[0] - (a[0] + b[0]) / 2, 2 * m[1] - (a[1] + b[1]) / 2];
+  return {d: `M${f1(a[0])} ${f1(a[1])}Q${f1(q[0])} ${f1(q[1])} ${f1(b[0])} ${f1(b[1])}`, fin: [q, b]};
 }
-const svgDessin = f => `<svg viewBox="0 0 ${VB[0]} ${VB[1]}" preserveAspectRatio="none" aria-hidden="true">${f.map(forme).join('')}</svg>`;
+function forme(s, n){
+  const c = esc(s.c), w = EP[s.w || 2], tirets = s.d ? ` stroke-dasharray="${w * 2.2} ${w * 1.8}"` : '';
+  const trait = `stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" fill="none"${tirets}`;
+  const prise = n != null ? ` data-n="${n}"` : '', large = `stroke="transparent" stroke-width="${Math.max(34, w + 26)}" fill="none" stroke-linecap="round"`;
+  if (s.k === 'tr'){ const pts = s.p.map(q => px(q).map(f1).join(',')).join(' '); return `<g${prise}><polyline points="${pts}" ${large}/><polyline points="${pts}" ${trait}/></g>`; }
+  const a = px(s.p[0]), b = s.p[1] ? px(s.p[1]) : null;
+  if (s.k === 'ce'){ const r = f1(Math.hypot(b[0] - a[0], b[1] - a[1])); return `<g${prise}><circle cx="${f1(a[0])}" cy="${f1(a[1])}" r="${r}" ${large}/><circle cx="${f1(a[0])}" cy="${f1(a[1])}" r="${r}" ${trait}/></g>`; }
+  if (s.k === 're'){ const x = Math.min(a[0], b[0]), y = Math.min(a[1], b[1]), W = Math.abs(b[0] - a[0]), H = Math.abs(b[1] - a[1]);
+    return `<g${prise}><rect x="${f1(x)}" y="${f1(y)}" width="${f1(W)}" height="${f1(H)}" rx="10" fill="${c}" fill-opacity=".22" stroke="${c}" stroke-width="${w}"${tirets}/></g>`; }
+  if (s.k === 'tx') return `<g${prise}><text x="${f1(a[0])}" y="${f1(a[1])}" fill="${c}" stroke="${s.c === '#0b0f0c' ? '#eaf0e8' : '#0b0f0c'}" stroke-width="${(TX_T[s.s || 2] / 6).toFixed(1)}" paint-order="stroke" font-family="Inter,sans-serif" font-weight="${s.b ? 900 : 700}" font-size="${TX_T[s.s || 2]}" dominant-baseline="middle">${esc(s.t)}</text></g>`;
+  /* flèche et ligne : la pointe suit la direction d'arrivée du trait, courbé ou non */
+  const {d, fin: [q, e]} = chemin(s);
+  let pointe = '';
+  if (s.k === 'fl'){
+    const ang = Math.atan2(e[1] - q[1], e[0] - q[0]), L = 26 + w * 2.2, W = 15 + w * 1.2;
+    const g = [e[0] - Math.cos(ang) * L + Math.sin(ang) * W, e[1] - Math.sin(ang) * L - Math.cos(ang) * W], dr = [e[0] - Math.cos(ang) * L - Math.sin(ang) * W, e[1] - Math.sin(ang) * L + Math.cos(ang) * W];
+    pointe = `<polygon points="${[e, g, dr].map(v => v.map(f1).join(',')).join(' ')}" fill="${c}" stroke="${c}" stroke-width="3" stroke-linejoin="round"/>`;
+  }
+  return `<g${prise}><path d="${d}" ${large}/><path d="${d}" ${trait}/>${pointe}</g>`;
+}
+const svgDessin = (f, plus) => `<svg viewBox="0 0 ${VB[0]} ${VB[1]}" preserveAspectRatio="none" aria-hidden="true">${f.map((s, n) => forme(s, plus ? n : null)).join('')}${plus || ''}</svg>`;
 const decrire = mq => `${esc(NOM_ACTION[mq.action] || mq.action)} · ${mq.camp === 'nous' ? 'Nous' : 'Eux'} · ${hms(mq.t)}`;
 
 function cacherCalque(){
@@ -836,6 +879,32 @@ function afficherDessin(mq){
   };
 }
 
+/* les poignées de l'élément choisi : [index du point ou « taille », x, y] en unités 1600 × 900 */
+function poignees(s){
+  if (s.k === 'fl' || s.k === 'li'){ const a = px(s.p[0]), b = px(s.p[1]), m = s.p[2] ? px(s.p[2]) : [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]; return [[0, ...a], [2, ...m], [1, ...b]]; }
+  if (s.k === 'ce'){ const b = px(s.p[1]); return [[1, ...b]]; }
+  if (s.k === 're'){ return [[0, ...px(s.p[0])], [1, ...px(s.p[1])]]; }
+  if (s.k === 'tr'){ const xs = s.p.map(q => q[0]), ys = s.p.map(q => q[1]); return [['taille', Math.max(...xs) * VB[0], Math.max(...ys) * VB[1]]]; }
+  return [];
+}
+/* le cadre pointillé autour de l'élément choisi */
+function cadre(s){
+  let xs, ys;
+  if (s.k === 'ce'){ const a = px(s.p[0]), b = px(s.p[1]), r = Math.hypot(b[0] - a[0], b[1] - a[1]); xs = [a[0] - r, a[0] + r]; ys = [a[1] - r, a[1] + r]; }
+  else if (s.k === 'tx'){ const a = px(s.p[0]), h = TX_T[s.s || 2]; xs = [a[0] - 8, a[0] + h * .58 * (s.t || '').length + 8]; ys = [a[1] - h * .65, a[1] + h * .65]; }
+  else { const pts = s.p.map(px); xs = pts.map(q => q[0]); ys = pts.map(q => q[1]); }
+  const x0 = Math.min(...xs) - 14, y0 = Math.min(...ys) - 14, x1 = Math.max(...xs) + 14, y1 = Math.max(...ys) + 14;
+  return `<rect x="${f1(x0)}" y="${f1(y0)}" width="${f1(x1 - x0)}" height="${f1(y1 - y0)}" rx="8" fill="none" stroke="#f2e400" stroke-width="2.5" stroke-dasharray="10 8" pointer-events="none"/>`;
+}
+
+const point = e => { const r = $('#calque').getBoundingClientRect(); return [Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)), Math.min(1, Math.max(0, (e.clientY - r.top) / r.height))].map(v => Math.round(v * 1000) / 1000); };
+const borne = v => Math.round(Math.min(1, Math.max(0, v)) * 1000) / 1000;
+/* l'historique : une copie avant chaque changement, Ctrl+Z ou ↶ revient d'un pas */
+function memo(){ D.hist.push(JSON.stringify(D.f)); if (D.hist.length > 80) D.hist.shift(); D.modifie = true; }
+function annuler(){ if (!D || !D.hist.length) return; D.f = JSON.parse(D.hist.pop()); if (D.sel != null && D.sel >= D.f.length) D.sel = null; outils(); trace(); }
+/* le style des éléments suivants, ou de l'élément choisi */
+const styleDe = () => D.sel != null ? D.f[D.sel] : D.style;
+
 async function ouvrirDessin(){
   if (!M || !M.ecrire || !joueur || D) return;
   arreterClip();
@@ -849,71 +918,145 @@ async function ouvrirDessin(){
     mq = {...d.marqueur, neuf: true}; M.marqueurs.push(mq);
   } else aller(mq.t);
   M.sel = mq; liste(); $('#qui').innerHTML = '';
-  D = {mq, cree, f: JSON.parse(JSON.stringify((mq.dessin || {}).f || [])), outil: 'fl', couleur: COULEURS[0][0], cur: null, modifie: false};
+  let style; try { style = JSON.parse(lire('sagc-video-style') || 'null'); } catch(e){}
+  D = {mq, cree, f: JSON.parse(JSON.stringify((mq.dessin || {}).f || [])), outil: 'fl', sel: null, cur: null, prise: null, hist: [], modifie: false,
+    style: {c: COULEURS[0][0], w: 2, d: false, s: 2, b: false, ...(style || {})}};
   $('#barre').hidden = true;
   const c = $('#calque'); c.hidden = false; c.className = 'calque edit'; c.onclick = null;
   outils(); trace();
   c.onpointerdown = e => {
     if (!D || e.button > 0 || e.target.closest('.cq-tx')) return;
-    const p = point(e);
+    const p = point(e), h = e.target.closest('[data-h]'), g = e.target.closest('[data-n]');
+    /* une poignée de l'élément choisi */
+    if (h && D.sel != null){ e.preventDefault(); try { c.setPointerCapture(e.pointerId); } catch(er){} memo(); D.prise = {type: 'poignee', h: h.dataset.h, depart: p, avant: JSON.parse(JSON.stringify(D.f[D.sel]))}; return; }
+    /* un élément : on le choisit et on peut le déplacer, quel que soit l'outil */
+    if (g){
+      e.preventDefault(); try { c.setPointerCapture(e.pointerId); } catch(er){}
+      const n = +g.dataset.n;
+      D.sel = n; memo(); D.prise = {type: 'deplacer', depart: p, avant: JSON.parse(JSON.stringify(D.f[n])), bouge: false}; outils(); trace(); return;
+    }
+    /* le vide : un clic désélectionne ; avec un outil, on trace un nouvel élément */
+    if (D.sel != null){ D.sel = null; outils(); trace(); return; }
     if (D.outil === 'tx'){ texteA(p); return; }
     e.preventDefault(); try { c.setPointerCapture(e.pointerId); } catch(er){}
-    D.cur = {k: D.outil, c: D.couleur, p: D.outil === 'tr' ? [p] : [p, p]}; trace();
+    const st = D.style;
+    D.cur = {k: D.outil, c: st.c, w: st.w, ...(st.d ? {d: true} : {}), p: D.outil === 'tr' ? [p] : [p, p]}; trace();
   };
   c.onpointermove = e => {
-    if (!D || !D.cur) return;
+    if (!D) return;
     const p = point(e);
+    if (D.prise){
+      const s = D.f[D.sel], a = D.prise.avant, dx = p[0] - D.prise.depart[0], dy = p[1] - D.prise.depart[1];
+      if (D.prise.type === 'deplacer'){ s.p = a.p.map(q => [borne(q[0] + dx), borne(q[1] + dy)]); D.prise.bouge = true; }
+      else if (D.prise.h === 'taille'){
+        /* main levée : on l'agrandit depuis son coin haut gauche */
+        const xs = a.p.map(q => q[0]), ys = a.p.map(q => q[1]), x0 = Math.min(...xs), y0 = Math.min(...ys), lx = Math.max(.01, Math.max(...xs) - x0), ly = Math.max(.01, Math.max(...ys) - y0);
+        const k = Math.max(.15, Math.min((lx + dx) / lx, (ly + dy) / ly));
+        s.p = a.p.map(q => [borne(x0 + (q[0] - x0) * k), borne(y0 + (q[1] - y0) * k)]);
+      }
+      else { s.p = a.p.map(q => q.slice()); s.p[+D.prise.h] = p; }
+      trace(); return;
+    }
+    if (!D.cur) return;
     if (D.cur.k === 'tr'){ const q = D.cur.p[D.cur.p.length - 1]; if (Math.hypot(p[0] - q[0], p[1] - q[1]) > .004) D.cur.p.push(p); }
     else D.cur.p[1] = p;
     trace();
   };
   c.onpointerup = c.onpointercancel = () => {
-    if (!D || !D.cur) return;
+    if (!D) return;
+    if (D.prise){ if (D.prise.type === 'deplacer' && !D.prise.bouge) D.hist.pop(); D.prise = null; outils(); trace(); return; }
+    if (!D.cur) return;
     const s = D.cur; D.cur = null;
     const long = s.k === 'tr' ? s.p.length > 2 : Math.hypot(s.p[1][0] - s.p[0][0], s.p[1][1] - s.p[0][1]) > .012;
-    if (long){ D.f.push(s); D.modifie = true; outils(); }
-    trace();
+    if (long){ memo(); D.f.push(s); D.sel = D.f.length - 1; }
+    outils(); trace();
+  };
+  /* double-clic sur un texte : le réécrire */
+  c.ondblclick = e => {
+    const g = e.target.closest('[data-n]'); if (!D || !g) return;
+    const n = +g.dataset.n; if (!D.f[n] || D.f[n].k !== 'tx') return;
+    D.sel = n; outils(); trace(); texteA(D.f[n].p[0], n);
   };
 }
-const point = e => { const r = $('#calque').getBoundingClientRect(); return [Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)), Math.min(1, Math.max(0, (e.clientY - r.top) / r.height))].map(v => Math.round(v * 1000) / 1000); };
 function trace(){
   const c = $('#calque'); if (!c || !D) return;
   const champ = c.querySelector('.cq-tx');
-  c.innerHTML = svgDessin(D.cur ? [...D.f, D.cur] : D.f);
+  const s = D.sel != null ? D.f[D.sel] : null;
+  const plus = s ? cadre(s) + poignees(s).map(([h, x, y]) => `<circle data-h="${h}" cx="${f1(x)}" cy="${f1(y)}" r="${h === 2 ? 13 : 16}" fill="${h === 2 ? '#0b0f0c' : '#f2e400'}" stroke="${h === 2 ? '#f2e400' : '#0b0f0c'}" stroke-width="4" style="cursor:${h === 'taille' ? 'nwse-resize' : 'grab'}"/>`).join('') : '';
+  c.innerHTML = svgDessin(D.cur ? [...D.f, D.cur] : D.f, plus || ' ');
   if (champ) c.appendChild(champ);
 }
-/* le texte : un petit champ à l'endroit touché ; Entrée pose le texte, Échap annule */
-function texteA(p){
+/* le texte : un champ à l'endroit touché (ou sur le texte à réécrire) ; Entrée pose, Échap annule */
+function texteA(p, n){
   const c = $('#calque'); c.querySelectorAll('.cq-tx').forEach(x => x.remove());
+  const st = n != null ? D.f[n] : D.style;
   const i = document.createElement('input'); i.className = 'cq-tx'; i.maxLength = 80; i.placeholder = 'Texte, puis Entrée';
-  i.style.left = Math.min(p[0] * 100, 70) + '%'; i.style.top = `calc(${p[1] * 100}% - 18px)`; i.style.color = D.couleur;
-  c.appendChild(i); setTimeout(() => i.focus());
+  if (n != null) i.value = D.f[n].t;
+  i.style.left = Math.min(p[0] * 100, 70) + '%'; i.style.top = `calc(${p[1] * 100}% - 18px)`; i.style.color = st.c === '#0b0f0c' ? '#eaf0e8' : st.c;
+  c.appendChild(i); setTimeout(() => { i.focus(); i.select(); });
   let fait = false;
-  const poser = () => { if (fait) return; fait = true; const t = i.value.trim(); i.remove(); if (t && D){ D.f.push({k: 'tx', c: D.couleur, p: [p], t}); D.modifie = true; outils(); trace(); } };
+  const poser = () => {
+    if (fait) return; fait = true; const t = i.value.trim(); i.remove(); if (!D) return;
+    if (n != null){ if (t && t !== D.f[n].t){ memo(); D.f[n].t = t; } }
+    else if (t){ memo(); D.f.push({k: 'tx', c: st.c, s: st.s, ...(st.b ? {b: true} : {}), p: [p], t}); D.sel = D.f.length - 1; }
+    outils(); trace();
+  };
   i.onkeydown = e => { e.stopPropagation(); if (e.key === 'Enter'){ e.preventDefault(); poser(); } else if (e.key === 'Escape'){ fait = true; i.remove(); } };
   i.onblur = poser;
 }
+/* la barre : outils, puis la mise en forme de l'élément choisi (ou du style des suivants), puis Annuler, Fermer, Enregistrer */
 function outils(){
   const o = $('#outils'); if (!o || !D) return;
   o.hidden = false;
-  o.innerHTML = `<p class="sur">Dessin sur <b>${decrire(D.mq)}</b> · la vidéo est en pause</p>
-    ${OUTILS.map(([k, nom, ic]) => `<button type="button" class="ot${D.outil === k ? ' on' : ''}" data-ou="${k}" aria-pressed="${D.outil === k}">${ic}${nom}</button>`).join('')}
-    ${COULEURS.map(([c, nom]) => `<button type="button" class="coul${D.couleur === c ? ' on' : ''}" data-co="${c}" style="background:${c}" aria-label="${nom}" title="${nom}"></button>`).join('')}
-    <button type="button" class="ot" data-od="annuler"${D.f.length ? '' : ' disabled style="opacity:.4"'}>↶ Annuler</button>
-    <button type="button" class="ot" data-od="effacer"${D.f.length ? '' : ' disabled style="opacity:.4"'}>Tout effacer</button>
-    <span class="esp"></span>
-    <button type="button" class="btn btn-ghost" data-od="fermer">Fermer</button>
-    <button type="button" class="btn btn-acid" data-od="garder">Enregistrer</button>`;
+  const s = D.sel != null ? D.f[D.sel] : null, st = styleDe(), estTexte = s ? s.k === 'tx' : D.outil === 'tx', avecTrait = s ? s.k !== 'tx' : D.outil !== 'tx';
+  const choix = (attr, v, actuel, label, titre) => `<button type="button" class="ot mini${actuel === v ? ' on' : ''}" data-${attr}="${v}" aria-pressed="${actuel === v}"${titre ? ` title="${titre}"` : ''}>${label}</button>`;
+  o.innerHTML = `<p class="sur">Dessin sur <b>${decrire(D.mq)}</b> · ${s ? `<b class="choisi">${NOM_FORME[s.k]}</b> choisi : tire-le, ses poignées, ou règle-le ci-dessous` : 'touche un élément pour le modifier, ou trace avec un outil'}</p>
+    <div class="ou-l">${OUTILS.map(([k, nom, ic]) => `<button type="button" class="ot${D.outil === k ? ' on' : ''}" data-ou="${k}" aria-pressed="${D.outil === k}">${ic}${nom}</button>`).join('')}</div>
+    <div class="ou-l ou-f">
+      <span class="ou-g">${COULEURS.map(([c, nom]) => `<button type="button" class="coul${st.c === c ? ' on' : ''}" data-co="${c}" style="background:${c}" aria-label="${nom}" title="${nom}"></button>`).join('')}</span>
+      ${avecTrait ? `<span class="ou-g"><span class="lb">Trait</span>${choix('ep', 1, st.w || 2, 'Fin')}${choix('ep', 2, st.w || 2, 'Moyen')}${choix('ep', 3, st.w || 2, 'Épais')}${choix('pt', 1, st.d ? 1 : 0, '┄ Pointillés', 'Pointillés')}</span>` : ''}
+      ${estTexte ? `<span class="ou-g"><span class="lb">Texte</span>${choix('ts', 1, st.s || 2, 'Petit')}${choix('ts', 2, st.s || 2, 'Moyen')}${choix('ts', 3, st.s || 2, 'Grand')}${choix('gr', 1, st.b ? 1 : 0, '<b>G</b>', 'Gras')}${s ? '<button type="button" class="ot mini" data-od="reecrire">✎ Réécrire</button>' : ''}</span>` : ''}
+      ${s ? `<span class="ou-g"><button type="button" class="ot mini" data-od="dupliquer" title="Ctrl+D">⧉ Dupliquer</button><button type="button" class="ot mini" data-od="devant">Devant</button><button type="button" class="ot mini sup" data-od="supprimer" title="Suppr">🗑 Supprimer</button></span>` : ''}
+    </div>
+    <div class="ou-l">
+      <button type="button" class="ot" data-od="annuler"${D.hist.length ? '' : ' disabled style="opacity:.4"'} title="Ctrl+Z">↶ Annuler</button>
+      <button type="button" class="ot" data-od="effacer"${D.f.length ? '' : ' disabled style="opacity:.4"'}>Tout effacer</button>
+      <span class="esp"></span>
+      <button type="button" class="btn btn-ghost" data-od="fermer">Fermer</button>
+      <button type="button" class="btn btn-acid" data-od="garder">Enregistrer</button></div>`;
   o.onclick = e => {
     const b = e.target.closest('button'); if (!b || b.disabled) return;
-    if (b.dataset.ou){ D.outil = b.dataset.ou; outils(); return; }
-    if (b.dataset.co){ D.couleur = b.dataset.co; outils(); return; }
+    const sel = D.sel != null ? D.f[D.sel] : null;
+    /* un réglage : sur l'élément choisi (avec historique), et toujours sur le style des suivants */
+    const regler = (cle, v) => { if (sel){ memo(); if (v === false) delete sel[cle]; else sel[cle] = v; } if (v === false) delete D.style[cle]; else D.style[cle] = v; garderStyle(); outils(); trace(); };
+    if (b.dataset.ou){ D.outil = b.dataset.ou; D.sel = null; outils(); trace(); return; }
+    if (b.dataset.co) return regler('c', b.dataset.co);
+    if (b.dataset.ep) return regler('w', +b.dataset.ep);
+    if (b.dataset.pt) return regler('d', (sel ? !sel.d : !D.style.d) || false);
+    if (b.dataset.ts) return regler('s', +b.dataset.ts);
+    if (b.dataset.gr) return regler('b', (sel ? !sel.b : !D.style.b) || false);
     const a = b.dataset.od;
-    if (a === 'annuler'){ D.f.pop(); D.modifie = true; outils(); trace(); }
-    else if (a === 'effacer'){ D.f = []; D.modifie = true; outils(); trace(); }
+    if (a === 'annuler') annuler();
+    else if (a === 'effacer'){ memo(); D.f = []; D.sel = null; outils(); trace(); }
+    else if (a === 'supprimer') supprimer();
+    else if (a === 'dupliquer') dupliquer();
+    else if (a === 'devant' && sel){ memo(); D.f.splice(D.sel, 1); D.f.push(sel); D.sel = D.f.length - 1; outils(); trace(); }
+    else if (a === 'reecrire' && sel) texteA(sel.p[0], D.sel);
     else if (a === 'fermer') fermerDessin();
     else if (a === 'garder') garderDessin();
   };
+}
+function garderStyle(){ try { localStorage.setItem('sagc-video-style', JSON.stringify(D.style)); } catch(e){} }
+function supprimer(){ if (!D || D.sel == null) return; memo(); D.f.splice(D.sel, 1); D.sel = null; outils(); trace(); }
+function dupliquer(){
+  if (!D || D.sel == null) return;
+  memo(); const s = JSON.parse(JSON.stringify(D.f[D.sel])); s.p = s.p.map(q => [borne(q[0] + .025), borne(q[1] + .035)]);
+  D.f.push(s); D.sel = D.f.length - 1; outils(); trace();
+}
+/* déplacer l'élément choisi au clavier : 0,5 % par flèche, 2,5 % avec Maj */
+function pousser(dx, dy){
+  if (!D || D.sel == null) return;
+  memo(); const s = D.f[D.sel]; s.p = s.p.map(q => [borne(q[0] + dx), borne(q[1] + dy)]); trace();
 }
 function fermerDessin(sansDemander){
   if (!D) return;
@@ -926,7 +1069,7 @@ function fermerDessin(sansDemander){
     liste(); api('/marqueur/retirer', {id: mq.id});
   }
   $('#outils').hidden = true; $('#outils').innerHTML = ''; $('#barre').hidden = false;
-  const c = $('#calque'); c.onpointerdown = c.onpointermove = c.onpointerup = c.onpointercancel = null;
+  const c = $('#calque'); c.onpointerdown = c.onpointermove = c.onpointerup = c.onpointercancel = c.ondblclick = null;
   cacherCalque();
   if (mq.dessin) afficherDessin(mq);
 }
@@ -963,10 +1106,18 @@ function toast(texte, bouton, faire){
 /* le clavier, hors des champs (le lecteur YouTube garde les touches quand on a cliqué dedans) */
 document.addEventListener('keydown', e => {
   if (/^(INPUT|TEXTAREA|SELECT)$/.test((e.target || {}).tagName)) return;
-  /* pendant un dessin : Échap ferme le dessin, Ctrl+Z (Cmd+Z) retire le dernier trait, le reste attend */
+  /* pendant un dessin : Échap désélectionne puis ferme, Ctrl+Z annule, Ctrl+D duplique, Suppr retire l'élément choisi,
+     les flèches le déplacent (Maj : 5 fois plus) ; le reste attend */
   if (D){
-    if (e.key === 'Escape'){ e.preventDefault(); fermerDessin(); }
-    else if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z') && D.f.length){ e.preventDefault(); D.f.pop(); D.modifie = true; outils(); trace(); }
+    const ctrl = e.ctrlKey || e.metaKey, k = e.key;
+    if (k === 'Escape'){ e.preventDefault(); if (D.sel != null){ D.sel = null; outils(); trace(); } else fermerDessin(); }
+    else if (ctrl && (k === 'z' || k === 'Z')){ e.preventDefault(); annuler(); }
+    else if (ctrl && (k === 'd' || k === 'D')){ e.preventDefault(); dupliquer(); }
+    else if ((k === 'Delete' || k === 'Backspace') && D.sel != null){ e.preventDefault(); supprimer(); }
+    else if (k.startsWith('Arrow') && D.sel != null){
+      e.preventDefault(); const pas = e.shiftKey ? .025 : .005;
+      pousser(k === 'ArrowLeft' ? -pas : k === 'ArrowRight' ? pas : 0, k === 'ArrowUp' ? -pas : k === 'ArrowDown' ? pas : 0);
+    }
     return;
   }
   if (e.key === 'Escape' && DANS_APPLI){ fermer(); return; }
