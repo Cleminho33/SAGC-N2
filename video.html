@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B0F0C">
+<meta name="robots" content="noindex">
+<title>SAGC'TOUT · Vidéo</title>
+<link rel="stylesheet" href="fonts/polices.css">
+<!-- Module vidéo de SAGC'TOUT, lot 1 (Clément, 18.11) : marquer les actions d'un match sur sa vidéo YouTube.
+     Page publiée en clair à côté de l'appli : elle ne contient aucune donnée. Tout passe par le service sagc-video
+     (livrables/Rink/site/video/worker.js), avec la session de SAGC'TOUT (même adresse, même stockage).
+     L'appli lui laisse le contexte dans localStorage « sagc-video-ctx » : {matchs: [{k, titre}], joueurs: [{id, nom, num}]}.
+     Voir livrables/Rink/MODULE-VIDEO-CADRAGE.md. -->
+<style>
+:root{
+  --ink:#0B0F0C; --ink-2:#131A15; --ink-3:#1B241D; --line:#26332A; --line-2:#37473A;
+  --bone:#EAF0E8; --muted:#8D9A8E; --acid:#F2E400; --grass:#3FA845; --deep:#009444; --away:#6FA8D8; --shot:#FF7A45;
+  --grad-flat:linear-gradient(90deg,#F2E400 0%,#A9C400 45%,#009444 100%);
+  --r-s:10px; --r-l:18px; --r-pill:999px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--ink);color:var(--bone);font:400 15px/1.5 Inter,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer;padding:0}
+.wrap{max-width:1320px;margin:0 auto;padding:16px 16px 48px}
+.back{display:inline-flex;align-items:center;gap:6px;min-height:40px;font:600 12px/1 Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.eyebrow{font:600 11px/1.2 Inter,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.h1{font:400 clamp(30px,5vw,46px)/1 Anton,Impact,sans-serif;text-transform:uppercase;font-style:italic;margin:6px 0 0}
+.rule{height:3px;width:72px;background:var(--grad-flat);border-radius:var(--r-pill);margin:14px 0 20px}
+.muted{color:var(--muted)}
+.card{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--r-l);padding:18px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:var(--r-s);font:600 13px/1 Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase}
+.btn-acid{background:var(--acid);color:var(--ink)}
+.btn-ghost{border:1px solid var(--line-2)}
+.btn:disabled{opacity:.5;cursor:default}
+.champ{width:100%;padding:12px 14px;border-radius:var(--r-s);border:1px solid var(--line-2);background:var(--ink-3);font-size:15px}
+.champ:focus{outline:2px solid var(--acid);outline-offset:1px}
+.msg{font-size:14px;margin:10px 0 0;min-height:1.4em}
+.msg.err{color:var(--shot)}
+
+/* le choix du match */
+.liste{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.mt{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px;border-radius:var(--r-l);background:var(--ink-2);border:1px solid var(--line)}
+.mt:hover{border-color:var(--line-2)}
+.mt b{font-weight:800;font-size:16px}
+.mt small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.pas{font:600 11px/1 Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;border-radius:var(--r-pill);border:1px solid var(--line-2);color:var(--muted);white-space:nowrap}
+.pas.ok{border-color:var(--grass);color:var(--grass)}
+
+/* le marquage */
+.grille{display:grid;gap:18px;grid-template-columns:minmax(0,1fr) 360px;align-items:start}
+@media (max-width:980px){.grille{grid-template-columns:1fr}}
+.ecran{position:relative;aspect-ratio:16/9;background:#000;border-radius:var(--r-l);overflow:hidden;border:1px solid var(--line)}
+.ecran iframe,.ecran #yt{position:absolute;inset:0;width:100%;height:100%;border:0}
+.barre{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.camp{display:inline-flex;border:1px solid var(--line-2);border-radius:var(--r-pill);padding:3px;margin-right:6px}
+.camp button{padding:9px 14px;border-radius:var(--r-pill);font:700 12px/1 Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.camp button.on[data-camp=nous]{background:var(--grass);color:var(--ink)}
+.camp button.on[data-camp=eux]{background:var(--away);color:var(--ink)}
+.act{display:inline-flex;align-items:center;gap:8px;padding:11px 13px;border-radius:var(--r-s);background:var(--ink-3);border:1px solid var(--line-2);font-weight:600;font-size:14px;transition:transform .12s,border-color .12s}
+.act:hover{border-color:var(--bone)}
+.act kbd{font:700 11px/1 Inter,sans-serif;color:var(--muted);border:1px solid var(--line-2);border-radius:5px;padding:3px 5px}
+.act.but{background:var(--acid);border-color:var(--acid);color:var(--ink)}
+.act.but kbd{color:var(--ink);border-color:rgba(11,15,12,.35)}
+.act.flash{transform:scale(.94)}
+.aide{font-size:12.5px;color:var(--muted);margin-top:10px}
+.aide kbd{font:700 11px/1 Inter,sans-serif;border:1px solid var(--line-2);border-radius:5px;padding:2px 5px;color:var(--bone)}
+.qui{margin-top:12px;padding:12px;border-radius:var(--r-s);background:var(--ink-2);border:1px solid var(--line-2)}
+.qui p{margin:0 0 8px;font-size:13px;color:var(--muted)}
+.qui p b{color:var(--bone)}
+.puces{display:flex;flex-wrap:wrap;gap:6px}
+.puce{padding:7px 11px;border-radius:var(--r-pill);border:1px solid var(--line-2);font-size:13px;font-weight:600}
+.puce:hover{border-color:var(--bone)}
+.puce em{font-style:normal;color:var(--muted);margin-right:4px}
+
+.cote h2{font:800 18px/1.2 Inter,sans-serif;margin:0}
+.bilan{display:grid;grid-template-columns:1fr auto auto;gap:4px 14px;font-size:13px;margin:12px 0 4px}
+.bilan span:nth-child(3n+2){color:var(--grass);font-weight:700;text-align:right}
+.bilan span:nth-child(3n){color:var(--away);font-weight:700;text-align:right}
+.bilan .tete{font:600 10.5px/1.4 Inter,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)!important}
+.mqs{list-style:none;margin:14px 0 0;padding:0;max-height:62vh;overflow:auto;border-top:1px solid var(--line)}
+.mq{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid var(--line)}
+.mq.neuf{animation:neuf .9s ease-out}
+@keyframes neuf{from{background:rgba(242,228,0,.16)}to{background:transparent}}
+.mq .va{flex:1;display:flex;align-items:center;gap:10px;text-align:left;min-width:0}
+.mq time{font:700 13px/1 Inter,sans-serif;font-variant-numeric:tabular-nums;min-width:52px;color:var(--bone)}
+.mq .pt{width:8px;height:8px;border-radius:50%;flex:none}
+.mq .pt.nous{background:var(--grass)}.mq .pt.eux{background:var(--away)}
+.mq b{font-weight:600;font-size:14px}
+.mq small{color:var(--muted);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mq .x{width:30px;height:30px;border-radius:var(--r-pill);color:var(--muted);font-size:18px;line-height:1}
+.mq .x:hover{color:var(--bone);background:var(--ink-3)}
+.vide{color:var(--muted);font-size:14px;padding:14px 0}
+.toast{position:fixed;left:50%;bottom:22px;translate:-50% 0;background:var(--ink-3);border:1px solid var(--line-2);border-radius:var(--r-pill);padding:10px 12px 10px 18px;display:flex;gap:12px;align-items:center;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.45);z-index:9}
+.toast button{font-weight:700;color:var(--acid);padding:6px 8px}
+.lien{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.lien .champ{flex:1 1 320px}
+@media (prefers-reduced-motion:reduce){.mq.neuf{animation:none}.act{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" id="retour" href="./#/stats/club">← SAGC'TOUT</a>
+  <main id="v" aria-live="polite"></main>
+</div>
+<script>
+(() => {
+'use strict';
+const VIDEO_URL = window.VIDEO_URL || 'https://sagc-video.clement-mora11.workers.dev';
+const ACTIONS = [
+  ['but', 'But'], ['tir', 'Tir'], ['arret', 'Arrêt'], ['perte', 'Perte de balle'],
+  ['recup', 'Récupération'], ['faute', 'Faute'], ['sup', 'Supériorité'], ['inf', 'Infériorité']];
+const NOM_ACTION = Object.fromEntries(ACTIONS);
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+const lire = k => { try { return localStorage.getItem(k); } catch(e){ return null; } };
+const ctx = (() => { try { return JSON.parse(lire('sagc-video-ctx') || '{}') || {}; } catch(e){ return {}; } })();
+const MATCHS = Array.isArray(ctx.matchs) ? ctx.matchs : [], JOUEURS = Array.isArray(ctx.joueurs) ? ctx.joueurs : [];
+const nomJoueur = id => { const j = JOUEURS.find(x => x.id === id); return j ? j.nom : id; };
+const titreMatch = k => (MATCHS.find(x => x.k === k) || {}).titre || k;
+const hms = t => { t = Math.max(0, Math.floor(t)); const h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s = t % 60;
+  return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(s).padStart(2, '0'); };
+
+/* le service : la session de SAGC'TOUT ; « reseau » si le service ne répond pas (pas encore créé, pas de réseau) */
+async function api(chemin, corps){
+  const ses = lire('sagc-session');
+  let r;
+  try {
+    r = await fetch(VIDEO_URL + chemin, {method: 'POST', headers: {'Content-Type': 'application/json', ...(ses ? {Authorization: 'Bearer ' + ses} : {})}, body: JSON.stringify(corps || {})});
+  } catch(e){ return {ok: false, erreur: 'reseau'}; }
+  const d = await r.json().catch(() => null);
+  return d || {ok: false, erreur: 'reseau'};
+}
+const RAISON = {
+  compte: "Connecte-toi d'abord dans SAGC'TOUT, sur cet appareil, puis reviens ici.",
+  lecture: 'Ton compte peut regarder, pas marquer.',
+  fort: "Confirme d'abord ton identité dans SAGC'TOUT (Face ID ou mot de passe de secours), puis reviens ici.",
+  reseau: "Le service vidéo ne répond pas. S'il vient d'être ajouté, il n'est peut-être pas encore en place dans Cloudflare.",
+  lien: "Ce lien n'est pas une vidéo YouTube. Colle l'adresse de la vidéo (youtube.com/watch?v=… ou youtu.be/…).",
+  plein: 'Trop de marqueurs sur ce match.', service: 'Le service a eu un souci. Réessaie dans un instant.'
+};
+const raison = d => RAISON[d && d.erreur] || "Ça n'a pas marché. Réessaie dans un instant.";
+
+/* ---------- le choix du match ---------- */
+async function vueChoix(){
+  document.title = "SAGC'TOUT · Vidéo";
+  const v = $('#v');
+  v.innerHTML = `<div class="eyebrow">Après le match</div><h1 class="h1">Vidéo des matchs</h1><div class="rule"></div>
+    ${MATCHS.length ? `<p class="muted" style="margin-top:0">Choisis le match à marquer.</p><div class="liste">${MATCHS.slice().sort((a, b) => (b.iso || '').localeCompare(a.iso || '')).map(m => `<a class="mt" href="#${esc(m.k)}"><span><b>${esc(m.titre)}</b><small>${esc(m.d || '')}</small></span><span class="pas" data-pas="${esc(m.k)}">Pas de vidéo</span></a>`).join('')}</div>`
+      : `<div class="card"><p style="margin:0">Ouvre cette page depuis SAGC'TOUT : <b>Stats › Notre club › Marquer la vidéo</b>.</p></div>`}
+    <p class="msg" id="msg"></p>`;
+  if (!MATCHS.length) return;
+  const d = await api('/matchs');
+  if (!d.ok){ $('#msg').textContent = raison(d); $('#msg').className = 'msg err'; return; }
+  d.matchs.forEach(m => { const p = document.querySelector(`[data-pas="${CSS.escape(m.match)}"]`); if (p){ p.textContent = m.n ? `${m.n} action${m.n > 1 ? 's' : ''}` : 'Vidéo, rien de marqué'; p.classList.add('ok'); } });
+}
+
+/* ---------- le marquage d'un match ---------- */
+let M = null;   // {k, video, marqueurs, ecrire, camp, dernier}
+let joueur = null, ytPret = null;
+
+function ytCharger(){
+  if (ytPret) return ytPret;
+  ytPret = new Promise((ok, ko) => {
+    if (window.YT && window.YT.Player) return ok();
+    window.onYouTubeIframeAPIReady = () => ok();
+    const s = document.createElement('script'); s.src = 'https://www.youtube.com/iframe_api'; s.onerror = () => { ytPret = null; ko(new Error('yt')); };
+    document.head.appendChild(s);
+  });
+  return ytPret;
+}
+const maintenant = () => { try { return joueur && joueur.getCurrentTime ? joueur.getCurrentTime() : 0; } catch(e){ return 0; } };
+function aller(t, lire){
+  if (!joueur || !joueur.seekTo) return;
+  joueur.seekTo(Math.max(0, t), true);
+  if (lire && joueur.playVideo) joueur.playVideo();
+}
+
+async function vueMatch(k){
+  document.title = "SAGC'TOUT · Vidéo · " + titreMatch(k);
+  $('#retour').href = '#';
+  $('#retour').textContent = '← Les matchs';
+  const v = $('#v');
+  v.innerHTML = `<div class="eyebrow">Vidéo du match</div><h1 class="h1">${esc(titreMatch(k))}</h1><div class="rule"></div><p class="muted">Chargement…</p>`;
+  const d = await api('/match', {match: k});
+  if (!d.ok){ v.innerHTML = `<div class="eyebrow">Vidéo du match</div><h1 class="h1">${esc(titreMatch(k))}</h1><div class="rule"></div><div class="card"><p style="margin:0">${esc(raison(d))}</p></div>`; return; }
+  M = {k, video: d.video, marqueurs: d.marqueurs, ecrire: d.ecrire, pourquoi: d.pourquoi, camp: 'nous', dernier: null};
+  dessiner();
+}
+
+function dessiner(){
+  const v = $('#v'), tete = `<div class="eyebrow">Vidéo du match</div><h1 class="h1">${esc(titreMatch(M.k))}</h1><div class="rule"></div>`;
+  joueur = null;
+  if (!M.video){
+    v.innerHTML = tete + (M.ecrire ? `<div class="card"><b>Colle le lien YouTube du match</b>
+        <p class="muted" style="margin:4px 0 0;font-size:13.5px">Le match entier, même s'il dure 1h30 : rien n'est téléchargé, la vidéo reste sur YouTube.</p>
+        <form class="lien" id="f-lien"><input class="champ" id="yt-lien" placeholder="https://www.youtube.com/watch?v=…" autocomplete="off" required><button class="btn btn-acid">Charger</button></form>
+        <p class="msg" id="msg"></p></div>`
+      : `<div class="card"><p style="margin:0">Pas encore de vidéo pour ce match.</p></div>`);
+    if (M.ecrire){ $('#yt-lien').focus(); $('#f-lien').onsubmit = e => { e.preventDefault(); poserLien($('#yt-lien').value); }; }
+    return;
+  }
+  v.innerHTML = tete + `<div class="grille">
+    <section>
+      <div class="ecran"><div id="yt"></div></div>
+      ${M.ecrire ? `<div class="barre" id="barre">
+        <div class="camp" role="group" aria-label="Pour qui">${['nous', 'eux'].map(c => `<button type="button" data-camp="${c}" class="${M.camp === c ? 'on' : ''}" aria-pressed="${M.camp === c}">${c === 'nous' ? 'Nous' : 'Eux'}</button>`).join('')}</div>
+        ${ACTIONS.map(([id, nom], i) => `<button type="button" class="act ${id}" data-act="${id}"><kbd>${i + 1}</kbd>${nom}</button>`).join('')}
+      </div>
+      <div id="qui"></div>
+      <p class="aide">Clavier (clique d'abord hors de la vidéo) : <kbd>1</kbd> à <kbd>8</kbd> marquer · <kbd>C</kbd> Nous / Eux · <kbd>Espace</kbd> lecture · <kbd>←</kbd> <kbd>→</kbd> 5 s · <kbd>Maj</kbd>+<kbd>←</kbd> <kbd>→</kbd> 1 s.
+        <button type="button" id="ch-lien" style="text-decoration:underline;color:var(--muted)">Changer le lien</button></p>`
+      : `<p class="aide">${esc(RAISON[M.pourquoi] || '')}</p>`}
+    </section>
+    <aside class="card cote"><h2>Les actions</h2><div id="bilan"></div><ul class="mqs" id="mqs"></ul></aside>
+  </div>`;
+  liste();
+  if (M.ecrire){
+    $('#barre').onclick = e => {
+      const c = e.target.closest('[data-camp]'); if (c){ choisirCamp(c.dataset.camp); return; }
+      const a = e.target.closest('[data-act]'); if (a) marquer(a.dataset.act);
+    };
+    $('#ch-lien').onclick = () => { if (confirm('Changer le lien YouTube de ce match ? Les actions déjà marquées restent, calées sur les mêmes instants.')){ M.video = null; dessiner(); } };
+  }
+  ytCharger().then(() => {
+    joueur = new YT.Player('yt', {videoId: M.video.yt, playerVars: {rel: 0, playsinline: 1, modestbranding: 1}});
+  }).catch(() => { $('.ecran').innerHTML = '<p style="padding:20px;margin:0">Le lecteur YouTube ne se charge pas sur ce réseau.</p>'; });
+}
+
+async function poserLien(lien){
+  const msg = $('#msg'); msg.className = 'msg'; msg.textContent = 'Enregistrement…';
+  const d = await api('/video', {match: M.k, yt: lien, titre: titreMatch(M.k)});
+  if (!d.ok){ msg.className = 'msg err'; msg.textContent = raison(d); return; }
+  M.video = d.video; dessiner();
+}
+
+function choisirCamp(c){
+  M.camp = c;
+  document.querySelectorAll('#barre [data-camp]').forEach(b => { b.classList.toggle('on', b.dataset.camp === c); b.setAttribute('aria-pressed', b.dataset.camp === c); });
+}
+
+async function marquer(action){
+  const b = document.querySelector(`[data-act="${action}"]`); if (b){ b.classList.add('flash'); setTimeout(() => b.classList.remove('flash'), 140); }
+  const tmp = {id: 'tmp' + Date.now(), t: Math.round(maintenant() * 10) / 10, action, camp: M.camp, joueur: '', neuf: true};
+  M.marqueurs.push(tmp); liste(); demanderJoueur(tmp);
+  const d = await api('/marqueur', {match: M.k, t: tmp.t, action, camp: tmp.camp});
+  const i = M.marqueurs.indexOf(tmp);
+  if (!d.ok){ if (i >= 0) M.marqueurs.splice(i, 1); liste(); $('#qui').innerHTML = ''; toast(raison(d)); return; }
+  const vrai = {...d.marqueur, neuf: true};
+  if (i >= 0) M.marqueurs[i] = vrai;
+  /* un joueur choisi pendant l'envoi */
+  if (tmp.joueur){ vrai.joueur = tmp.joueur; api('/marqueur/modifier', {id: vrai.id, joueur: tmp.joueur}); }
+  if (M.dernier === tmp) M.dernier = vrai;
+  liste();
+}
+
+/* après un marqueur pour nous : à qui l'attribuer (facultatif, se ferme au marqueur suivant) */
+function demanderJoueur(mq){
+  const q = $('#qui'); M.dernier = mq;
+  if (mq.camp !== 'nous' || !JOUEURS.length){ q.innerHTML = ''; return; }
+  q.innerHTML = `<div class="qui"><p><b>${esc(NOM_ACTION[mq.action])}</b> à ${hms(mq.t)} : qui ? <span style="opacity:.8">(facultatif)</span></p>
+    <div class="puces">${JOUEURS.map(j => `<button type="button" class="puce" data-j="${esc(j.id)}">${j.num ? `<em>${esc(j.num)}</em>` : ''}${esc(j.nom)}</button>`).join('')}</div></div>`;
+  q.onclick = e => {
+    const p = e.target.closest('[data-j]'); if (!p) return;
+    const cible = M.dernier; if (!cible) return;
+    cible.joueur = p.dataset.j; q.innerHTML = ''; liste();
+    if (typeof cible.id === 'number') api('/marqueur/modifier', {id: cible.id, joueur: cible.joueur}).then(d => { if (!d.ok) toast(raison(d)); });
+  };
+}
+
+function liste(){
+  const l = M.marqueurs.slice().sort((a, b) => a.t - b.t), ul = $('#mqs'); if (!ul) return;
+  const compte = (a, c) => l.filter(x => x.action === a && x.camp === c).length;
+  const vus = ACTIONS.filter(([a]) => compte(a, 'nous') + compte(a, 'eux'));
+  $('#bilan').innerHTML = vus.length ? `<div class="bilan"><span class="tete">Action</span><span class="tete">Nous</span><span class="tete">Eux</span>${vus.map(([a, n]) => `<span>${n}</span><span>${compte(a, 'nous')}</span><span>${compte(a, 'eux')}</span>`).join('')}</div>` : '';
+  ul.innerHTML = l.length ? l.map(m => `<li class="mq${m.neuf ? ' neuf' : ''}">
+      <button type="button" class="va" data-t="${m.t}" title="Revoir (5 s avant)"><time>${hms(m.t)}</time><i class="pt ${m.camp}"></i><span style="min-width:0"><b>${esc(NOM_ACTION[m.action] || m.action)}</b><br><small>${m.camp === 'nous' ? 'Nous' : 'Eux'}${m.joueur ? ' · ' + esc(nomJoueur(m.joueur)) : ''}${m.parNom ? ' · par ' + esc(m.parNom) : ''}</small></span></button>
+      ${M.ecrire && typeof m.id === 'number' ? `<button type="button" class="x" data-x="${m.id}" aria-label="Retirer">×</button>` : ''}</li>`).join('')
+    : `<li class="vide">${M.ecrire ? 'Lance la vidéo et touche une action au bon moment.' : 'Rien de marqué pour l\'instant.'}</li>`;
+  l.forEach(m => { delete m.neuf; });
+  ul.onclick = e => {
+    const x = e.target.closest('[data-x]'); if (x){ retirer(+x.dataset.x); return; }
+    const va = e.target.closest('[data-t]'); if (va) aller(+va.dataset.t - 5, true);
+  };
+}
+
+async function retirer(id){
+  const i = M.marqueurs.findIndex(m => m.id === id); if (i < 0) return;
+  const [m] = M.marqueurs.splice(i, 1); liste();
+  const d = await api('/marqueur/retirer', {id});
+  if (!d.ok){ M.marqueurs.push(m); liste(); toast(raison(d)); return; }
+  toast(`${NOM_ACTION[m.action]} à ${hms(m.t)} retiré.`, 'Annuler', async () => {
+    const r = await api('/marqueur', {match: M.k, t: m.t, action: m.action, camp: m.camp, joueur: m.joueur || ''});
+    if (r.ok){ M.marqueurs.push({...r.marqueur, neuf: true}); liste(); } else toast(raison(r));
+  });
+}
+
+let toastT = null;
+function toast(texte, bouton, faire){
+  document.querySelectorAll('.toast').forEach(t => t.remove()); clearTimeout(toastT);
+  const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status');
+  t.innerHTML = `<span>${esc(texte)}</span>${bouton ? `<button type="button">${esc(bouton)}</button>` : ''}`;
+  if (bouton) t.querySelector('button').onclick = () => { t.remove(); faire(); };
+  document.body.appendChild(t); toastT = setTimeout(() => t.remove(), 6000);
+}
+
+/* le clavier, hors des champs (le lecteur YouTube garde les touches quand on a cliqué dedans) */
+document.addEventListener('keydown', e => {
+  if (!M || !M.video || !M.ecrire || e.ctrlKey || e.metaKey || e.altKey || /^(INPUT|TEXTAREA|SELECT)$/.test((e.target || {}).tagName)) return;
+  const n = +e.key;
+  if (n >= 1 && n <= ACTIONS.length && !e.shiftKey){ e.preventDefault(); marquer(ACTIONS[n - 1][0]); return; }
+  if (e.key === 'c' || e.key === 'C'){ e.preventDefault(); choisirCamp(M.camp === 'nous' ? 'eux' : 'nous'); return; }
+  if (!joueur || !joueur.getPlayerState) return;
+  if (e.key === ' '){ e.preventDefault(); joueur.getPlayerState() === 1 ? joueur.pauseVideo() : joueur.playVideo(); return; }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight'){ e.preventDefault(); aller(maintenant() + (e.key === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 1 : 5)); }
+});
+
+function route(){
+  const k = decodeURIComponent(location.hash.slice(1));
+  M = null;
+  if (k){ vueMatch(k); return; }
+  $('#retour').href = './#/stats/club'; $('#retour').textContent = "← SAGC'TOUT";
+  vueChoix();
+}
+window.addEventListener('hashchange', route);
+route();
+})();
+</script>
+</body>
+</html>
