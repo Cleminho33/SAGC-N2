@@ -120,6 +120,59 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .coul.on{box-shadow:0 0 0 2px var(--bone)}
 .outils .esp{flex:1}
 .mq.sel{background:rgba(242,228,0,.07)}
+.lb{font-size:12.5px;color:var(--muted)}
+.esp{flex:1}
+/* la frise du match (18.11) : nous en haut, eux en bas, supériorités et infériorités au milieu */
+.fw{margin-top:10px;padding:10px 12px 8px;border-radius:var(--r-s);background:var(--ink-2);border:1px solid var(--line)}
+.fw-haut{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.fw-leg{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.fw-leg .pt{display:inline-block;width:9px;height:9px;border-radius:50%;margin-left:6px}
+.pt.iv-sup{background:var(--acid)}.pt.iv-inf{background:var(--shot)}
+.fw-leg .pt.nous{background:var(--grass)}.fw-leg .pt.eux{background:var(--away)}
+.fw-z{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted)}
+.fw-z .ot{padding:5px 9px;font-size:12px}
+.frise{position:relative;height:76px;border-radius:8px;background:var(--ink);cursor:pointer;overflow:hidden;touch-action:pan-y}
+.frise i{position:absolute;display:block}
+.fz-axe{left:0;right:0;top:38px;height:1px;background:var(--line-2)}
+.fz-clip{height:10px;border-radius:3px;opacity:.38}
+.fz-clip.h{top:13px}.fz-clip.b{top:53px}
+.fz-clip.nous{background:var(--grass)}.fz-clip.eux{background:var(--away)}
+.fz-tag{width:3px;height:24px;margin-left:-1.5px;border-radius:2px}
+.fz-tag.h{top:6px}.fz-tag.b{top:46px}
+.fz-tag.nous{background:var(--grass)}.fz-tag.eux{background:var(--away)}
+.fz-tag.but{width:5px;margin-left:-2.5px;box-shadow:0 0 0 1px var(--bone)}
+.fz-iv{top:33px;height:10px;border-radius:5px;opacity:.9}
+.fz-iv.sup{background:var(--acid)}.fz-iv.inf{background:var(--shot)}
+.fz-iv.ouvert{background-image:repeating-linear-gradient(45deg,rgba(11,15,12,.35) 0 6px,transparent 6px 12px);background-size:17px 17px;animation:raye 1s linear infinite}
+@keyframes raye{to{background-position:17px 0}}
+.frise .sel{outline:2px solid var(--bone);outline-offset:1px;opacity:1;z-index:2}
+.fz-tete{top:0;bottom:0;width:2px;margin-left:-1px;background:var(--bone);z-index:3;pointer-events:none}
+.fz-tete::before{content:'';position:absolute;top:-1px;left:-4px;border:5px solid transparent;border-top-color:var(--bone)}
+.fw-temps{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums}
+.act.ouvert{border-color:var(--acid);box-shadow:0 0 0 2px rgba(242,228,0,.3);animation:pulse 1.4s ease-in-out infinite}
+.act.inf.ouvert{border-color:var(--shot);box-shadow:0 0 0 2px rgba(255,122,69,.3)}
+@keyframes pulse{50%{box-shadow:0 0 0 5px rgba(242,228,0,.12)}}
+/* le réglage d'un tag et les durées par catégorie */
+.rg{margin-top:10px;padding:12px;border-radius:var(--r-s);background:var(--ink-2);border:1px solid var(--line-2)}
+.rg-t{margin:0 0 8px;font-size:13.5px}
+.rg-l{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.rg-l .ot,.du .ot{padding:6px 10px}
+.rg-v{min-width:46px;text-align:center;font-variant-numeric:tabular-nums}
+.rg .btn{padding:9px 12px}
+.lien-mini{font-size:12px;color:var(--muted);text-decoration:underline;margin-left:4px}
+.mini{position:relative;height:40px;margin-top:10px;border-radius:8px;background:var(--ink);touch-action:none}
+.mini i{position:absolute;display:block}
+.mi-clip{top:14px;height:12px;border-radius:3px;opacity:.5}
+.mi-clip.nous{background:var(--grass)}.mi-clip.eux{background:var(--away)}.mi-clip.sup{background:var(--acid)}.mi-clip.inf{background:var(--shot)}
+.mi-tag{top:8px;width:3px;height:24px;margin-left:-1.5px;background:var(--bone);border-radius:2px}
+.poignee{top:5px;width:12px;height:30px;margin-left:-6px;border-radius:4px;background:var(--ink-2);border:2px solid var(--bone);cursor:ew-resize;z-index:2}
+.poignee:hover{border-color:var(--acid)}
+.mi-a,.mi-b{position:absolute;bottom:-17px;font-size:11px;color:var(--muted)}
+.mi-a{left:0}.mi-b{right:0}
+.mini{margin-bottom:16px}
+.du{display:grid;grid-template-columns:minmax(110px,auto) auto auto;gap:6px 14px;align-items:center;font-size:13.5px}
+.du-c{display:inline-flex;align-items:center;gap:6px}
+.du-c b{min-width:34px;text-align:center}
 .mq .crayon{font-size:13px;margin-left:4px}
 .haut{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .aide-btn{width:36px;height:36px;border-radius:var(--r-pill);border:1px solid var(--line-2);font:800 15px/1 Inter,sans-serif;color:var(--muted)}
@@ -161,8 +214,8 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .mini-acts kbd{font:700 12px/1 Inter,sans-serif;padding:8px 9px;border-radius:7px;border:1px solid var(--line-2);color:var(--bone);background:var(--ink-3);animation:appui 4s infinite}
 .mini-acts kbd.but{background:var(--acid);color:var(--ink);border-color:var(--acid)}
 @keyframes appui{0%,8%{transform:none;box-shadow:none}4%{transform:scale(.88);box-shadow:0 0 0 4px rgba(242,228,0,.35)}}
-.frise{position:absolute;left:14px;right:14px;bottom:14px;height:4px;border-radius:4px;background:var(--line)}
-.frise i{position:absolute;top:-4px;width:3px;height:12px;border-radius:2px;background:var(--acid);animation:tag 4s infinite backwards}
+.gfrise{position:absolute;left:14px;right:14px;bottom:14px;height:4px;border-radius:4px;background:var(--line)}
+.gfrise i{position:absolute;top:-4px;width:3px;height:12px;border-radius:2px;background:var(--acid);animation:tag 4s infinite backwards}
 @keyframes tag{0%{opacity:0;transform:scaleY(0)}10%,100%{opacity:1;transform:none}}
 .mini-camp{display:inline-flex;border:1px solid var(--line-2);border-radius:var(--r-pill);padding:3px;position:relative}
 .mini-camp span{position:relative;z-index:1;padding:8px 14px;font:700 12px/1 Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
@@ -177,6 +230,14 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .mini-liste div b{font-variant-numeric:tabular-nums}
 .mini-liste div:nth-child(2){animation:clic 2.4s infinite}
 @keyframes clic{0%,30%{border-color:var(--line)}40%,70%{border-color:var(--acid);background:rgba(242,228,0,.08)}}
+.gfr{position:relative;width:100%;height:90px;border-radius:8px;background:var(--ink-2)}
+.gfr i{position:absolute;display:block}
+.gfr .ax{left:0;right:0;top:45px;height:1px;background:var(--line-2)}
+.gfr .cl{height:10px;border-radius:3px;opacity:.38}.gfr .cl.n{top:18px;background:var(--grass)}.gfr .cl.e{top:62px;background:var(--away)}
+.gfr .tg{width:3px;height:22px;border-radius:2px}.gfr .tg.n{top:12px;background:var(--grass)}.gfr .tg.e{top:56px;background:var(--away)}
+.gfr .iv{top:40px;height:10px;border-radius:5px;background:var(--acid);opacity:.9}
+.gfr .tt{top:0;bottom:0;width:2px;background:var(--bone);animation:tete 6s linear infinite}
+@keyframes tete{from{left:2%}to{left:98%}}
 .mini-dessin{width:100%;max-width:340px}
 .mini-dessin svg{width:100%;height:auto;display:block}
 .mini-dessin .trace{stroke-dasharray:200;stroke-dashoffset:200;animation:trace 3.2s ease-in-out infinite}
@@ -189,7 +250,7 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .bientot div{padding:12px;border-radius:var(--r-s);border:1px dashed var(--line-2);font-size:12.5px;color:var(--muted);text-align:left}
 .bientot b{display:block;color:var(--bone);font-size:13.5px;margin-bottom:4px}
 @media (max-width:520px){.gd-vis{height:auto;min-height:130px;gap:6px;padding:10px}.fl{display:none}.nd{padding:8px 4px;font-size:11.5px}.nd b{font-size:12.5px}.gd-t{font-size:26px}}
-@media (prefers-reduced-motion:reduce){.mq.neuf{animation:none}.act{transition:none}.mini-dessin *{animation:none!important;stroke-dashoffset:0!important;opacity:1!important}.gd,.gd-pas,.fl::after,.faux-champ span,.mini-acts kbd,.frise i,.mini-camp::before,.mini-camp span,.mini-liste div{animation:none!important}.faux-champ span{width:auto;border:0}}
+@media (prefers-reduced-motion:reduce){.mq.neuf{animation:none}.act{transition:none}.mini-dessin *{animation:none!important;stroke-dashoffset:0!important;opacity:1!important}.gd,.gd-pas,.fl::after,.faux-champ span,.mini-acts kbd,.gfrise i,.gfr .tt,.fz-iv.ouvert,.act.ouvert,.mini-camp::before,.mini-camp span,.mini-liste div{animation:none!important}.faux-champ span{width:auto;border:0}}
 </style>
 </head>
 <body>
@@ -291,7 +352,7 @@ async function vueMatch(k){
   v.innerHTML = `<div class="eyebrow">Vidéo du match</div><h1 class="h1">${esc(titreMatch(k))}</h1><div class="rule"></div><p class="muted">Chargement…</p>`;
   const d = await api('/match', {match: k});
   if (!d.ok){ v.innerHTML = `<div class="eyebrow">Vidéo du match</div><h1 class="h1">${esc(titreMatch(k))}</h1><div class="rule"></div><div class="card"><p style="margin:0">${esc(raison(d))}</p></div>`; return; }
-  M = {k, video: d.video, marqueurs: d.marqueurs, ecrire: d.ecrire, pourquoi: d.pourquoi, camp: 'nous', dernier: null};
+  M = {k, video: d.video, marqueurs: d.marqueurs, ecrire: d.ecrire, pourquoi: d.pourquoi, camp: 'nous', dernier: null, reglages: d.reglages || null};
   dessiner();
 }
 
@@ -310,6 +371,13 @@ function dessiner(){
   v.innerHTML = tete + `<div class="grille">
     <section>
       <div class="ecran"><div id="yt"></div><div class="calque" id="calque" hidden></div></div>
+      <div class="fw">
+        <div class="fw-haut"><span class="fw-leg"><i class="pt nous"></i>Nous <i class="pt eux"></i>Eux <i class="pt iv-sup"></i>Supériorité <i class="pt iv-inf"></i>Infériorité</span>
+          <span class="fw-z"><span id="fz-txt"></span><button type="button" class="ot" data-z="moins" aria-label="Dézoomer">−</button><button type="button" class="ot" data-z="plus" aria-label="Zoomer">+</button><button type="button" class="ot" data-z="tout">Tout</button></span></div>
+        <div class="frise" id="frise" title="Clic : aller à cet instant · molette : zoomer"></div>
+        <div class="fw-temps"><span id="fr-a"></span><span id="fr-b"></span></div>
+      </div>
+      <div id="reglage"></div>
       ${M.ecrire ? `<div class="barre" id="barre">
         <div class="camp" role="group" aria-label="Pour qui">${['nous', 'eux'].map(c => `<button type="button" data-camp="${c}" class="${M.camp === c ? 'on' : ''}" aria-pressed="${M.camp === c}">${c === 'nous' ? 'Nous' : 'Eux'}</button>`).join('')}</div>
         ${ACTIONS.map(([id, nom], i) => `<button type="button" class="act ${id}" data-act="${id}"><kbd>${i + 1}</kbd>${nom}</button>`).join('')}
@@ -318,7 +386,9 @@ function dessiner(){
       <div class="outils" id="outils" hidden></div>
       <div id="qui"></div>
       <p class="aide">Clavier (clique d'abord hors de la vidéo) : <kbd>1</kbd> à <kbd>8</kbd> marquer · <kbd>C</kbd> Nous / Eux · <kbd>D</kbd> dessiner · <kbd>Espace</kbd> lecture · <kbd>←</kbd> <kbd>→</kbd> 5 s · <kbd>Maj</kbd>+<kbd>←</kbd> <kbd>→</kbd> 1 s.
-        <button type="button" id="ch-lien" style="text-decoration:underline;color:var(--muted)">Changer le lien</button></p>`
+        <button type="button" id="ch-lien" style="text-decoration:underline;color:var(--muted)">Changer le lien</button> ·
+        <button type="button" id="ch-durees" style="text-decoration:underline;color:var(--muted)">Durées par catégorie</button></p>
+      <div id="durees"></div>`
       : `<p class="aide">${esc(RAISON[M.pourquoi] || '')}</p>`}
     </section>
     <aside class="card cote"><h2>Les actions</h2><div id="bilan"></div><ul class="mqs" id="mqs"></ul></aside>
@@ -331,11 +401,14 @@ function dessiner(){
       const a = e.target.closest('[data-act]'); if (a) marquer(a.dataset.act);
     };
     $('#ch-lien').onclick = () => { if (confirm('Changer le lien YouTube de ce match ? Les actions déjà marquées restent, calées sur les mêmes instants.')){ M.video = null; dessiner(); } };
+    $('#ch-durees').onclick = () => panneauDurees();
   }
+  friseBrancher(); friseDessiner(); majReglage(); majBoutons();
   ytCharger().then(() => {
     /* la lecture repart (bouton du lecteur, Espace, Continuer) : le dessin affiché s'efface */
     joueur = new YT.Player('yt', {videoId: M.video.yt, playerVars: {rel: 0, playsinline: 1, modestbranding: 1},
-      events: {onStateChange: e => { if (e.data === 1 && !D) cacherCalque(); }}});
+      events: {onStateChange: e => { if (e.data === 1 && !D) cacherCalque(); }, onReady: () => { DUREE = 0; Z = null; friseDessiner(); }}});
+    clearInterval(boucle); boucle = setInterval(tic, 250);
   }).catch(() => { $('.ecran').innerHTML = '<p style="padding:20px;margin:0">Le lecteur YouTube ne se charge pas sur ce réseau.</p>'; });
 }
 
@@ -353,8 +426,22 @@ function choisirCamp(c){
 
 async function marquer(action){
   const b = document.querySelector(`[data-act="${action}"]`); if (b){ b.classList.add('flash'); setTimeout(() => b.classList.remove('flash'), 140); }
-  const tmp = {id: 'tmp' + Date.now(), t: Math.round(maintenant() * 10) / 10, action, camp: M.camp, joueur: '', neuf: true};
-  M.marqueurs.push(tmp); M.sel = tmp; liste(); demanderJoueur(tmp);
+  /* supériorité, infériorité : la même touche ouvre puis ferme l'intervalle (Clément, 18.11) */
+  if (estIv({action})){
+    const ouvert = M.marqueurs.find(m => m.action === action && m.t2 == null && typeof m.id === 'number');
+    if (ouvert){
+      const t2 = Math.max(ouvert.t, Math.round(maintenant() * 10) / 10);
+      ouvert.t2 = t2; M.sel = ouvert; liste();
+      const d = await api('/marqueur/modifier', {id: ouvert.id, t2});
+      if (!d.ok){ ouvert.t2 = null; liste(); toast(raison(d)); return; }
+      Object.assign(ouvert, d.marqueur); liste();
+      toast(`${NOM_ACTION[action]} fermée : ${hms(t2 - ouvert.t)} de vidéo.`);
+      return;
+    }
+  }
+  const tmp = {id: 'tmp' + Date.now(), t: Math.round(maintenant() * 10) / 10, action, camp: M.camp, joueur: '', neuf: true, t2: null};
+  M.marqueurs.push(tmp); M.sel = tmp; liste();
+  if (estIv(tmp)){ $('#qui').innerHTML = ''; M.dernier = tmp; } else demanderJoueur(tmp);
   const d = await api('/marqueur', {match: M.k, t: tmp.t, action, camp: tmp.camp});
   const i = M.marqueurs.indexOf(tmp);
   if (!d.ok){ if (i >= 0) M.marqueurs.splice(i, 1); liste(); $('#qui').innerHTML = ''; toast(raison(d)); return; }
@@ -387,7 +474,7 @@ function liste(){
   const vus = ACTIONS.filter(([a]) => compte(a, 'nous') + compte(a, 'eux'));
   $('#bilan').innerHTML = vus.length ? `<div class="bilan"><span class="tete">Action</span><span class="tete">Nous</span><span class="tete">Eux</span>${vus.map(([a, n]) => `<span>${n}</span><span>${compte(a, 'nous')}</span><span>${compte(a, 'eux')}</span>`).join('')}</div>` : '';
   ul.innerHTML = l.length ? l.map(m => `<li class="mq${m.neuf ? ' neuf' : ''}${M.sel === m ? ' sel' : ''}">
-      <button type="button" class="va" data-i="${M.marqueurs.indexOf(m)}" title="${m.dessin ? 'Revoir jusqu\'au dessin' : 'Revoir (5 s avant)'}"><time>${hms(m.t)}</time><i class="pt ${m.camp}"></i><span style="min-width:0"><b>${esc(NOM_ACTION[m.action] || m.action)}</b>${m.dessin ? '<span class="crayon" title="Avec un dessin">✏️</span>' : ''}<br><small>${m.camp === 'nous' ? 'Nous' : 'Eux'}${m.joueur ? ' · ' + esc(nomJoueur(m.joueur)) : ''}${m.parNom ? ' · par ' + esc(m.parNom) : ''}</small></span></button>
+      <button type="button" class="va" data-i="${M.marqueurs.indexOf(m)}" title="Revoir le clip"><time>${hms(m.t)}</time><i class="pt ${m.camp}"></i><span style="min-width:0"><b>${esc(NOM_ACTION[m.action] || m.action)}</b>${m.dessin ? '<span class="crayon" title="Avec un dessin">✏️</span>' : ''}<br><small>${m.camp === 'nous' ? 'Nous' : 'Eux'}${m.joueur ? ' · ' + esc(nomJoueur(m.joueur)) : ''}${estIv(m) ? ' · ' + (m.t2 == null ? 'en cours' : hms(m.t2 - m.t)) : ''}${m.parNom ? ' · par ' + esc(m.parNom) : ''}</small></span></button>
       ${M.ecrire && typeof m.id === 'number' ? `<button type="button" class="x" data-x="${m.id}" aria-label="Retirer">×</button>` : ''}</li>`).join('')
     : `<li class="vide">${M.ecrire ? 'Lance la vidéo et touche une action au bon moment.' : 'Rien de marqué pour l\'instant.'}</li>`;
   l.forEach(m => { delete m.neuf; });
@@ -395,8 +482,205 @@ function liste(){
     const x = e.target.closest('[data-x]'); if (x){ retirer(+x.dataset.x); return; }
     const va = e.target.closest('[data-i]'); if (!va) return;
     const m = M.marqueurs[+va.dataset.i]; if (!m || D) return;
-    M.sel = m; liste();
-    if (m.dessin) allerVersDessin(m); else { cacherCalque(); aller(m.t - 5, true); }
+    M.sel = m; liste(); jouerClip(m);
+  };
+  friseDessiner(); majReglage(); majBoutons();
+}
+
+/* ---------- la frise du match et les clips (Clément, 18.11) ----------
+   Frise C : nous au-dessus, eux en dessous, supériorités et infériorités en bande au milieu. Chaque tag est un clip :
+   de l'instant moins « avant » à l'instant plus « après » (durées de sa catégorie, ou les siennes) ; un intervalle va de t à t2. */
+const DUREES_DEF = {but: [8, 3], tir: [5, 2], arret: [5, 2], perte: [4, 3], recup: [4, 3], faute: [4, 2], moment: [3, 3]};
+const estIv = m => m.action === 'sup' || m.action === 'inf';
+const dureesDe = a => ((M && M.reglages && M.reglages.durees) || {})[a] || DUREES_DEF[a] || [5, 2];
+const avDe = m => m.av != null ? m.av : dureesDe(m.action)[0];
+const apDe = m => m.ap != null ? m.ap : dureesDe(m.action)[1];
+const debutClip = m => estIv(m) ? m.t : Math.max(0, m.t - avDe(m));
+const finClip = m => estIv(m) ? (m.t2 != null ? m.t2 : Math.max(m.t, maintenant())) : m.t + apDe(m);
+let DUREE = 0, Z = null, boucle = null, lecture = null;
+function dureeVideo(){
+  let d = 0; try { d = joueur && joueur.getDuration ? joueur.getDuration() : 0; } catch(e){}
+  if (!d) d = Math.max(600, ...M.marqueurs.map(m => finClip(m) + 60));
+  return d;
+}
+/* ce qu'on voit de la frise : [a, b] en secondes (Z), tout le match par défaut */
+function fenetre(){
+  DUREE = dureeVideo();
+  if (!Z) return [0, DUREE];
+  const l = Math.max(20, Math.min(DUREE, Z[1] - Z[0])), a = Math.max(0, Math.min(DUREE - l, Z[0]));
+  return [a, a + l];
+}
+function friseDessiner(){
+  const f = $('#frise'); if (!f || !M) return;
+  const [a, b] = fenetre(), x = s => ((s - a) / (b - a) * 100), dans = (s, e) => e >= a && s <= b;
+  const parts = [];
+  M.marqueurs.forEach((m, i) => {
+    const s = debutClip(m), e = finClip(m); if (!dans(s, e)) return;
+    const g = Math.max(0, x(s)), w = Math.max(.4, Math.min(100, x(e)) - g), sel = M.sel === m ? ' sel' : '';
+    if (estIv(m)){ parts.push(`<i class="fz-iv ${m.action}${m.t2 == null ? ' ouvert' : ''}${sel}" data-i="${i}" style="left:${g}%;width:${w}%" title="${esc(NOM_ACTION[m.action])} · ${hms(m.t)}${m.t2 != null ? ' → ' + hms(m.t2) : ' · en cours'}"></i>`); return; }
+    const ligne = m.camp === 'nous' ? 'h' : 'b';
+    parts.push(`<i class="fz-clip ${m.camp} ${ligne}${sel}" data-i="${i}" style="left:${g}%;width:${w}%"></i>`);
+    if (m.t >= a && m.t <= b) parts.push(`<i class="fz-tag ${m.camp} ${ligne} ${m.action}${sel}" data-i="${i}" style="left:${x(m.t)}%" title="${esc(NOM_ACTION[m.action] || m.action)} · ${hms(m.t)}${m.joueur ? ' · ' + esc(nomJoueur(m.joueur)) : ''}${m.dessin ? ' · ✏️' : ''}"></i>`);
+  });
+  f.innerHTML = `<i class="fz-axe"></i>${parts.join('')}<i class="fz-tete" id="fz-tete"></i>`;
+  $('#fr-a').textContent = hms(a); $('#fr-b').textContent = hms(b);
+  $('#fz-txt').textContent = Z ? 'Zoom : ' + hms(b - a) : '';
+  teteMaj();
+}
+function teteMaj(){
+  const t = $('#fz-tete'); if (!t || !M) return;
+  const [a, b] = fenetre(), c = maintenant();
+  t.style.left = ((c - a) / (b - a) * 100) + '%'; t.hidden = c < a || c > b;
+}
+function zoomer(f, autour){
+  const [a, b] = fenetre(), l = Math.max(20, Math.min(DUREE, (b - a) * f)), c = autour != null ? autour : Math.min(b, Math.max(a, maintenant()));
+  const r = (c - a) / (b - a || 1);
+  Z = l >= DUREE ? null : [c - l * r, c - l * r + l];
+  friseDessiner();
+}
+function friseBrancher(){
+  const f = $('#frise'); if (!f) return;
+  const instantX = e => { const r = f.getBoundingClientRect(), [a, b] = fenetre(); return a + (e.clientX - r.left) / r.width * (b - a); };
+  f.onclick = e => {
+    if (D) return;
+    const el = e.target.closest('[data-i]');
+    if (el){ const m = M.marqueurs[+el.dataset.i]; if (m){ M.sel = m; liste(); jouerClip(m); } return; }
+    arreterClip(); cacherCalque(); aller(Math.max(0, instantX(e)));
+  };
+  f.onwheel = e => {
+    e.preventDefault();
+    if (e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)){
+      const [a, b] = fenetre(), d = (e.deltaX || e.deltaY) / 400 * (b - a); Z = [a + d, b + d]; friseDessiner(); return;
+    }
+    zoomer(e.deltaY > 0 ? 1.4 : 1 / 1.4, instantX(e));
+  };
+  const z = $('.fw-z'); if (z) z.onclick = e => {
+    const b = e.target.closest('[data-z]'); if (!b) return;
+    if (b.dataset.z === 'tout'){ Z = null; friseDessiner(); } else zoomer(b.dataset.z === 'plus' ? 1 / 2.5 : 2.5);
+  };
+}
+
+/* un clip : lecture du début à la fin, arrêt sur le dessin s'il y en a un, puis pause à la fin */
+function jouerClip(m){
+  if (D) return;
+  arreterClip(); cacherCalque();
+  const a = debutClip(m);
+  aller(a, true);
+  lecture = {m, t0: Date.now(), vu: false};
+}
+function arreterClip(){ lecture = null; }
+function tic(){
+  if (!M || !joueur) return;
+  teteMaj();
+  if (M.marqueurs.some(m => estIv(m) && m.t2 == null)) friseDessiner();
+  if (!lecture) return;
+  const m = lecture.m, c = maintenant(), a = debutClip(m), b = finClip(m), joue = joueur.getPlayerState && joueur.getPlayerState() === 1;
+  /* la vidéo a été envoyée ailleurs (frise, flèches, lecteur) : le clip s'arrête de surveiller */
+  if (Date.now() - lecture.t0 > 1500 && (c < a - 3 || c > b + 3)){ lecture = null; return; }
+  if (m.dessin && !lecture.vu && c >= m.t - .08){ lecture.vu = true; try { joueur.pauseVideo(); } catch(e){} aller(m.t); afficherDessin(m); return; }
+  if (joue && !estIv(m) || joue && m.t2 != null) if (c >= b - .05){ try { joueur.pauseVideo(); } catch(e){} lecture = null; afficherFin(m); }
+}
+/* fin d'un clip : Rejouer ou Continuer le match */
+function afficherFin(m){
+  const c = $('#calque'); if (!c || D) return;
+  c.hidden = false; c.className = 'calque lecture';
+  c.innerHTML = `<div class="cq-bas"><button type="button" class="btn btn-ghost" data-cq="rejouer" style="background:rgba(11,15,12,.85)">↺ Rejouer</button><button type="button" class="btn btn-acid" data-cq="continuer">Continuer ▶</button></div>`;
+  c.onclick = e => {
+    const b = e.target.closest('[data-cq]'); if (!b) return;
+    if (b.dataset.cq === 'rejouer') jouerClip(m);
+    else { cacherCalque(); if (joueur && joueur.playVideo) joueur.playVideo(); }
+  };
+}
+/* les boutons Supériorité / Infériorité disent quand un intervalle est ouvert */
+function majBoutons(){
+  ['sup', 'inf'].forEach(a => {
+    const b = document.querySelector(`#barre [data-act="${a}"]`); if (!b) return;
+    const ouvert = M.marqueurs.some(m => m.action === a && m.t2 == null);
+    b.classList.toggle('ouvert', ouvert);
+    b.lastChild.textContent = NOM_ACTION[a] + (ouvert ? ' · fermer' : '');
+  });
+}
+
+/* le réglage du tag choisi : − / + et poignées sur une frise zoomée autour du clip */
+function majReglage(){
+  const r = $('#reglage'); if (!r || !M) return;
+  const m = M.sel;
+  if (!m || typeof m.id !== 'number' || D){ r.innerHTML = ''; return; }
+  const iv = estIv(m), e = M.ecrire, pas = (champ, sens) => e ? `<button type="button" class="ot" data-rg="${champ}" data-s="${sens}" aria-label="${sens > 0 ? 'Plus' : 'Moins'}">${sens > 0 ? '+' : '−'}</button>` : '';
+  const perso = !iv && (m.av != null || m.ap != null);
+  r.innerHTML = `<div class="rg"><p class="rg-t"><b>${decrire(m)}</b>${m.joueur ? ' · ' + esc(nomJoueur(m.joueur)) : ''}</p>
+    <div class="rg-l">${iv
+      ? `<span class="lb">Début</span>${pas('t', -1)}<b class="rg-v">${hms(m.t)}</b>${pas('t', 1)}<span class="lb">Fin</span>${pas('t2', -1)}<b class="rg-v">${m.t2 == null ? 'en cours' : hms(m.t2)}</b>${pas('t2', 1)}<span class="lb">${m.t2 == null ? '' : 'durée ' + hms(m.t2 - m.t)}</span>`
+      : `<span class="lb">Démarre</span>${pas('av', -1)}<b class="rg-v">${avDe(m)} s</b>${pas('av', 1)}<span class="lb">avant · s'arrête</span>${pas('ap', -1)}<b class="rg-v">${apDe(m)} s</b>${pas('ap', 1)}<span class="lb">après</span>${perso && e ? '<button type="button" class="lien-mini" data-rg="defaut">durées de la catégorie</button>' : ''}`}
+      <span class="esp"></span><button type="button" class="btn btn-ghost" data-rg="lire">▶ Lire le clip</button></div>
+    <div class="mini" id="mini"></div></div>`;
+  miniDessiner();
+  r.onclick = ev => {
+    const b = ev.target.closest('[data-rg]'); if (!b) return;
+    const k = b.dataset.rg, s = +b.dataset.s || 0;
+    if (k === 'lire') return jouerClip(m);
+    if (k === 'defaut') return reglerClip(m, {av: null, ap: null});
+    if (k === 'av') return reglerClip(m, {av: Math.max(0, Math.min(120, avDe(m) + s))});
+    if (k === 'ap') return reglerClip(m, {ap: Math.max(0, Math.min(120, apDe(m) + s))});
+    if (k === 't') return reglerClip(m, {t: Math.max(0, Math.min(m.t2 != null ? m.t2 : 1e9, m.t + s))});
+    if (k === 't2' && m.t2 != null) return reglerClip(m, {t2: Math.max(m.t, m.t2 + s)});
+  };
+}
+/* la mini-frise : 10 s de marge autour du clip, poignées à tirer (qui peut écrire) */
+function miniDessiner(){
+  const z = $('#mini'), m = M.sel; if (!z || !m) return;
+  const s = debutClip(m), e = finClip(m), a = Math.max(0, s - 10), b = e + 10, x = v => ((v - a) / (b - a) * 100);
+  z.innerHTML = `<i class="mi-clip ${estIv(m) ? m.action : m.camp}" style="left:${x(s)}%;width:${x(e) - x(s)}%"></i>${estIv(m) ? '' : `<i class="mi-tag" style="left:${x(m.t)}%"></i>`}
+    ${M.ecrire ? `<i class="poignee" data-p="debut" style="left:${x(s)}%"></i>${!estIv(m) || m.t2 != null ? `<i class="poignee" data-p="fin" style="left:${x(e)}%"></i>` : ''}` : ''}
+    <span class="mi-a">${hms(a)}</span><span class="mi-b">${hms(b)}</span>`;
+  if (!M.ecrire) return;
+  z.onpointerdown = ev => {
+    const p = ev.target.closest('[data-p]'); if (!p) return;
+    ev.preventDefault(); try { z.setPointerCapture(ev.pointerId); } catch(er){}
+    const r = z.getBoundingClientRect(), quel = p.dataset.p, champs = {};
+    const v = cx => Math.round((a + (cx - r.left) / r.width * (b - a)) * 2) / 2;
+    z.onpointermove = mv => {
+      const t = v(mv.clientX);
+      if (estIv(m)){ if (quel === 'debut') champs.t = Math.max(0, Math.min(m.t2, t)); else champs.t2 = Math.max(m.t, t); }
+      else if (quel === 'debut') champs.av = Math.max(0, Math.min(120, Math.round((m.t - t) * 2) / 2));
+      else champs.ap = Math.max(0, Math.min(120, Math.round((t - m.t) * 2) / 2));
+      Object.assign(m, champs); miniDessiner(); friseDessiner();
+      const rv = document.querySelectorAll('#reglage .rg-v'); if (rv.length === 2) rv[quel === 'debut' ? 0 : 1].textContent = estIv(m) ? hms(quel === 'debut' ? m.t : m.t2) : (quel === 'debut' ? avDe(m) : apDe(m)) + ' s';
+    };
+    z.onpointerup = z.onpointercancel = () => { z.onpointermove = z.onpointerup = z.onpointercancel = null; if (Object.keys(champs).length) reglerClip(m, champs); };
+  };
+}
+async function reglerClip(m, champs){
+  const avant = {t: m.t, t2: m.t2, av: m.av, ap: m.ap};
+  Object.assign(m, champs); liste();
+  const d = await api('/marqueur/modifier', {id: m.id, ...champs});
+  if (!d.ok){ Object.assign(m, avant); liste(); toast(raison(d)); return; }
+  Object.assign(m, d.marqueur); liste();
+}
+
+/* les durées par catégorie : réglées une fois, partagées entre les coachs */
+function panneauDurees(){
+  const p = $('#durees'); if (!p) return;
+  if (p.innerHTML){ p.innerHTML = ''; return; }
+  const cats = [...ACTIONS.filter(([a]) => !['sup', 'inf'].includes(a)), ['moment', 'Moment (dessin)']];
+  const val = {}; cats.forEach(([a]) => { val[a] = dureesDe(a).slice(); });
+  const dessinerP = () => {
+    p.innerHTML = `<div class="rg"><p class="rg-t"><b>Durées par catégorie</b> <span class="lb">· secondes avant et après l'instant du tag, pour tous les tags qui n'ont pas les leurs</span></p>
+      <div class="du">${cats.map(([a, n]) => `<span>${esc(n)}</span><span class="du-c"><button type="button" class="ot" data-du="${a}|0|-1">−</button><b>${val[a][0]} s</b><button type="button" class="ot" data-du="${a}|0|1">+</button><span class="lb">avant</span></span><span class="du-c"><button type="button" class="ot" data-du="${a}|1|-1">−</button><b>${val[a][1]} s</b><button type="button" class="ot" data-du="${a}|1|1">+</button><span class="lb">après</span></span>`).join('')}</div>
+      <div class="rg-l" style="margin-top:10px"><span class="esp"></span><button type="button" class="btn btn-ghost" data-du="fermer">Fermer</button><button type="button" class="btn btn-acid" data-du="garder">Enregistrer</button></div></div>`;
+  };
+  dessinerP();
+  p.onclick = async e => {
+    const b = e.target.closest('[data-du]'); if (!b) return;
+    const k = b.dataset.du;
+    if (k === 'fermer'){ p.innerHTML = ''; return; }
+    if (k === 'garder'){
+      b.disabled = true; b.textContent = 'Enregistrement…';
+      const d = await api('/reglages', {durees: val});
+      if (!d.ok){ b.disabled = false; b.textContent = 'Enregistrer'; toast(raison(d)); return; }
+      M.reglages = d.reglages; p.innerHTML = ''; liste(); toast('Durées enregistrées pour toute l\'équipe des coachs.'); return;
+    }
+    const [a, i, s] = k.split('|'); val[a][+i] = Math.max(0, Math.min(120, val[a][+i] + +s)); dessinerP();
   };
 }
 
@@ -425,7 +709,6 @@ function forme(s){
 const svgDessin = f => `<svg viewBox="0 0 ${VB[0]} ${VB[1]}" preserveAspectRatio="none" aria-hidden="true">${f.map(forme).join('')}</svg>`;
 const decrire = mq => `${esc(NOM_ACTION[mq.action] || mq.action)} · ${mq.camp === 'nous' ? 'Nous' : 'Eux'} · ${hms(mq.t)}`;
 
-let guet = null;
 function cacherCalque(){
   const c = $('#calque'); if (!c || D) return;
   c.hidden = true; c.className = 'calque'; c.innerHTML = '';
@@ -441,21 +724,10 @@ function afficherDessin(mq){
     else { M.sel = mq; ouvrirDessin(); }
   };
 }
-/* un tag avec dessin : 5 s avant, la vidéo joue, puis s'arrête pile sur l'instant et montre le dessin */
-function allerVersDessin(mq){
-  cacherCalque(); clearInterval(guet);
-  aller(mq.t - 5, true);
-  const t0 = Date.now();
-  guet = setInterval(() => {
-    const c = maintenant();
-    if (c >= mq.t - .08 && c <= mq.t + 2){ clearInterval(guet); guet = null; try { joueur.pauseVideo(); } catch(e){} aller(mq.t); afficherDessin(mq); }
-    else if (Date.now() - t0 > 20000 || c > mq.t + 2 && Date.now() - t0 > 1500){ clearInterval(guet); guet = null; }
-  }, 120);
-}
 
 async function ouvrirDessin(){
   if (!M || !M.ecrire || !joueur || D) return;
-  clearInterval(guet); guet = null;
+  arreterClip();
   try { joueur.pauseVideo(); } catch(e){}
   const t = Math.round(maintenant() * 10) / 10;
   let mq = M.sel && typeof M.sel.id === 'number' && Math.abs(M.sel.t - t) <= 2 ? M.sel : null, cree = false;
@@ -619,15 +891,16 @@ const GUIDE = [
     p: "Choisis un match dans la liste, colle l'adresse de sa vidéo YouTube, et c'est chargé. Une seule fois par match : ensuite, la vidéo est là pour tout le monde.",
     m: "Le lien se change à tout moment (« Changer le lien », sous les boutons). Les tags déjà posés gardent leurs instants."},
   {t: 'Tague au bon <em>moment</em>', vis: `<div class="mini-acts">${ACTIONS.map(([id, nom], i) => `<kbd class="${id === 'but' ? 'but' : ''}" style="animation-delay:${(i * .45).toFixed(2)}s">${i + 1} · ${nom.split(' ')[0]}</kbd>`).join('')}</div>
-      <div class="frise">${[8, 21, 37, 52, 66, 83].map((x, i) => `<i style="left:${x}%;animation-delay:${(i * .5).toFixed(1)}s"></i>`).join('')}</div>`,
-    p: "Lance la vidéo. Quand l'action arrive, touche son bouton, ou la touche 1 à 8 du clavier : le tag se pose à l'instant exact de la vidéo.",
+      <div class="gfrise">${[8, 21, 37, 52, 66, 83].map((x, i) => `<i style="left:${x}%;animation-delay:${(i * .5).toFixed(1)}s"></i>`).join('')}</div>`,
+    p: "Lance la vidéo. Quand l'action arrive, touche son bouton, ou la touche 1 à 6 du clavier : le tag se pose à l'instant exact. Supériorité (7) et infériorité (8) durent : une touche au début, la même à la fin.",
     m: "Les touches marchent quand la page a la main : clique une fois hors du lecteur. Espace pour pause, flèches pour reculer ou avancer de 5 s (1 s avec Maj)."},
   {t: '<em>Nous</em> ou eux, et qui', vis: `<div class="mini-camp"><span>Nous</span><span>Eux</span></div>`,
     p: "Avant de taguer, choisis Nous ou Eux (touche C pour basculer). Après un tag pour nous, la liste des joueurs s'affiche : touche celui qui a fait l'action.",
     m: "Le joueur est facultatif. Sans réponse, le tag reste à l'équipe ; le tag suivant referme la liste."},
-  {t: 'Revenir en <em>1 clic</em>', vis: `<div class="mini-liste"><div><b>12:04</b>But · Nous · Luis Miguel</div><div><b>27:41</b>Perte de balle · Nous</div><div><b>33:10</b>Arrêt · Eux</div></div>`,
-    p: "À droite, tous les tags du match dans l'ordre, avec le bilan Nous / Eux. Touche un tag : la vidéo repart 5 secondes avant, pour voir l'action se construire.",
-    m: "La croix retire un tag, « Annuler » le remet."},
+  {t: 'La frise, des <em>clips</em>', vis: `<div class="gfr"><i class="ax"></i><i class="cl n" style="left:8%;width:12%"></i><i class="tg n" style="left:18%"></i><i class="cl n" style="left:52%;width:9%"></i><i class="tg n" style="left:59%"></i>
+        <i class="cl e" style="left:30%;width:10%"></i><i class="tg e" style="left:38%"></i><i class="cl e" style="left:76%;width:8%"></i><i class="tg e" style="left:82%"></i><i class="iv" style="left:40%;width:22%"></i><i class="tt"></i></div>`,
+    p: "Sous la vidéo, la frise du match : nous en haut, eux en bas, supériorités et infériorités au milieu. Chaque tag est un clip : un clic dessus, la vidéo joue l'action puis s'arrête. « Continuer » relance le match.",
+    m: "Un tag touché montre son réglage : − / + ou poignées pour démarrer plus tôt, finir plus tard. Les durées de départ se règlent une fois par catégorie (« Durées par catégorie »). Molette sur la frise : zoom."},
   {t: 'Dessine sur <em>l\'action</em>', vis: `<div class="mini-dessin"><svg viewBox="0 0 320 120" aria-hidden="true"><rect width="320" height="120" rx="6" fill="#16201a"/><circle class="j" cx="70" cy="70" r="9" fill="#3fa845"/><circle class="j" cx="250" cy="45" r="9" fill="#3fa845"/><circle class="j" cx="180" cy="88" r="9" fill="#6fa8d8"/>
         <path class="trace" d="M82 66 Q160 20 236 46" fill="none" stroke="#f2e400" stroke-width="5" stroke-linecap="round"/><path class="pointe" d="M236 46 l-14 -8 l2 15 z" fill="#f2e400"/><circle class="rond" cx="180" cy="88" r="20" fill="none" stroke="#ff7a45" stroke-width="4"/></svg></div>`,
     p: "Mets en pause sur l'action et touche ✏️ Dessiner (touche D) : flèche, trait, cercle ou texte, en 5 couleurs. Le dessin se rattache au tag que tu viens de poser ou de toucher, sinon à un tag « Moment » créé à l'instant.",
@@ -637,7 +910,8 @@ const GUIDE = [
     m: "Ce pas-à-pas revient avec le bouton « ? » en haut à droite."}
 ];
 /* version du pas-à-pas : qui a vu l'ancien (sans le dessin) voit une fois la nouvelle étape */
-const GUIDE_V = '2', GUIDE_DESSIN = GUIDE.findIndex(s => /Dessine/.test(s.t));
+/* v3 (frise) : qui a vu une version d'avant revoit à partir de la frise (puis le dessin) */
+const GUIDE_V = '3', GUIDE_DESSIN = GUIDE.findIndex(s => /clips/.test(s.t));
 let gdI = -1;
 function guide(i, sens){
   gdI = i;
