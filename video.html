@@ -98,18 +98,89 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .toast button{font-weight:700;color:var(--acid);padding:6px 8px}
 .lien{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .lien .champ{flex:1 1 320px}
-@media (prefers-reduced-motion:reduce){.mq.neuf{animation:none}.act{transition:none}}
+.haut{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.aide-btn{width:36px;height:36px;border-radius:var(--r-pill);border:1px solid var(--line-2);font:800 15px/1 Inter,sans-serif;color:var(--muted)}
+.aide-btn:hover{color:var(--bone);border-color:var(--bone)}
+
+/* le pas-à-pas de la première fois (Clément, 18.11) : comment c'est câblé, puis comment s'en servir */
+.gd{position:fixed;inset:0;z-index:20;background:rgba(5,8,6,.78);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px;animation:gdIn .25s ease}
+@keyframes gdIn{from{opacity:0}}
+.gd-c{width:min(560px,100%);max-height:calc(100vh - 32px);overflow:auto;background:var(--ink-2);border:1px solid var(--line-2);border-radius:var(--r-l);padding:22px 22px 18px;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.gd-num{font:600 11px/1 Inter,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.gd-t{font:400 30px/1.05 Anton,Impact,sans-serif;font-style:italic;text-transform:uppercase;margin:8px 0 12px}
+.gd-t em{font-style:inherit;color:var(--acid)}
+.gd-p{margin:0 0 6px;font-size:15px}
+.gd-p.m{color:var(--muted);font-size:13.5px}
+.gd-vis{height:150px;margin:4px 0 16px;border-radius:var(--r-s);background:var(--ink);border:1px solid var(--line);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:10px;padding:12px}
+.gd-pas{animation:pasIn .32s cubic-bezier(.2,.8,.2,1)}
+@keyframes pasIn{from{opacity:0;transform:translateX(18px)}}
+.gd-pas.ret{animation-name:pasRet}
+@keyframes pasRet{from{opacity:0;transform:translateX(-18px)}}
+.gd-bas{display:flex;align-items:center;gap:10px;margin-top:16px}
+.gd-pts{display:flex;gap:6px;flex:1}
+.gd-pts i{width:7px;height:7px;border-radius:50%;background:var(--line-2);transition:width .2s,background .2s}
+.gd-pts i.on{width:20px;border-radius:var(--r-pill);background:var(--acid)}
+.gd-bas .btn{padding:11px 14px}
+/* les petits dessins de chaque étape */
+.nd{flex:1;min-width:0;text-align:center;padding:10px 6px;border-radius:var(--r-s);border:1px solid var(--line-2);background:var(--ink-2);font-size:12px;line-height:1.3;color:var(--muted)}
+.nd b{display:block;color:var(--bone);font-size:13.5px;margin-bottom:3px}
+.nd.yt b{color:#ff4e45}
+.nd.app b{color:var(--acid)}
+.nd.sv b{color:var(--grass)}
+.fl{flex:none;width:30px;height:2px;background:var(--line-2);position:relative}
+.fl::after{content:'';position:absolute;top:-3px;left:0;width:8px;height:8px;border-radius:50%;background:var(--acid);animation:flux 1.6s linear infinite}
+.fl.b::after{animation-delay:.8s}
+@keyframes flux{from{left:-4px;opacity:0}20%{opacity:1}80%{opacity:1}to{left:26px;opacity:0}}
+.faux-champ{width:86%;padding:12px 14px;border-radius:var(--r-s);border:1px solid var(--line-2);background:var(--ink-3);font-size:14px;color:var(--bone);white-space:nowrap;overflow:hidden}
+.faux-champ span{display:inline-block;overflow:hidden;vertical-align:bottom;width:0;border-right:2px solid var(--acid);animation:tape 2.6s steps(30) infinite}
+@keyframes tape{0%{width:0}60%,100%{width:30ch}}
+.mini-acts{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.mini-acts kbd{font:700 12px/1 Inter,sans-serif;padding:8px 9px;border-radius:7px;border:1px solid var(--line-2);color:var(--bone);background:var(--ink-3);animation:appui 4s infinite}
+.mini-acts kbd.but{background:var(--acid);color:var(--ink);border-color:var(--acid)}
+@keyframes appui{0%,8%{transform:none;box-shadow:none}4%{transform:scale(.88);box-shadow:0 0 0 4px rgba(242,228,0,.35)}}
+.frise{position:absolute;left:14px;right:14px;bottom:14px;height:4px;border-radius:4px;background:var(--line)}
+.frise i{position:absolute;top:-4px;width:3px;height:12px;border-radius:2px;background:var(--acid);animation:tag 4s infinite backwards}
+@keyframes tag{0%{opacity:0;transform:scaleY(0)}10%,100%{opacity:1;transform:none}}
+.mini-camp{display:inline-flex;border:1px solid var(--line-2);border-radius:var(--r-pill);padding:3px;position:relative}
+.mini-camp span{position:relative;z-index:1;padding:8px 14px;font:700 12px/1 Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+.mini-camp span+span{color:var(--muted);animation:campTxt 3s infinite}
+.mini-camp span:first-child{animation:campTxt2 3s infinite}
+.mini-camp::before{content:'';position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:var(--r-pill);background:var(--grass);animation:camp 3s infinite}
+@keyframes camp{0%,40%{transform:none;background:var(--grass)}50%,90%{transform:translateX(100%);background:var(--away)}100%{transform:none;background:var(--grass)}}
+@keyframes campTxt{0%,40%{color:var(--muted)}50%,90%{color:var(--ink)}}
+@keyframes campTxt2{0%,40%{color:var(--ink)}50%,90%{color:var(--muted)}}
+.mini-liste{width:88%;display:grid;gap:6px}
+.mini-liste div{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:8px;background:var(--ink-2);border:1px solid var(--line);font-size:12.5px}
+.mini-liste div b{font-variant-numeric:tabular-nums}
+.mini-liste div:nth-child(2){animation:clic 2.4s infinite}
+@keyframes clic{0%,30%{border-color:var(--line)}40%,70%{border-color:var(--acid);background:rgba(242,228,0,.08)}}
+.bientot{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.bientot div{padding:12px;border-radius:var(--r-s);border:1px dashed var(--line-2);font-size:12.5px;color:var(--muted);text-align:left}
+.bientot b{display:block;color:var(--bone);font-size:13.5px;margin-bottom:4px}
+@media (max-width:520px){.gd-vis{height:auto;min-height:130px;gap:6px;padding:10px}.fl{display:none}.nd{padding:8px 4px;font-size:11.5px}.nd b{font-size:12.5px}.gd-t{font-size:26px}}
+@media (prefers-reduced-motion:reduce){.mq.neuf{animation:none}.act{transition:none}.gd,.gd-pas,.fl::after,.faux-champ span,.mini-acts kbd,.frise i,.mini-camp::before,.mini-camp span,.mini-liste div{animation:none!important}.faux-champ span{width:auto;border:0}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <a class="back" id="retour" href="./#/stats/club">← SAGC'TOUT</a>
+  <div class="haut"><a class="back" id="retour" href="./#/stats/club">← SAGC'TOUT</a><button type="button" class="aide-btn" id="guide-btn" aria-label="Comment ça marche" title="Comment ça marche">?</button></div>
   <main id="v" aria-live="polite"></main>
 </div>
 <script>
 (() => {
 'use strict';
 const VIDEO_URL = window.VIDEO_URL || 'https://sagc-video.clement-mora11.workers.dev';
+/* dans l'appli (18.11) : la page est ouverte en plein écran par-dessus SAGC'TOUT, dans un cadre ; on change d'écran sans
+   ajouter d'étape à l'historique, pour que le retour du téléphone ferme la vidéo d'un coup, comme une fiche */
+const DANS_APPLI = (() => { try { return window.parent !== window; } catch(e){ return true; } })();
+function va(k){
+  if (DANS_APPLI){ try { history.replaceState(null, '', k ? '#' + k : location.pathname); } catch(e){} route(); }
+  else location.hash = k;
+}
+function fermer(){
+  if (DANS_APPLI) parent.postMessage({sagcVideo: 'fermer'}, location.origin);
+  else location.href = './#/stats/club';
+}
 const ACTIONS = [
   ['but', 'But'], ['tir', 'Tir'], ['arret', 'Arrêt'], ['perte', 'Perte de balle'],
   ['recup', 'Récupération'], ['faute', 'Faute'], ['sup', 'Supériorité'], ['inf', 'Infériorité']];
@@ -149,9 +220,10 @@ async function vueChoix(){
   document.title = "SAGC'TOUT · Vidéo";
   const v = $('#v');
   v.innerHTML = `<div class="eyebrow">Après le match</div><h1 class="h1">Vidéo des matchs</h1><div class="rule"></div>
-    ${MATCHS.length ? `<p class="muted" style="margin-top:0">Choisis le match à marquer.</p><div class="liste">${MATCHS.slice().sort((a, b) => (b.iso || '').localeCompare(a.iso || '')).map(m => `<a class="mt" href="#${esc(m.k)}"><span><b>${esc(m.titre)}</b><small>${esc(m.d || '')}</small></span><span class="pas" data-pas="${esc(m.k)}">Pas de vidéo</span></a>`).join('')}</div>`
+    ${MATCHS.length ? `<p class="muted" style="margin-top:0">Choisis le match à marquer.</p><div class="liste">${MATCHS.slice().sort((a, b) => (b.iso || '').localeCompare(a.iso || '')).map(m => `<a class="mt" href="#${esc(m.k)}" data-k="${esc(m.k)}"><span><b>${esc(m.titre)}</b><small>${esc(m.d || '')}</small></span><span class="pas" data-pas="${esc(m.k)}">Pas de vidéo</span></a>`).join('')}</div>`
       : `<div class="card"><p style="margin:0">Ouvre cette page depuis SAGC'TOUT : <b>Stats › Notre club › Marquer la vidéo</b>.</p></div>`}
     <p class="msg" id="msg"></p>`;
+  v.onclick = e => { const a = e.target.closest('a.mt[data-k]'); if (a){ e.preventDefault(); va(a.dataset.k); } };
   if (!MATCHS.length) return;
   const d = await api('/matchs');
   if (!d.ok){ $('#msg').textContent = raison(d); $('#msg').className = 'msg err'; return; }
@@ -181,7 +253,6 @@ function aller(t, lire){
 
 async function vueMatch(k){
   document.title = "SAGC'TOUT · Vidéo · " + titreMatch(k);
-  $('#retour').href = '#';
   $('#retour').textContent = '← Les matchs';
   const v = $('#v');
   v.innerHTML = `<div class="eyebrow">Vidéo du match</div><h1 class="h1">${esc(titreMatch(k))}</h1><div class="rule"></div><p class="muted">Chargement…</p>`;
@@ -309,6 +380,7 @@ function toast(texte, bouton, faire){
 
 /* le clavier, hors des champs (le lecteur YouTube garde les touches quand on a cliqué dedans) */
 document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && DANS_APPLI && !/^(INPUT|TEXTAREA|SELECT)$/.test((e.target || {}).tagName)){ fermer(); return; }
   if (!M || !M.video || !M.ecrire || e.ctrlKey || e.metaKey || e.altKey || /^(INPUT|TEXTAREA|SELECT)$/.test((e.target || {}).tagName)) return;
   const n = +e.key;
   if (n >= 1 && n <= ACTIONS.length && !e.shiftKey){ e.preventDefault(); marquer(ACTIONS[n - 1][0]); return; }
@@ -322,11 +394,63 @@ function route(){
   const k = decodeURIComponent(location.hash.slice(1));
   M = null;
   if (k){ vueMatch(k); return; }
-  $('#retour').href = './#/stats/club'; $('#retour').textContent = "← SAGC'TOUT";
+  $('#retour').textContent = "← SAGC'TOUT";
   vueChoix();
 }
+/* le retour en haut : d'un match vers la liste, de la liste vers l'appli */
+$('#retour').onclick = e => { e.preventDefault(); if (location.hash.length > 1) va(''); else fermer(); };
 window.addEventListener('hashchange', route);
 route();
+
+/* ---------- le pas-à-pas (Clément, 18.11) : à la première ouverture sur cet appareil, puis par le bouton « ? » ---------- */
+const GUIDE = [
+  {t: 'Comment c\'est <em>câblé</em>', vis: `<div class="nd yt"><b>YouTube</b>le match entier reste ici</div><i class="fl"></i>
+      <div class="nd app"><b>SAGC'TOUT</b>tu regardes et tu tagues</div><i class="fl b"></i><div class="nd sv"><b>Le service vidéo</b>garde le lien et les instants</div>`,
+    p: "Aucune vidéo n'est copiée ni téléchargée, même un match d'1h30. On retient seulement le lien YouTube du match et, pour chaque tag, l'instant, l'action, l'équipe et le joueur.",
+    m: "Le service vidéo est un petit service à part, relié aux comptes de l'appli : toi, Gaëtan et Olivier G. pouvez taguer, toute l'équipe pourra regarder."},
+  {t: 'Le match, puis le <em>lien</em>', vis: `<div class="faux-champ"><span>youtube.com/watch?v=match-J7</span></div>`,
+    p: "Choisis un match dans la liste, colle l'adresse de sa vidéo YouTube, et c'est chargé. Une seule fois par match : ensuite, la vidéo est là pour tout le monde.",
+    m: "Le lien se change à tout moment (« Changer le lien », sous les boutons). Les tags déjà posés gardent leurs instants."},
+  {t: 'Tague au bon <em>moment</em>', vis: `<div class="mini-acts">${ACTIONS.map(([id, nom], i) => `<kbd class="${id === 'but' ? 'but' : ''}" style="animation-delay:${(i * .45).toFixed(2)}s">${i + 1} · ${nom.split(' ')[0]}</kbd>`).join('')}</div>
+      <div class="frise">${[8, 21, 37, 52, 66, 83].map((x, i) => `<i style="left:${x}%;animation-delay:${(i * .5).toFixed(1)}s"></i>`).join('')}</div>`,
+    p: "Lance la vidéo. Quand l'action arrive, touche son bouton, ou la touche 1 à 8 du clavier : le tag se pose à l'instant exact de la vidéo.",
+    m: "Les touches marchent quand la page a la main : clique une fois hors du lecteur. Espace pour pause, flèches pour reculer ou avancer de 5 s (1 s avec Maj)."},
+  {t: '<em>Nous</em> ou eux, et qui', vis: `<div class="mini-camp"><span>Nous</span><span>Eux</span></div>`,
+    p: "Avant de taguer, choisis Nous ou Eux (touche C pour basculer). Après un tag pour nous, la liste des joueurs s'affiche : touche celui qui a fait l'action.",
+    m: "Le joueur est facultatif. Sans réponse, le tag reste à l'équipe ; le tag suivant referme la liste."},
+  {t: 'Revenir en <em>1 clic</em>', vis: `<div class="mini-liste"><div><b>12:04</b>But · Nous · Luis Miguel</div><div><b>27:41</b>Perte de balle · Nous</div><div><b>33:10</b>Arrêt · Eux</div></div>`,
+    p: "À droite, tous les tags du match dans l'ordre, avec le bilan Nous / Eux. Touche un tag : la vidéo repart 5 secondes avant, pour voir l'action se construire.",
+    m: "La croix retire un tag, « Annuler » le remet."},
+  {t: 'Ce qui <em>arrive</em>', vis: `<div class="bientot"><div><b>Dessiner sur la vidéo</b>Pause, flèches, cercles, texte, rattachés au tag et réaffichés au clic.</div><div><b>Toute l'équipe</b>Les tags et les dessins sur la fiche du match, en 1 clic, sur téléphone.</div></div>`,
+    p: "Le dessin et la vue de l'équipe sont les deux prochaines étapes. Pour l'instant, tague un vrai match : c'est ce qui dira si l'outil te sert.",
+    m: "Ce pas-à-pas revient avec le bouton « ? » en haut à droite."}
+];
+let gdI = -1;
+function guide(i, sens){
+  gdI = i;
+  let g = $('#gd'); if (!g){ g = document.createElement('div'); g.id = 'gd'; g.className = 'gd'; g.setAttribute('role', 'dialog'); g.setAttribute('aria-modal', 'true'); g.setAttribute('aria-labelledby', 'gd-t'); document.body.appendChild(g); }
+  const s = GUIDE[i], der = i === GUIDE.length - 1;
+  g.innerHTML = `<div class="gd-c"><div class="gd-pas${sens < 0 ? ' ret' : ''}"><div class="gd-num">Pas à pas · ${i + 1} sur ${GUIDE.length}</div><h2 class="gd-t" id="gd-t">${s.t}</h2>
+      <div class="gd-vis" aria-hidden="true">${s.vis}</div><p class="gd-p">${s.p}</p><p class="gd-p m">${s.m}</p></div>
+    <div class="gd-bas"><div class="gd-pts">${GUIDE.map((x, j) => `<i class="${j === i ? 'on' : ''}"></i>`).join('')}</div>
+      ${i ? '<button type="button" class="btn btn-ghost" data-gd="-1">Retour</button>' : '<button type="button" class="btn btn-ghost" data-gd="fin">Passer</button>'}
+      <button type="button" class="btn btn-acid" data-gd="${der ? 'fin' : '1'}">${der ? "C'est parti" : 'Suivant'}</button></div></div>`;
+  g.onclick = e => { const b = e.target.closest('[data-gd]'); if (!b) return; b.dataset.gd === 'fin' ? finGuide() : guide(gdI + +b.dataset.gd, +b.dataset.gd); };
+  g.querySelector('[data-gd]:last-child').focus();
+}
+function finGuide(){
+  const g = $('#gd'); if (g) g.remove(); gdI = -1;
+  try { localStorage.setItem('sagc-video-guide', '1'); } catch(e){}
+}
+$('#guide-btn').onclick = () => guide(0, 1);
+document.addEventListener('keydown', e => {
+  if (gdI < 0) return;
+  e.stopImmediatePropagation();
+  if (e.key === 'Escape') finGuide();
+  else if (e.key === 'ArrowRight' && gdI < GUIDE.length - 1) guide(gdI + 1, 1);
+  else if (e.key === 'ArrowLeft' && gdI > 0) guide(gdI - 1, -1);
+}, true);
+if (!lire('sagc-video-guide')) guide(0, 1);
 })();
 </script>
 </body>
