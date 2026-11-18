@@ -98,6 +98,29 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .toast button{font-weight:700;color:var(--acid);padding:6px 8px}
 .lien{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .lien .champ{flex:1 1 320px}
+/* le dessin sur la vidéo en pause (étape 2, 18.11) : un calque par-dessus le lecteur, en coordonnées 1600 × 900 */
+.calque{position:absolute;inset:0;z-index:2}
+.calque[hidden]{display:none}
+.calque svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.calque.edit{cursor:crosshair;touch-action:none;background:rgba(11,15,12,.08);box-shadow:inset 0 0 0 3px var(--acid)}
+.calque.lecture{pointer-events:none}
+.calque.lecture .cq-bas{pointer-events:auto}
+.cq-bas{position:absolute;right:12px;bottom:12px;display:flex;gap:8px}
+.cq-bas .btn{box-shadow:0 6px 18px rgba(0,0,0,.45)}
+.cq-tx{position:absolute;min-width:160px;padding:8px 10px;border-radius:8px;border:2px solid var(--acid);background:rgba(11,15,12,.9);font:800 15px Inter,sans-serif;outline:none}
+.act.dess{border-style:dashed}
+.outils{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;border-radius:var(--r-s);background:var(--ink-2);border:1px solid var(--acid)}
+.outils[hidden]{display:none}
+.outils .sur{flex-basis:100%;font-size:13px;color:var(--muted);margin:0 0 2px}
+.outils .sur b{color:var(--bone)}
+.ot{display:inline-flex;align-items:center;gap:6px;padding:9px 11px;border-radius:var(--r-s);border:1px solid var(--line-2);font-weight:600;font-size:13.5px}
+.ot.on{background:var(--bone);color:var(--ink);border-color:var(--bone)}
+.ot svg{width:16px;height:16px}
+.coul{width:28px;height:28px;border-radius:50%;border:2px solid var(--ink-2);box-shadow:0 0 0 1px var(--line-2)}
+.coul.on{box-shadow:0 0 0 2px var(--bone)}
+.outils .esp{flex:1}
+.mq.sel{background:rgba(242,228,0,.07)}
+.mq .crayon{font-size:13px;margin-left:4px}
 .haut{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .aide-btn{width:36px;height:36px;border-radius:var(--r-pill);border:1px solid var(--line-2);font:800 15px/1 Inter,sans-serif;color:var(--muted)}
 .aide-btn:hover{color:var(--bone);border-color:var(--bone)}
@@ -154,11 +177,19 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .mini-liste div b{font-variant-numeric:tabular-nums}
 .mini-liste div:nth-child(2){animation:clic 2.4s infinite}
 @keyframes clic{0%,30%{border-color:var(--line)}40%,70%{border-color:var(--acid);background:rgba(242,228,0,.08)}}
+.mini-dessin{width:100%;max-width:340px}
+.mini-dessin svg{width:100%;height:auto;display:block}
+.mini-dessin .trace{stroke-dasharray:200;stroke-dashoffset:200;animation:trace 3.2s ease-in-out infinite}
+.mini-dessin .pointe{opacity:0;animation:pointe 3.2s infinite}
+.mini-dessin .rond{stroke-dasharray:130;stroke-dashoffset:130;animation:rond 3.2s ease-in-out infinite}
+@keyframes trace{0%{stroke-dashoffset:200}35%,100%{stroke-dashoffset:0}}
+@keyframes pointe{0%,34%{opacity:0}38%,100%{opacity:1}}
+@keyframes rond{0%,45%{stroke-dashoffset:130}75%,100%{stroke-dashoffset:0}}
 .bientot{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
 .bientot div{padding:12px;border-radius:var(--r-s);border:1px dashed var(--line-2);font-size:12.5px;color:var(--muted);text-align:left}
 .bientot b{display:block;color:var(--bone);font-size:13.5px;margin-bottom:4px}
 @media (max-width:520px){.gd-vis{height:auto;min-height:130px;gap:6px;padding:10px}.fl{display:none}.nd{padding:8px 4px;font-size:11.5px}.nd b{font-size:12.5px}.gd-t{font-size:26px}}
-@media (prefers-reduced-motion:reduce){.mq.neuf{animation:none}.act{transition:none}.gd,.gd-pas,.fl::after,.faux-champ span,.mini-acts kbd,.frise i,.mini-camp::before,.mini-camp span,.mini-liste div{animation:none!important}.faux-champ span{width:auto;border:0}}
+@media (prefers-reduced-motion:reduce){.mq.neuf{animation:none}.act{transition:none}.mini-dessin *{animation:none!important;stroke-dashoffset:0!important;opacity:1!important}.gd,.gd-pas,.fl::after,.faux-champ span,.mini-acts kbd,.frise i,.mini-camp::before,.mini-camp span,.mini-liste div{animation:none!important}.faux-champ span{width:auto;border:0}}
 </style>
 </head>
 <body>
@@ -184,7 +215,8 @@ function fermer(){
 const ACTIONS = [
   ['but', 'But'], ['tir', 'Tir'], ['arret', 'Arrêt'], ['perte', 'Perte de balle'],
   ['recup', 'Récupération'], ['faute', 'Faute'], ['sup', 'Supériorité'], ['inf', 'Infériorité']];
-const NOM_ACTION = Object.fromEntries(ACTIONS);
+/* « moment » : le tag posé par Dessiner quand aucun tag n'est là (pas de bouton ni de touche à lui) */
+const NOM_ACTION = {...Object.fromEntries(ACTIONS), moment: 'Moment'};
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const lire = k => { try { return localStorage.getItem(k); } catch(e){ return null; } };
@@ -233,6 +265,7 @@ async function vueChoix(){
 /* ---------- le marquage d'un match ---------- */
 let M = null;   // {k, video, marqueurs, ecrire, camp, dernier}
 let joueur = null, ytPret = null;
+let D = null;   // le dessin en cours : {mq, f: formes, outil, couleur, cur: forme qu'on trace}
 
 function ytCharger(){
   if (ytPret) return ytPret;
@@ -276,13 +309,15 @@ function dessiner(){
   }
   v.innerHTML = tete + `<div class="grille">
     <section>
-      <div class="ecran"><div id="yt"></div></div>
+      <div class="ecran"><div id="yt"></div><div class="calque" id="calque" hidden></div></div>
       ${M.ecrire ? `<div class="barre" id="barre">
         <div class="camp" role="group" aria-label="Pour qui">${['nous', 'eux'].map(c => `<button type="button" data-camp="${c}" class="${M.camp === c ? 'on' : ''}" aria-pressed="${M.camp === c}">${c === 'nous' ? 'Nous' : 'Eux'}</button>`).join('')}</div>
         ${ACTIONS.map(([id, nom], i) => `<button type="button" class="act ${id}" data-act="${id}"><kbd>${i + 1}</kbd>${nom}</button>`).join('')}
+        <button type="button" class="act dess" data-dessin="1"><kbd>D</kbd>✏️ Dessiner</button>
       </div>
+      <div class="outils" id="outils" hidden></div>
       <div id="qui"></div>
-      <p class="aide">Clavier (clique d'abord hors de la vidéo) : <kbd>1</kbd> à <kbd>8</kbd> marquer · <kbd>C</kbd> Nous / Eux · <kbd>Espace</kbd> lecture · <kbd>←</kbd> <kbd>→</kbd> 5 s · <kbd>Maj</kbd>+<kbd>←</kbd> <kbd>→</kbd> 1 s.
+      <p class="aide">Clavier (clique d'abord hors de la vidéo) : <kbd>1</kbd> à <kbd>8</kbd> marquer · <kbd>C</kbd> Nous / Eux · <kbd>D</kbd> dessiner · <kbd>Espace</kbd> lecture · <kbd>←</kbd> <kbd>→</kbd> 5 s · <kbd>Maj</kbd>+<kbd>←</kbd> <kbd>→</kbd> 1 s.
         <button type="button" id="ch-lien" style="text-decoration:underline;color:var(--muted)">Changer le lien</button></p>`
       : `<p class="aide">${esc(RAISON[M.pourquoi] || '')}</p>`}
     </section>
@@ -292,12 +327,15 @@ function dessiner(){
   if (M.ecrire){
     $('#barre').onclick = e => {
       const c = e.target.closest('[data-camp]'); if (c){ choisirCamp(c.dataset.camp); return; }
+      if (e.target.closest('[data-dessin]')){ ouvrirDessin(); return; }
       const a = e.target.closest('[data-act]'); if (a) marquer(a.dataset.act);
     };
     $('#ch-lien').onclick = () => { if (confirm('Changer le lien YouTube de ce match ? Les actions déjà marquées restent, calées sur les mêmes instants.')){ M.video = null; dessiner(); } };
   }
   ytCharger().then(() => {
-    joueur = new YT.Player('yt', {videoId: M.video.yt, playerVars: {rel: 0, playsinline: 1, modestbranding: 1}});
+    /* la lecture repart (bouton du lecteur, Espace, Continuer) : le dessin affiché s'efface */
+    joueur = new YT.Player('yt', {videoId: M.video.yt, playerVars: {rel: 0, playsinline: 1, modestbranding: 1},
+      events: {onStateChange: e => { if (e.data === 1 && !D) cacherCalque(); }}});
   }).catch(() => { $('.ecran').innerHTML = '<p style="padding:20px;margin:0">Le lecteur YouTube ne se charge pas sur ce réseau.</p>'; });
 }
 
@@ -316,12 +354,13 @@ function choisirCamp(c){
 async function marquer(action){
   const b = document.querySelector(`[data-act="${action}"]`); if (b){ b.classList.add('flash'); setTimeout(() => b.classList.remove('flash'), 140); }
   const tmp = {id: 'tmp' + Date.now(), t: Math.round(maintenant() * 10) / 10, action, camp: M.camp, joueur: '', neuf: true};
-  M.marqueurs.push(tmp); liste(); demanderJoueur(tmp);
+  M.marqueurs.push(tmp); M.sel = tmp; liste(); demanderJoueur(tmp);
   const d = await api('/marqueur', {match: M.k, t: tmp.t, action, camp: tmp.camp});
   const i = M.marqueurs.indexOf(tmp);
   if (!d.ok){ if (i >= 0) M.marqueurs.splice(i, 1); liste(); $('#qui').innerHTML = ''; toast(raison(d)); return; }
   const vrai = {...d.marqueur, neuf: true};
   if (i >= 0) M.marqueurs[i] = vrai;
+  if (M.sel === tmp) M.sel = vrai;
   /* un joueur choisi pendant l'envoi */
   if (tmp.joueur){ vrai.joueur = tmp.joueur; api('/marqueur/modifier', {id: vrai.id, joueur: tmp.joueur}); }
   if (M.dernier === tmp) M.dernier = vrai;
@@ -347,15 +386,175 @@ function liste(){
   const compte = (a, c) => l.filter(x => x.action === a && x.camp === c).length;
   const vus = ACTIONS.filter(([a]) => compte(a, 'nous') + compte(a, 'eux'));
   $('#bilan').innerHTML = vus.length ? `<div class="bilan"><span class="tete">Action</span><span class="tete">Nous</span><span class="tete">Eux</span>${vus.map(([a, n]) => `<span>${n}</span><span>${compte(a, 'nous')}</span><span>${compte(a, 'eux')}</span>`).join('')}</div>` : '';
-  ul.innerHTML = l.length ? l.map(m => `<li class="mq${m.neuf ? ' neuf' : ''}">
-      <button type="button" class="va" data-t="${m.t}" title="Revoir (5 s avant)"><time>${hms(m.t)}</time><i class="pt ${m.camp}"></i><span style="min-width:0"><b>${esc(NOM_ACTION[m.action] || m.action)}</b><br><small>${m.camp === 'nous' ? 'Nous' : 'Eux'}${m.joueur ? ' · ' + esc(nomJoueur(m.joueur)) : ''}${m.parNom ? ' · par ' + esc(m.parNom) : ''}</small></span></button>
+  ul.innerHTML = l.length ? l.map(m => `<li class="mq${m.neuf ? ' neuf' : ''}${M.sel === m ? ' sel' : ''}">
+      <button type="button" class="va" data-i="${M.marqueurs.indexOf(m)}" title="${m.dessin ? 'Revoir jusqu\'au dessin' : 'Revoir (5 s avant)'}"><time>${hms(m.t)}</time><i class="pt ${m.camp}"></i><span style="min-width:0"><b>${esc(NOM_ACTION[m.action] || m.action)}</b>${m.dessin ? '<span class="crayon" title="Avec un dessin">✏️</span>' : ''}<br><small>${m.camp === 'nous' ? 'Nous' : 'Eux'}${m.joueur ? ' · ' + esc(nomJoueur(m.joueur)) : ''}${m.parNom ? ' · par ' + esc(m.parNom) : ''}</small></span></button>
       ${M.ecrire && typeof m.id === 'number' ? `<button type="button" class="x" data-x="${m.id}" aria-label="Retirer">×</button>` : ''}</li>`).join('')
     : `<li class="vide">${M.ecrire ? 'Lance la vidéo et touche une action au bon moment.' : 'Rien de marqué pour l\'instant.'}</li>`;
   l.forEach(m => { delete m.neuf; });
   ul.onclick = e => {
     const x = e.target.closest('[data-x]'); if (x){ retirer(+x.dataset.x); return; }
-    const va = e.target.closest('[data-t]'); if (va) aller(+va.dataset.t - 5, true);
+    const va = e.target.closest('[data-i]'); if (!va) return;
+    const m = M.marqueurs[+va.dataset.i]; if (!m || D) return;
+    M.sel = m; liste();
+    if (m.dessin) allerVersDessin(m); else { cacherCalque(); aller(m.t - 5, true); }
   };
+}
+
+/* ---------- le dessin sur la vidéo en pause (étape 2, Clément 18.11) ----------
+   Rattaché à un tag : celui qu'on vient de toucher ou de poser s'il est à 2 s près, sinon un tag « Moment » créé à l'instant.
+   Coordonnées de 0 à 1 sur l'image (le service les garde ainsi), tracées dans un SVG de 1600 × 900, la taille de l'écran 16/9. */
+const VB = [1600, 900];
+const COULEURS = [['#f2e400', 'Jaune'], ['#eaf0e8', 'Blanc'], ['#3fa845', 'Vert'], ['#6fa8d8', 'Bleu'], ['#ff7a45', 'Orange']];
+const OUTILS = [
+  ['fl', 'Flèche', '<svg viewBox="0 0 16 16"><path d="M2 14L13 3M13 3H7M13 3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'],
+  ['tr', 'Trait', '<svg viewBox="0 0 16 16"><path d="M2 12c3-6 5 2 8-3s3-4 4-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'],
+  ['ce', 'Cercle', '<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>'],
+  ['tx', 'Texte', '<svg viewBox="0 0 16 16"><path d="M3 3h10M8 3v10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>']];
+const px = p => [p[0] * VB[0], p[1] * VB[1]];
+function forme(s){
+  const c = esc(s.c), trait = `stroke="${c}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"`;
+  if (s.k === 'tr') return `<polyline points="${s.p.map(q => px(q).map(v => v.toFixed(1)).join(',')).join(' ')}" ${trait}/>`;
+  const [a, b] = [px(s.p[0]), s.p[1] ? px(s.p[1]) : null];
+  if (s.k === 'ce') return `<circle cx="${a[0].toFixed(1)}" cy="${a[1].toFixed(1)}" r="${Math.hypot(b[0] - a[0], b[1] - a[1]).toFixed(1)}" ${trait}/>`;
+  if (s.k === 'tx') return `<text x="${a[0].toFixed(1)}" y="${a[1].toFixed(1)}" fill="${c}" stroke="#0b0f0c" stroke-width="9" paint-order="stroke" font-family="Inter,sans-serif" font-weight="800" font-size="52" dominant-baseline="middle">${esc(s.t)}</text>`;
+  /* flèche : le trait s'arrête au pied de la pointe, pointe pleine */
+  const ang = Math.atan2(b[1] - a[1], b[0] - a[0]), L = 38, W = 22, pied = [b[0] - Math.cos(ang) * L * .8, b[1] - Math.sin(ang) * L * .8];
+  const g = [b[0] - Math.cos(ang) * L + Math.sin(ang) * W, b[1] - Math.sin(ang) * L - Math.cos(ang) * W], d = [b[0] - Math.cos(ang) * L - Math.sin(ang) * W, b[1] - Math.sin(ang) * L + Math.cos(ang) * W];
+  return `<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${pied[0].toFixed(1)}" y2="${pied[1].toFixed(1)}" ${trait}/><polygon points="${[b, g, d].map(q => q.map(v => v.toFixed(1)).join(',')).join(' ')}" fill="${c}" stroke="${c}" stroke-width="3" stroke-linejoin="round"/>`;
+}
+const svgDessin = f => `<svg viewBox="0 0 ${VB[0]} ${VB[1]}" preserveAspectRatio="none" aria-hidden="true">${f.map(forme).join('')}</svg>`;
+const decrire = mq => `${esc(NOM_ACTION[mq.action] || mq.action)} · ${mq.camp === 'nous' ? 'Nous' : 'Eux'} · ${hms(mq.t)}`;
+
+let guet = null;
+function cacherCalque(){
+  const c = $('#calque'); if (!c || D) return;
+  c.hidden = true; c.className = 'calque'; c.innerHTML = '';
+}
+/* afficher un dessin à l'arrêt, avec Continuer (et Modifier pour qui peut écrire) */
+function afficherDessin(mq){
+  const c = $('#calque'); if (!c || !mq.dessin) return;
+  c.hidden = false; c.className = 'calque lecture';
+  c.innerHTML = svgDessin(mq.dessin.f) + `<div class="cq-bas">${M.ecrire && typeof mq.id === 'number' ? '<button type="button" class="btn btn-ghost" data-cq="modifier" style="background:rgba(11,15,12,.85)">✏️ Modifier</button>' : ''}<button type="button" class="btn btn-acid" data-cq="continuer">Continuer ▶</button></div>`;
+  c.onclick = e => {
+    const b = e.target.closest('[data-cq]'); if (!b) return;
+    if (b.dataset.cq === 'continuer'){ cacherCalque(); if (joueur && joueur.playVideo) joueur.playVideo(); }
+    else { M.sel = mq; ouvrirDessin(); }
+  };
+}
+/* un tag avec dessin : 5 s avant, la vidéo joue, puis s'arrête pile sur l'instant et montre le dessin */
+function allerVersDessin(mq){
+  cacherCalque(); clearInterval(guet);
+  aller(mq.t - 5, true);
+  const t0 = Date.now();
+  guet = setInterval(() => {
+    const c = maintenant();
+    if (c >= mq.t - .08 && c <= mq.t + 2){ clearInterval(guet); guet = null; try { joueur.pauseVideo(); } catch(e){} aller(mq.t); afficherDessin(mq); }
+    else if (Date.now() - t0 > 20000 || c > mq.t + 2 && Date.now() - t0 > 1500){ clearInterval(guet); guet = null; }
+  }, 120);
+}
+
+async function ouvrirDessin(){
+  if (!M || !M.ecrire || !joueur || D) return;
+  clearInterval(guet); guet = null;
+  try { joueur.pauseVideo(); } catch(e){}
+  const t = Math.round(maintenant() * 10) / 10;
+  let mq = M.sel && typeof M.sel.id === 'number' && Math.abs(M.sel.t - t) <= 2 ? M.sel : null, cree = false;
+  if (!mq){
+    cree = true;
+    const d = await api('/marqueur', {match: M.k, t, action: 'moment', camp: M.camp});
+    if (!d.ok){ toast(raison(d)); return; }
+    mq = {...d.marqueur, neuf: true}; M.marqueurs.push(mq);
+  } else aller(mq.t);
+  M.sel = mq; liste(); $('#qui').innerHTML = '';
+  D = {mq, cree, f: JSON.parse(JSON.stringify((mq.dessin || {}).f || [])), outil: 'fl', couleur: COULEURS[0][0], cur: null, modifie: false};
+  $('#barre').hidden = true;
+  const c = $('#calque'); c.hidden = false; c.className = 'calque edit'; c.onclick = null;
+  outils(); trace();
+  c.onpointerdown = e => {
+    if (!D || e.button > 0 || e.target.closest('.cq-tx')) return;
+    const p = point(e);
+    if (D.outil === 'tx'){ texteA(p); return; }
+    e.preventDefault(); try { c.setPointerCapture(e.pointerId); } catch(er){}
+    D.cur = {k: D.outil, c: D.couleur, p: D.outil === 'tr' ? [p] : [p, p]}; trace();
+  };
+  c.onpointermove = e => {
+    if (!D || !D.cur) return;
+    const p = point(e);
+    if (D.cur.k === 'tr'){ const q = D.cur.p[D.cur.p.length - 1]; if (Math.hypot(p[0] - q[0], p[1] - q[1]) > .004) D.cur.p.push(p); }
+    else D.cur.p[1] = p;
+    trace();
+  };
+  c.onpointerup = c.onpointercancel = () => {
+    if (!D || !D.cur) return;
+    const s = D.cur; D.cur = null;
+    const long = s.k === 'tr' ? s.p.length > 2 : Math.hypot(s.p[1][0] - s.p[0][0], s.p[1][1] - s.p[0][1]) > .012;
+    if (long){ D.f.push(s); D.modifie = true; outils(); }
+    trace();
+  };
+}
+const point = e => { const r = $('#calque').getBoundingClientRect(); return [Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)), Math.min(1, Math.max(0, (e.clientY - r.top) / r.height))].map(v => Math.round(v * 1000) / 1000); };
+function trace(){
+  const c = $('#calque'); if (!c || !D) return;
+  const champ = c.querySelector('.cq-tx');
+  c.innerHTML = svgDessin(D.cur ? [...D.f, D.cur] : D.f);
+  if (champ) c.appendChild(champ);
+}
+/* le texte : un petit champ à l'endroit touché ; Entrée pose le texte, Échap annule */
+function texteA(p){
+  const c = $('#calque'); c.querySelectorAll('.cq-tx').forEach(x => x.remove());
+  const i = document.createElement('input'); i.className = 'cq-tx'; i.maxLength = 80; i.placeholder = 'Texte, puis Entrée';
+  i.style.left = Math.min(p[0] * 100, 70) + '%'; i.style.top = `calc(${p[1] * 100}% - 18px)`; i.style.color = D.couleur;
+  c.appendChild(i); setTimeout(() => i.focus());
+  let fait = false;
+  const poser = () => { if (fait) return; fait = true; const t = i.value.trim(); i.remove(); if (t && D){ D.f.push({k: 'tx', c: D.couleur, p: [p], t}); D.modifie = true; outils(); trace(); } };
+  i.onkeydown = e => { e.stopPropagation(); if (e.key === 'Enter'){ e.preventDefault(); poser(); } else if (e.key === 'Escape'){ fait = true; i.remove(); } };
+  i.onblur = poser;
+}
+function outils(){
+  const o = $('#outils'); if (!o || !D) return;
+  o.hidden = false;
+  o.innerHTML = `<p class="sur">Dessin sur <b>${decrire(D.mq)}</b> · la vidéo est en pause</p>
+    ${OUTILS.map(([k, nom, ic]) => `<button type="button" class="ot${D.outil === k ? ' on' : ''}" data-ou="${k}" aria-pressed="${D.outil === k}">${ic}${nom}</button>`).join('')}
+    ${COULEURS.map(([c, nom]) => `<button type="button" class="coul${D.couleur === c ? ' on' : ''}" data-co="${c}" style="background:${c}" aria-label="${nom}" title="${nom}"></button>`).join('')}
+    <button type="button" class="ot" data-od="annuler"${D.f.length ? '' : ' disabled style="opacity:.4"'}>↶ Annuler</button>
+    <button type="button" class="ot" data-od="effacer"${D.f.length ? '' : ' disabled style="opacity:.4"'}>Tout effacer</button>
+    <span class="esp"></span>
+    <button type="button" class="btn btn-ghost" data-od="fermer">Fermer</button>
+    <button type="button" class="btn btn-acid" data-od="garder">Enregistrer</button>`;
+  o.onclick = e => {
+    const b = e.target.closest('button'); if (!b || b.disabled) return;
+    if (b.dataset.ou){ D.outil = b.dataset.ou; outils(); return; }
+    if (b.dataset.co){ D.couleur = b.dataset.co; outils(); return; }
+    const a = b.dataset.od;
+    if (a === 'annuler'){ D.f.pop(); D.modifie = true; outils(); trace(); }
+    else if (a === 'effacer'){ D.f = []; D.modifie = true; outils(); trace(); }
+    else if (a === 'fermer') fermerDessin();
+    else if (a === 'garder') garderDessin();
+  };
+}
+function fermerDessin(sansDemander){
+  if (!D) return;
+  if (!sansDemander && D.modifie && !confirm('Fermer sans enregistrer ce dessin ?')) return;
+  const mq = D.mq, cree = D.cree; D = null;
+  /* le tag « Moment » créé pour ce dessin, refermé sans rien garder : on le retire, pas de tag vide dans la liste */
+  if (cree && !mq.dessin){
+    const i = M.marqueurs.indexOf(mq); if (i >= 0) M.marqueurs.splice(i, 1);
+    if (M.sel === mq) M.sel = null;
+    liste(); api('/marqueur/retirer', {id: mq.id});
+  }
+  $('#outils').hidden = true; $('#outils').innerHTML = ''; $('#barre').hidden = false;
+  const c = $('#calque'); c.onpointerdown = c.onpointermove = c.onpointerup = c.onpointercancel = null;
+  cacherCalque();
+  if (mq.dessin) afficherDessin(mq);
+}
+async function garderDessin(){
+  if (!D) return;
+  const mq = D.mq, b = $('#outils [data-od="garder"]'); if (b){ b.disabled = true; b.textContent = 'Enregistrement…'; }
+  const d = await api('/marqueur/dessin', {id: mq.id, dessin: D.f.length ? {f: D.f} : null});
+  if (!d.ok){ if (b){ b.disabled = false; b.textContent = 'Enregistrer'; } toast(raison(d)); return; }
+  mq.dessin = d.marqueur.dessin;
+  fermerDessin(true); liste();
+  toast(mq.dessin ? 'Dessin enregistré : un clic sur le tag le remontre.' : 'Dessin effacé.');
 }
 
 async function retirer(id){
@@ -380,7 +579,15 @@ function toast(texte, bouton, faire){
 
 /* le clavier, hors des champs (le lecteur YouTube garde les touches quand on a cliqué dedans) */
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && DANS_APPLI && !/^(INPUT|TEXTAREA|SELECT)$/.test((e.target || {}).tagName)){ fermer(); return; }
+  if (/^(INPUT|TEXTAREA|SELECT)$/.test((e.target || {}).tagName)) return;
+  /* pendant un dessin : Échap ferme le dessin, Ctrl+Z (Cmd+Z) retire le dernier trait, le reste attend */
+  if (D){
+    if (e.key === 'Escape'){ e.preventDefault(); fermerDessin(); }
+    else if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z') && D.f.length){ e.preventDefault(); D.f.pop(); D.modifie = true; outils(); trace(); }
+    return;
+  }
+  if (e.key === 'Escape' && DANS_APPLI){ fermer(); return; }
+  if ((e.key === 'd' || e.key === 'D') && M && M.video && M.ecrire && !e.ctrlKey && !e.metaKey){ e.preventDefault(); ouvrirDessin(); return; }
   if (!M || !M.video || !M.ecrire || e.ctrlKey || e.metaKey || e.altKey || /^(INPUT|TEXTAREA|SELECT)$/.test((e.target || {}).tagName)) return;
   const n = +e.key;
   if (n >= 1 && n <= ACTIONS.length && !e.shiftKey){ e.preventDefault(); marquer(ACTIONS[n - 1][0]); return; }
@@ -421,10 +628,16 @@ const GUIDE = [
   {t: 'Revenir en <em>1 clic</em>', vis: `<div class="mini-liste"><div><b>12:04</b>But · Nous · Luis Miguel</div><div><b>27:41</b>Perte de balle · Nous</div><div><b>33:10</b>Arrêt · Eux</div></div>`,
     p: "À droite, tous les tags du match dans l'ordre, avec le bilan Nous / Eux. Touche un tag : la vidéo repart 5 secondes avant, pour voir l'action se construire.",
     m: "La croix retire un tag, « Annuler » le remet."},
-  {t: 'Ce qui <em>arrive</em>', vis: `<div class="bientot"><div><b>Dessiner sur la vidéo</b>Pause, flèches, cercles, texte, rattachés au tag et réaffichés au clic.</div><div><b>Toute l'équipe</b>Les tags et les dessins sur la fiche du match, en 1 clic, sur téléphone.</div></div>`,
-    p: "Le dessin et la vue de l'équipe sont les deux prochaines étapes. Pour l'instant, tague un vrai match : c'est ce qui dira si l'outil te sert.",
+  {t: 'Dessine sur <em>l\'action</em>', vis: `<div class="mini-dessin"><svg viewBox="0 0 320 120" aria-hidden="true"><rect width="320" height="120" rx="6" fill="#16201a"/><circle class="j" cx="70" cy="70" r="9" fill="#3fa845"/><circle class="j" cx="250" cy="45" r="9" fill="#3fa845"/><circle class="j" cx="180" cy="88" r="9" fill="#6fa8d8"/>
+        <path class="trace" d="M82 66 Q160 20 236 46" fill="none" stroke="#f2e400" stroke-width="5" stroke-linecap="round"/><path class="pointe" d="M236 46 l-14 -8 l2 15 z" fill="#f2e400"/><circle class="rond" cx="180" cy="88" r="20" fill="none" stroke="#ff7a45" stroke-width="4"/></svg></div>`,
+    p: "Mets en pause sur l'action et touche ✏️ Dessiner (touche D) : flèche, trait, cercle ou texte, en 5 couleurs. Le dessin se rattache au tag que tu viens de poser ou de toucher, sinon à un tag « Moment » créé à l'instant.",
+    m: "Un tag avec dessin porte un ✏️. Au clic, la vidéo repart 5 s avant et s'arrête pile sur l'instant, dessin par-dessus ; « Continuer ▶ » relance."},
+  {t: 'Ce qui <em>arrive</em>', vis: `<div class="bientot"><div><b>Toute l'équipe</b>Les tags et les dessins sur la fiche du match, en 1 clic, sur téléphone.</div><div><b>Relier</b>Un but tagué rattaché à sa note d'Analyser les buts, les actions d'un joueur dans sa fiche.</div></div>`,
+    p: "La vue de l'équipe est la prochaine étape. Pour l'instant, tague et dessine sur un vrai match : c'est ce qui dira si l'outil te sert.",
     m: "Ce pas-à-pas revient avec le bouton « ? » en haut à droite."}
 ];
+/* version du pas-à-pas : qui a vu l'ancien (sans le dessin) voit une fois la nouvelle étape */
+const GUIDE_V = '2', GUIDE_DESSIN = GUIDE.findIndex(s => /Dessine/.test(s.t));
 let gdI = -1;
 function guide(i, sens){
   gdI = i;
@@ -440,7 +653,7 @@ function guide(i, sens){
 }
 function finGuide(){
   const g = $('#gd'); if (g) g.remove(); gdI = -1;
-  try { localStorage.setItem('sagc-video-guide', '1'); } catch(e){}
+  try { localStorage.setItem('sagc-video-guide', GUIDE_V); } catch(e){}
 }
 $('#guide-btn').onclick = () => guide(0, 1);
 document.addEventListener('keydown', e => {
@@ -450,7 +663,7 @@ document.addEventListener('keydown', e => {
   else if (e.key === 'ArrowRight' && gdI < GUIDE.length - 1) guide(gdI + 1, 1);
   else if (e.key === 'ArrowLeft' && gdI > 0) guide(gdI - 1, -1);
 }, true);
-if (!lire('sagc-video-guide')) guide(0, 1);
+{ const vu = lire('sagc-video-guide'); if (!vu) guide(0, 1); else if (vu !== GUIDE_V) guide(GUIDE_DESSIN, 1); }
 })();
 </script>
 </body>
