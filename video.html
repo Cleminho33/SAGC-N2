@@ -122,55 +122,89 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .mq.sel{background:rgba(242,228,0,.07)}
 .lb{font-size:12.5px;color:var(--muted)}
 .esp{flex:1}
-/* la frise du match (18.11) : nous en haut, eux en bas, supériorités et infériorités au milieu */
-.fw{margin-top:10px;padding:10px 12px 8px;border-radius:var(--r-s);background:var(--ink-2);border:1px solid var(--line)}
-.fw-haut{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
-.fw-leg{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.fw-leg .pt{display:inline-block;width:9px;height:9px;border-radius:50%;margin-left:6px}
-.pt.iv-sup{background:var(--acid)}.pt.iv-inf{background:var(--shot)}
-.fw-leg .pt.nous{background:var(--grass)}.fw-leg .pt.eux{background:var(--away)}
+/* la frise du match, ligne de vie (Clément, 18.11, maquette A) : Cestas au-dessus, l'adversaire en dessous, pastilles sur tiges,
+   buts en grand avec le score, fautes numérotées (coup franc direct en orange), supériorités et infériorités dans l'axe */
+.fw{margin-top:10px;padding:12px 14px 10px;border-radius:var(--r-l);background:var(--ink-2);border:1px solid var(--line)}
+.fw-haut{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:4px}
+.fw-eq{font:700 11px/1 Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.fw-eq::before{content:'';width:9px;height:9px;border-radius:50%}
+.fw-eq.n::before{background:var(--grass)}.fw-eq.e::before{background:var(--away)}
+.fw-eq b{font:400 15px/1 Anton,Impact,sans-serif;font-style:italic;letter-spacing:.03em;color:var(--bone)}
+.fw-eq b.alerte{color:var(--shot)}
 .fw-z{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted)}
 .fw-z .ot{padding:5px 9px;font-size:12px}
-.frise{position:relative;height:76px;border-radius:8px;background:var(--ink);cursor:pointer;overflow:hidden;touch-action:pan-y}
-.frise i{position:absolute;display:block}
-.fz-axe{left:0;right:0;top:38px;height:1px;background:var(--line-2)}
-.fz-clip{height:10px;border-radius:3px;opacity:.38}
-.fz-clip.h{top:13px}.fz-clip.b{top:53px}
-.fz-clip.nous{background:var(--grass)}.fz-clip.eux{background:var(--away)}
-.fz-tag{width:3px;height:24px;margin-left:-1.5px;border-radius:2px}
-.fz-tag.h{top:6px}.fz-tag.b{top:46px}
-.fz-tag.nous{background:var(--grass)}.fz-tag.eux{background:var(--away)}
-.fz-tag.but{width:5px;margin-left:-2.5px;box-shadow:0 0 0 1px var(--bone)}
-.fz-iv{top:33px;height:10px;border-radius:5px;opacity:.9}
-.fz-iv.sup{background:var(--acid)}.fz-iv.inf{background:var(--shot)}
-.fz-iv.ouvert{background-image:repeating-linear-gradient(45deg,rgba(11,15,12,.35) 0 6px,transparent 6px 12px);background-size:17px 17px;animation:raye 1s linear infinite}
+.fa{position:relative;height:230px;cursor:pointer;user-select:none;-webkit-user-select:none;overflow:hidden;touch-action:pan-y}
+.fa i{position:absolute;display:block;font-style:normal}
+.fa-axe{left:0;right:0;top:106px;height:18px;border-radius:9px;background:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.fa-iv{top:109px;height:12px;border-radius:6px;z-index:1}
+.fa-iv.sup{background:var(--acid);box-shadow:0 0 0 3px rgba(242,228,0,.18)}
+.fa-iv.inf{background:var(--shot);box-shadow:0 0 0 3px rgba(255,122,69,.18)}
+.fa-iv.ouvert{background-image:repeating-linear-gradient(45deg,rgba(11,15,12,.35) 0 6px,transparent 6px 12px);background-size:17px 17px;animation:raye 1s linear infinite}
+.fa-iv b{position:absolute;left:6px;top:0;font:900 9.5px/12px Inter,sans-serif;color:var(--ink);white-space:nowrap}
+.fa-iv.sel{outline:2px solid var(--bone);outline-offset:2px}
 @keyframes raye{to{background-position:17px 0}}
-.frise .sel{outline:2px solid var(--bone);outline-offset:1px;opacity:1;z-index:2}
-.fz-tete{top:0;bottom:0;width:2px;margin-left:-1px;background:var(--bone);z-index:3;pointer-events:none}
-.fz-tete::before{content:'';position:absolute;top:-1px;left:-4px;border:5px solid transparent;border-top-color:var(--bone)}
-.fw-temps{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums}
+.fa-clip{top:106px;height:18px;border-radius:9px;background:rgba(234,240,232,.16);box-shadow:inset 0 0 0 1px rgba(234,240,232,.55);z-index:1;pointer-events:none}
+.fa .fa-ev{translate:-50% 0;display:flex;flex-direction:column;align-items:center;z-index:2}
+.fa-ev .tige,.fa-ev .pa,.fa-ev .sc{display:block;flex:none}
+.fa-ev .pa{display:flex}
+.fa-ev .tige{width:2px;background:var(--line-2)}
+.fa-ev .pa{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--ink-2);font:800 9px/1 Inter,sans-serif;transition:transform .15s}
+.fa-ev .pa svg{width:12px;height:12px}
+.fa-ev:hover{z-index:4}.fa-ev:hover .pa{transform:scale(1.3)}
+.fa-ev.sel{z-index:5}.fa-ev.sel .pa{transform:scale(1.3);box-shadow:0 0 0 2px var(--bone)}
+.fa-ev.nous .pa{background:var(--grass);color:var(--ink)}
+.fa-ev.eux .pa{background:var(--away);color:var(--ink)}
+.fa-ev.but .pa{width:30px;height:30px;background:var(--acid);color:var(--ink)}
+.fa-ev.but.eux .pa{background:var(--bone);color:#1f2b4a}
+.fa-ev.but .pa svg{width:16px;height:16px}
+.fa-ev .sc{font:400 15px/1 Anton,Impact,sans-serif;font-style:italic;letter-spacing:.03em;color:var(--acid);margin:0 0 3px;white-space:nowrap}
+.fa-ev.eux .sc{margin:3px 0 0;color:var(--bone)}
+.fa-ev.faute .pa{width:17px;height:17px;background:var(--ink-3);border-color:var(--line-2);color:var(--muted);border-radius:5px}
+.fa-ev.faute.cfd .pa{width:24px;height:24px;background:var(--shot);color:var(--ink);border-color:var(--ink-2);border-radius:6px;font-size:8px}
+.fa-ev.moment .pa{background:var(--ink-3);color:var(--bone);border-color:var(--line-2)}
+.fa-tete{top:84px;height:62px;width:2px;margin-left:-1px;background:var(--bone);pointer-events:none;z-index:6}
+.fa-tete::before{content:'';position:absolute;top:-7px;left:-5px;border:6px solid transparent;border-top-color:var(--bone)}
+.fw-temps{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:11.5px;color:var(--muted);margin-top:2px;font-variant-numeric:tabular-nums}
+.fw-leg{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;font-size:11.5px}
+.fw-leg span{display:inline-flex;align-items:center;gap:5px}
+.fw-leg i{width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--ink-3);color:var(--bone);font-style:normal}
+.fw-leg i svg{width:10px;height:10px}
+.fw-leg i.b{background:var(--acid);color:var(--ink)}.fw-leg i.f{border-radius:4px;border:1px solid var(--line-2)}.fw-leg i.cfd{border-radius:4px;background:var(--shot)}
+.fw-leg i.sup{width:18px;height:8px;border-radius:4px;background:var(--acid)}.fw-leg i.inf{width:18px;height:8px;border-radius:4px;background:var(--shot)}
+.tip{position:fixed;z-index:30;pointer-events:none;background:var(--ink-3);border:1px solid var(--line-2);border-radius:10px;padding:8px 10px;font-size:12.5px;box-shadow:0 10px 30px rgba(0,0,0,.5);max-width:250px}
+.tip b{display:block;font-size:13.5px}
+.tip em{font-style:normal;color:var(--acid)}
+.tip small{color:var(--muted);font-size:12px}
+/* le score par-dessus la vidéo, tenu à jour par les buts tagués */
+.bug{position:absolute;left:12px;top:12px;z-index:3;display:flex;align-items:stretch;border-radius:8px;overflow:hidden;font:800 13px/1 Inter,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.45);pointer-events:none}
+.bug:empty{display:none}
+.bug span{display:flex;align-items:center;gap:7px;padding:7px 10px;background:rgba(11,15,12,.9);text-transform:uppercase;letter-spacing:.02em}
+.bug .sc{background:var(--acid);color:var(--ink);font:400 19px/1 Anton,Impact,sans-serif;font-style:italic;padding:5px 11px;letter-spacing:.04em}
+.bug img,.bug .crest{width:20px;height:20px;border-radius:50%;object-fit:contain;background:#fff}
+.bug .crest{display:inline-flex;align-items:center;justify-content:center;background:var(--ink-3);color:var(--bone);font:800 7.5px/1 Inter,sans-serif}
+/* la carte du tag choisi : ▶ Rejouer · ⏱ Régler · ✏️ Dessin · ✕ ; les − / + seulement après « Régler » */
+.selc{margin-top:10px;padding:10px 12px;border-radius:var(--r-s);background:var(--ink-3);border:1px solid var(--line-2);display:flex;align-items:center;gap:8px;flex-wrap:wrap;animation:selIn .2s ease}
+@keyframes selIn{from{opacity:0;transform:translateY(-4px)}}
+.selc .q{font-weight:700;font-size:14px}
+.selc .q small{display:block;font-weight:500;color:var(--muted);font-size:12.5px}
+.selc .q small em{font-style:normal;color:var(--acid)}
+.selc .ot{padding:8px 11px}
+.selc .x2{width:34px;justify-content:center}
+.rgl{display:flex;align-items:center;gap:6px;flex-wrap:wrap;width:100%;padding-top:10px;margin-top:2px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.rgl b{color:var(--bone);min-width:46px;text-align:center;font-variant-numeric:tabular-nums}
+.rgl .ot{padding:6px 10px}
+.rgl .btn{padding:9px 14px}
+.lien-mini{font-size:12px;color:var(--muted);text-decoration:underline;margin-left:4px}
 .act.ouvert{border-color:var(--acid);box-shadow:0 0 0 2px rgba(242,228,0,.3);animation:pulse 1.4s ease-in-out infinite}
 .act.inf.ouvert{border-color:var(--shot);box-shadow:0 0 0 2px rgba(255,122,69,.3)}
 @keyframes pulse{50%{box-shadow:0 0 0 5px rgba(242,228,0,.12)}}
-/* le réglage d'un tag et les durées par catégorie */
+/* les durées par catégorie */
 .rg{margin-top:10px;padding:12px;border-radius:var(--r-s);background:var(--ink-2);border:1px solid var(--line-2)}
 .rg-t{margin:0 0 8px;font-size:13.5px}
 .rg-l{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
-.rg-l .ot,.du .ot{padding:6px 10px}
-.rg-v{min-width:46px;text-align:center;font-variant-numeric:tabular-nums}
 .rg .btn{padding:9px 12px}
-.lien-mini{font-size:12px;color:var(--muted);text-decoration:underline;margin-left:4px}
-.mini{position:relative;height:40px;margin-top:10px;border-radius:8px;background:var(--ink);touch-action:none}
-.mini i{position:absolute;display:block}
-.mi-clip{top:14px;height:12px;border-radius:3px;opacity:.5}
-.mi-clip.nous{background:var(--grass)}.mi-clip.eux{background:var(--away)}.mi-clip.sup{background:var(--acid)}.mi-clip.inf{background:var(--shot)}
-.mi-tag{top:8px;width:3px;height:24px;margin-left:-1.5px;background:var(--bone);border-radius:2px}
-.poignee{top:5px;width:12px;height:30px;margin-left:-6px;border-radius:4px;background:var(--ink-2);border:2px solid var(--bone);cursor:ew-resize;z-index:2}
-.poignee:hover{border-color:var(--acid)}
-.mi-a,.mi-b{position:absolute;bottom:-17px;font-size:11px;color:var(--muted)}
-.mi-a{left:0}.mi-b{right:0}
-.mini{margin-bottom:16px}
 .du{display:grid;grid-template-columns:minmax(110px,auto) auto auto;gap:6px 14px;align-items:center;font-size:13.5px}
+.du .ot{padding:6px 10px}
 .du-c{display:inline-flex;align-items:center;gap:6px}
 .du-c b{min-width:34px;text-align:center}
 .mq .crayon{font-size:13px;margin-left:4px}
@@ -230,12 +264,20 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .mini-liste div b{font-variant-numeric:tabular-nums}
 .mini-liste div:nth-child(2){animation:clic 2.4s infinite}
 @keyframes clic{0%,30%{border-color:var(--line)}40%,70%{border-color:var(--acid);background:rgba(242,228,0,.08)}}
-.gfr{position:relative;width:100%;height:90px;border-radius:8px;background:var(--ink-2)}
-.gfr i{position:absolute;display:block}
-.gfr .ax{left:0;right:0;top:45px;height:1px;background:var(--line-2)}
-.gfr .cl{height:10px;border-radius:3px;opacity:.38}.gfr .cl.n{top:18px;background:var(--grass)}.gfr .cl.e{top:62px;background:var(--away)}
-.gfr .tg{width:3px;height:22px;border-radius:2px}.gfr .tg.n{top:12px;background:var(--grass)}.gfr .tg.e{top:56px;background:var(--away)}
-.gfr .iv{top:40px;height:10px;border-radius:5px;background:var(--acid);opacity:.9}
+.gfr{position:relative;width:100%;height:120px;border-radius:8px;background:var(--ink-2)}
+.gfr i{position:absolute;display:block;font-style:normal}
+.gfr .ax{left:2%;right:2%;top:54px;height:12px;border-radius:6px;background:var(--ink)}
+.gfr .iv{top:57px;height:6px;border-radius:3px;background:var(--acid)}
+.gfr .lp{width:2px;margin-left:-1px;background:var(--line-2);display:flex;flex-direction:column;align-items:center}
+.gfr .lp.n{bottom:66px;height:16px;flex-direction:column-reverse;justify-content:flex-end}
+.gfr .lp.e{top:66px;height:16px;justify-content:flex-end}
+.gfr .lp b{position:absolute;width:14px;height:14px;border-radius:50%;left:-6px}
+.gfr .lp.n b{top:-13px;background:var(--grass)}.gfr .lp.e b{bottom:-13px;background:var(--away)}
+.gfr .lp.but{height:22px}.gfr .lp.but b{width:20px;height:20px;left:-9px;background:var(--acid)}
+.gfr .lp.but.e b{background:var(--bone)}
+.gfr .lp.faute b{border-radius:4px;background:var(--ink-3);box-shadow:inset 0 0 0 1px var(--line-2)}
+.gfr .lp em{position:absolute;font:400 13px/1 Anton,Impact,sans-serif;font-style:italic;color:var(--acid);left:50%;translate:-50% 0;white-space:nowrap}
+.gfr .lp.n em{top:-30px}.gfr .lp.e em{bottom:-30px;color:var(--bone)}
 .gfr .tt{top:0;bottom:0;width:2px;background:var(--bone);animation:tete 6s linear infinite}
 @keyframes tete{from{left:2%}to{left:98%}}
 .mini-dessin{width:100%;max-width:340px}
@@ -250,7 +292,7 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .bientot div{padding:12px;border-radius:var(--r-s);border:1px dashed var(--line-2);font-size:12.5px;color:var(--muted);text-align:left}
 .bientot b{display:block;color:var(--bone);font-size:13.5px;margin-bottom:4px}
 @media (max-width:520px){.gd-vis{height:auto;min-height:130px;gap:6px;padding:10px}.fl{display:none}.nd{padding:8px 4px;font-size:11.5px}.nd b{font-size:12.5px}.gd-t{font-size:26px}}
-@media (prefers-reduced-motion:reduce){.mq.neuf{animation:none}.act{transition:none}.mini-dessin *{animation:none!important;stroke-dashoffset:0!important;opacity:1!important}.gd,.gd-pas,.fl::after,.faux-champ span,.mini-acts kbd,.gfrise i,.gfr .tt,.fz-iv.ouvert,.act.ouvert,.mini-camp::before,.mini-camp span,.mini-liste div{animation:none!important}.faux-champ span{width:auto;border:0}}
+@media (prefers-reduced-motion:reduce){.mq.neuf{animation:none}.act{transition:none}.mini-dessin *{animation:none!important;stroke-dashoffset:0!important;opacity:1!important}.gd,.gd-pas,.fl::after,.faux-champ span,.mini-acts kbd,.gfrise i,.gfr .tt,.fa-iv.ouvert,.selc,.act.ouvert,.mini-camp::before,.mini-camp span,.mini-liste div{animation:none!important}.faux-champ span{width:auto;border:0}}
 </style>
 </head>
 <body>
@@ -370,12 +412,12 @@ function dessiner(){
   }
   v.innerHTML = tete + `<div class="grille">
     <section>
-      <div class="ecran"><div id="yt"></div><div class="calque" id="calque" hidden></div></div>
+      <div class="ecran"><div id="yt"></div><div class="calque" id="calque" hidden></div><div class="bug" id="bug"></div></div>
       <div class="fw">
-        <div class="fw-haut"><span class="fw-leg"><i class="pt nous"></i>Nous <i class="pt eux"></i>Eux <i class="pt iv-sup"></i>Supériorité <i class="pt iv-inf"></i>Infériorité</span>
+        <div class="fw-haut"><span class="fw-eq n" id="eq-n"></span><span class="fw-eq e" id="eq-e"></span><span class="esp"></span>
           <span class="fw-z"><span id="fz-txt"></span><button type="button" class="ot" data-z="moins" aria-label="Dézoomer">−</button><button type="button" class="ot" data-z="plus" aria-label="Zoomer">+</button><button type="button" class="ot" data-z="tout">Tout</button></span></div>
-        <div class="frise" id="frise" title="Clic : aller à cet instant · molette : zoomer"></div>
-        <div class="fw-temps"><span id="fr-a"></span><span id="fr-b"></span></div>
+        <div class="fa" id="frise"></div>
+        <div class="fw-temps"><span id="fr-a"></span><span class="fw-leg" id="fw-leg"></span><span id="fr-b"></span></div>
       </div>
       <div id="reglage"></div>
       ${M.ecrire ? `<div class="barre" id="barre">
@@ -440,7 +482,8 @@ async function marquer(action){
     }
   }
   const tmp = {id: 'tmp' + Date.now(), t: Math.round(maintenant() * 10) / 10, action, camp: M.camp, joueur: '', neuf: true, t2: null};
-  M.marqueurs.push(tmp); M.sel = tmp; liste();
+  /* en direct, pas de carte de tag : elle ne s'ouvre qu'au clic sur un tag (Clément, 18.11 : « sinon ce n'est pas jouable ») */
+  M.marqueurs.push(tmp); M.sel = tmp; M.carte = false; M.regle = false; liste();
   if (estIv(tmp)){ $('#qui').innerHTML = ''; M.dernier = tmp; } else demanderJoueur(tmp);
   const d = await api('/marqueur', {match: M.k, t: tmp.t, action, camp: tmp.camp});
   const i = M.marqueurs.indexOf(tmp);
@@ -470,11 +513,12 @@ function demanderJoueur(mq){
 
 function liste(){
   const l = M.marqueurs.slice().sort((a, b) => a.t - b.t), ul = $('#mqs'); if (!ul) return;
+  const infoListe = analyse();
   const compte = (a, c) => l.filter(x => x.action === a && x.camp === c).length;
   const vus = ACTIONS.filter(([a]) => compte(a, 'nous') + compte(a, 'eux'));
   $('#bilan').innerHTML = vus.length ? `<div class="bilan"><span class="tete">Action</span><span class="tete">Nous</span><span class="tete">Eux</span>${vus.map(([a, n]) => `<span>${n}</span><span>${compte(a, 'nous')}</span><span>${compte(a, 'eux')}</span>`).join('')}</div>` : '';
   ul.innerHTML = l.length ? l.map(m => `<li class="mq${m.neuf ? ' neuf' : ''}${M.sel === m ? ' sel' : ''}">
-      <button type="button" class="va" data-i="${M.marqueurs.indexOf(m)}" title="Revoir le clip"><time>${hms(m.t)}</time><i class="pt ${m.camp}"></i><span style="min-width:0"><b>${esc(NOM_ACTION[m.action] || m.action)}</b>${m.dessin ? '<span class="crayon" title="Avec un dessin">✏️</span>' : ''}<br><small>${m.camp === 'nous' ? 'Nous' : 'Eux'}${m.joueur ? ' · ' + esc(nomJoueur(m.joueur)) : ''}${estIv(m) ? ' · ' + (m.t2 == null ? 'en cours' : hms(m.t2 - m.t)) : ''}${m.parNom ? ' · par ' + esc(m.parNom) : ''}</small></span></button>
+      <button type="button" class="va" data-i="${M.marqueurs.indexOf(m)}" title="Revoir le clip"><time>${hms(m.t)}</time><i class="pt ${m.camp}"></i><span style="min-width:0"><b>${esc(NOM_ACTION[m.action] || m.action)}${m.action === 'but' && infoListe.get(m) ? ' ' + infoListe.get(m).score : ''}${m.action === 'faute' && infoListe.get(m) ? ' n°' + infoListe.get(m).n + (infoListe.get(m).cfd ? ' · CFD' : '') : ''}</b>${m.dessin ? '<span class="crayon" title="Avec un dessin">✏️</span>' : ''}<br><small>${m.camp === 'nous' ? 'Nous' : 'Eux'}${m.joueur ? ' · ' + esc(nomJoueur(m.joueur)) : ''}${estIv(m) ? ' · ' + (m.t2 == null ? 'en cours' : hms(m.t2 - m.t)) : ''}${m.parNom ? ' · par ' + esc(m.parNom) : ''}</small></span></button>
       ${M.ecrire && typeof m.id === 'number' ? `<button type="button" class="x" data-x="${m.id}" aria-label="Retirer">×</button>` : ''}</li>`).join('')
     : `<li class="vide">${M.ecrire ? 'Lance la vidéo et touche une action au bon moment.' : 'Rien de marqué pour l\'instant.'}</li>`;
   l.forEach(m => { delete m.neuf; });
@@ -482,7 +526,7 @@ function liste(){
     const x = e.target.closest('[data-x]'); if (x){ retirer(+x.dataset.x); return; }
     const va = e.target.closest('[data-i]'); if (!va) return;
     const m = M.marqueurs[+va.dataset.i]; if (!m || D) return;
-    M.sel = m; liste(); jouerClip(m);
+    jouerClip(m, true);
   };
   friseDessiner(); majReglage(); majBoutons();
 }
@@ -510,27 +554,98 @@ function fenetre(){
   const l = Math.max(20, Math.min(DUREE, Z[1] - Z[0])), a = Math.max(0, Math.min(DUREE - l, Z[0]));
   return [a, a + l];
 }
+/* ---------- la frise, ligne de vie (maquette A choisie par Clément, 18.11) ----------
+   Pastilles sur tiges : Cestas au-dessus de l'axe, l'adversaire en dessous ; buts en grand avec le score ; fautes d'équipe
+   numérotées, la 10e (puis 15e, 20e…) en orange : coup franc direct pour l'autre équipe ; supériorités et infériorités dans l'axe.
+   Deux pastilles qui se touchent montent d'un cran. Hauteurs en px : axe de 106 à 124 sur 230. */
+const FA_H = 230, FA_AXE = 106;
+const TIGE = {but: 46, arret: 34, tir: 24, recup: 16, perte: 16, moment: 20, faute: 8};
+const IC = {
+  but: '<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>',
+  tir: '<svg viewBox="0 0 16 16"><path d="M2 14L13 3M13 3H7.5M13 3v5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  arret: '<svg viewBox="0 0 16 16"><path d="M8 1.5l5.5 2v4.5c0 3.3-2.4 5.6-5.5 6.5-3.1-.9-5.5-3.2-5.5-6.5V3.5z" fill="currentColor"/></svg>',
+  perte: '<svg viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
+  recup: '<svg viewBox="0 0 16 16"><path d="M13 6a5 5 0 0 0-9-1.5M3 10a5 5 0 0 0 9 1.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3.5 1.5v3.5H7M12.5 14.5V11H9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  moment: '<svg viewBox="0 0 16 16"><path d="M3 13l1-3.5L11 2.5l2.5 2.5L6.5 12z" fill="currentColor"/></svg>'
+};
+const leMatch = () => MATCHS.find(x => x.k === (M && M.k)) || {};
+const nomCamp = c => c === 'nous' ? 'Cestas' : leMatch().adv || 'Adversaire';
+/* score au fil des buts, numéro de chaque faute d'équipe et coup franc direct (10e, 15e, 20e… de l'équipe) */
+function analyse(){
+  const info = new Map(), nf = {nous: 0, eux: 0}; let n = 0, e = 0;
+  M.marqueurs.filter(m => !estIv(m)).slice().sort((p, q) => p.t - q.t).forEach(m => {
+    if (m.action === 'but'){ m.camp === 'nous' ? n++ : e++; info.set(m, {score: `${n}-${e}`}); }
+    else if (m.action === 'faute'){ const k = ++nf[m.camp]; info.set(m, {n: k, cfd: k >= 10 && (k - 10) % 5 === 0}); }
+  });
+  return info;
+}
+const compter = (t, a, c) => M.marqueurs.filter(m => m.action === a && m.camp === c && m.t <= t).length;
+function detailTag(m, info){
+  const x = info.get(m) || {};
+  if (m.action === 'but') return `<em>${x.score || ''}</em>${m.joueur ? ' · ' + esc(nomJoueur(m.joueur)) : ''}`;
+  if (m.action === 'faute') return `${x.n || '?'}e faute d'équipe${x.cfd ? ` · <em>coup franc direct pour ${esc(nomCamp(m.camp === 'nous' ? 'eux' : 'nous'))}</em>` : ''}`;
+  if (estIv(m)) return m.t2 == null ? 'en cours' : `${hms(m.t2 - m.t)} de vidéo`;
+  return m.joueur ? esc(nomJoueur(m.joueur)) : '';
+}
+const titreTag = m => `${esc(NOM_ACTION[m.action] || m.action)} · ${esc(nomCamp(m.camp))}`;
+
 function friseDessiner(){
   const f = $('#frise'); if (!f || !M) return;
-  const [a, b] = fenetre(), x = s => ((s - a) / (b - a) * 100), dans = (s, e) => e >= a && s <= b;
-  const parts = [];
+  const [a, b] = fenetre(), W = f.clientWidth || 900, X = s => (s - a) / (b - a) * 100, PX = s => (s - a) / (b - a) * W;
+  const info = analyse(), parts = ['<i class="fa-axe"></i>'];
+  const sel = M.sel && typeof M.sel.id === 'number' ? M.sel : null;
+  if (sel && M.carte && !estIv(sel)){ const s = Math.max(a, debutClip(sel)), e = Math.min(b, finClip(sel)); if (e > s) parts.push(`<i class="fa-clip" style="left:${X(s)}%;width:${X(e) - X(s)}%"></i>`); }
   M.marqueurs.forEach((m, i) => {
-    const s = debutClip(m), e = finClip(m); if (!dans(s, e)) return;
-    const g = Math.max(0, x(s)), w = Math.max(.4, Math.min(100, x(e)) - g), sel = M.sel === m ? ' sel' : '';
-    if (estIv(m)){ parts.push(`<i class="fz-iv ${m.action}${m.t2 == null ? ' ouvert' : ''}${sel}" data-i="${i}" style="left:${g}%;width:${w}%" title="${esc(NOM_ACTION[m.action])} · ${hms(m.t)}${m.t2 != null ? ' → ' + hms(m.t2) : ' · en cours'}"></i>`); return; }
-    const ligne = m.camp === 'nous' ? 'h' : 'b';
-    parts.push(`<i class="fz-clip ${m.camp} ${ligne}${sel}" data-i="${i}" style="left:${g}%;width:${w}%"></i>`);
-    if (m.t >= a && m.t <= b) parts.push(`<i class="fz-tag ${m.camp} ${ligne} ${m.action}${sel}" data-i="${i}" style="left:${x(m.t)}%" title="${esc(NOM_ACTION[m.action] || m.action)} · ${hms(m.t)}${m.joueur ? ' · ' + esc(nomJoueur(m.joueur)) : ''}${m.dessin ? ' · ✏️' : ''}"></i>`);
+    if (!estIv(m)) return;
+    const s = Math.max(a, m.t), e = Math.min(b, finClip(m)); if (e < a || s > b) return;
+    const w = Math.max(.6, X(e) - X(s));
+    parts.push(`<i class="fa-iv ${m.action}${m.t2 == null ? ' ouvert' : ''}${sel === m ? ' sel' : ''}" data-i="${i}" style="left:${X(s)}%;width:${w}%">${w > 4 ? `<b>${m.action === 'sup' ? 'SUP' : 'INF'}</b>` : ''}</i>`);
   });
-  f.innerHTML = `<i class="fz-axe"></i>${parts.join('')}<i class="fz-tete" id="fz-tete"></i>`;
+  ['nous', 'eux'].forEach(c => {
+    /* les buts d'abord : ils restent au premier rang et prennent aussi la place du deuxième (leur score) ;
+       les autres montent d'un cran tant qu'ils touchent une pastille déjà posée, 2 crans au plus */
+    const l = M.marqueurs.map((m, i) => ({m, i})).filter(o => !estIv(o.m) && o.m.camp === c && o.m.t >= a && o.m.t <= b)
+      .sort((p, q) => (q.m.action === 'but') - (p.m.action === 'but') || p.m.t - q.m.t);
+    const pris = [[], [], []], touche = (k, x, d) => pris[k].some(o => Math.abs(o - x) < d);
+    l.forEach(({m, i}) => {
+      const x = PX(m.t), but = m.action === 'but';
+      let k = 0;
+      if (but){ pris[0].push(x); pris[1].push(x); }
+      else { while (k < 2 && touche(k, x, 24)) k++; pris[k].push(x); }
+      const d = info.get(m) || {}, tige = (TIGE[m.action] || 14) + k * 22;
+      const pa = `<span class="pa">${m.action === 'faute' ? (d.cfd ? 'CFD' : d.n || '') : IC[m.action] || ''}</span>`, t = `<span class="tige" style="height:${tige}px"></span>`;
+      const sc = m.action === 'but' ? `<span class="sc">${d.score}</span>` : '';
+      const cls = `fa-ev ${c} ${m.action}${d.cfd ? ' cfd' : ''}${sel === m ? ' sel' : ''}`;
+      parts.push(c === 'nous'
+        ? `<i class="${cls}" data-i="${i}" style="left:${X(m.t)}%;bottom:${FA_H - FA_AXE}px">${sc}${pa}${t}</i>`
+        : `<i class="${cls}" data-i="${i}" style="left:${X(m.t)}%;top:${FA_AXE + 18}px">${t}${pa}${sc}</i>`);
+    });
+  });
+  parts.push('<i class="fa-tete" id="fz-tete"></i>');
+  f.innerHTML = parts.join('');
   $('#fr-a').textContent = hms(a); $('#fr-b').textContent = hms(b);
   $('#fz-txt').textContent = Z ? 'Zoom : ' + hms(b - a) : '';
-  teteMaj();
+  const lg = $('#fw-leg');
+  if (lg && !lg.innerHTML) lg.innerHTML = `<span><i class="b">${IC.but}</i>But</span><span><i>${IC.tir}</i>Tir</span><span><i>${IC.arret}</i>Arrêt</span><span><i>${IC.perte}</i>Perte</span><span><i>${IC.recup}</i>Récup.</span><span><i class="f">7</i>Faute</span><span><i class="cfd"></i>Coup franc direct</span><span><i class="sup"></i>Sup.</span><span><i class="inf"></i>Inf.</span>`;
+  teteMaj(); majBug(true);
 }
 function teteMaj(){
   const t = $('#fz-tete'); if (!t || !M) return;
   const [a, b] = fenetre(), c = maintenant();
   t.style.left = ((c - a) / (b - a) * 100) + '%'; t.hidden = c < a || c > b;
+}
+/* le score par-dessus la vidéo et les fautes d'équipe au-dessus de la frise, à l'instant de la vidéo */
+let bugAvant = '';
+function majBug(forcer){
+  if (!M) return;
+  const c = maintenant(), n = compter(c, 'but', 'nous'), e = compter(c, 'but', 'eux'), fn = compter(c, 'faute', 'nous'), fe = compter(c, 'faute', 'eux');
+  const cle = [n, e, fn, fe].join('|'); if (cle === bugAvant && !forcer) return; bugAvant = cle;
+  const lm = leMatch(), adv = lm.adv || 'Adversaire';
+  const ecusson = (src, nom) => src ? `<img src="${esc(src)}" alt="">` : `<i class="crest">${esc(nom.slice(0, 3).toUpperCase())}</i>`;
+  const bug = $('#bug'); if (bug) bug.innerHTML = `<span>${ecusson(ctx.logo, 'SAGC')}Cestas</span><span class="sc">${n} - ${e}</span><span>${esc(adv)}${ecusson(lm.logo, adv)}</span>`;
+  const qn = $('#eq-n'), qe = $('#eq-e');
+  if (qn) qn.innerHTML = `Cestas · fautes <b class="${fn >= 9 ? 'alerte' : ''}">${fn}</b>`;
+  if (qe) qe.innerHTML = `${esc(adv)} · fautes <b class="${fe >= 9 ? 'alerte' : ''}">${fe}</b>`;
 }
 function zoomer(f, autour){
   const [a, b] = fenetre(), l = Math.max(20, Math.min(DUREE, (b - a) * f)), c = autour != null ? autour : Math.min(b, Math.max(a, maintenant()));
@@ -538,15 +653,25 @@ function zoomer(f, autour){
   Z = l >= DUREE ? null : [c - l * r, c - l * r + l];
   friseDessiner();
 }
+let tip = null;
 function friseBrancher(){
   const f = $('#frise'); if (!f) return;
+  if (!tip){ tip = document.createElement('div'); tip.className = 'tip'; tip.hidden = true; document.body.appendChild(tip); }
   const instantX = e => { const r = f.getBoundingClientRect(), [a, b] = fenetre(); return a + (e.clientX - r.left) / r.width * (b - a); };
   f.onclick = e => {
     if (D) return;
     const el = e.target.closest('[data-i]');
-    if (el){ const m = M.marqueurs[+el.dataset.i]; if (m){ M.sel = m; liste(); jouerClip(m); } return; }
-    arreterClip(); cacherCalque(); aller(Math.max(0, instantX(e)));
+    if (el){ const m = M.marqueurs[+el.dataset.i]; if (m) jouerClip(m, true); return; }
+    arreterClip(); cacherCalque(); M.carte = false; aller(Math.max(0, instantX(e))); liste();
   };
+  f.onmousemove = e => {
+    const el = e.target.closest('[data-i]'); if (!el){ tip.hidden = true; return; }
+    const m = M.marqueurs[+el.dataset.i]; if (!m){ tip.hidden = true; return; }
+    const d = detailTag(m, analyse());
+    tip.innerHTML = `<b>${titreTag(m)}</b>${d ? d + '<br>' : ''}<small>${hms(m.t)}${m.dessin ? ' · ✏️ dessin' : ''} · clic : le clip</small>`;
+    tip.hidden = false; tip.style.left = Math.min(innerWidth - 260, e.clientX + 14) + 'px'; tip.style.top = (e.clientY + 16) + 'px';
+  };
+  f.onmouseleave = () => { tip.hidden = true; };
   f.onwheel = e => {
     e.preventDefault();
     if (e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)){
@@ -559,28 +684,31 @@ function friseBrancher(){
     if (b.dataset.z === 'tout'){ Z = null; friseDessiner(); } else zoomer(b.dataset.z === 'plus' ? 1 / 2.5 : 2.5);
   };
 }
+addEventListener('resize', () => { if (M && M.video) friseDessiner(); });
 
-/* un clip : lecture du début à la fin, arrêt sur le dessin s'il y en a un, puis pause à la fin */
-function jouerClip(m){
+/* un clip : lecture du début à la fin, arrêt sur le dessin s'il y en a un, puis pause à la fin ; la carte du tag s'ouvre */
+function jouerClip(m, carte){
   if (D) return;
+  if (M.sel !== m) M.regle = false;
+  M.sel = m; if (carte) M.carte = true;
   arreterClip(); cacherCalque();
-  const a = debutClip(m);
-  aller(a, true);
+  aller(debutClip(m), true);
   lecture = {m, t0: Date.now(), vu: false};
+  liste();
 }
 function arreterClip(){ lecture = null; }
 function tic(){
   if (!M || !joueur) return;
-  teteMaj();
+  teteMaj(); majBug();
   if (M.marqueurs.some(m => estIv(m) && m.t2 == null)) friseDessiner();
   if (!lecture) return;
   const m = lecture.m, c = maintenant(), a = debutClip(m), b = finClip(m), joue = joueur.getPlayerState && joueur.getPlayerState() === 1;
   /* la vidéo a été envoyée ailleurs (frise, flèches, lecteur) : le clip s'arrête de surveiller */
   if (Date.now() - lecture.t0 > 1500 && (c < a - 3 || c > b + 3)){ lecture = null; return; }
   if (m.dessin && !lecture.vu && c >= m.t - .08){ lecture.vu = true; try { joueur.pauseVideo(); } catch(e){} aller(m.t); afficherDessin(m); return; }
-  if (joue && !estIv(m) || joue && m.t2 != null) if (c >= b - .05){ try { joueur.pauseVideo(); } catch(e){} lecture = null; afficherFin(m); }
+  if (joue && (!estIv(m) || m.t2 != null) && c >= b - .05){ try { joueur.pauseVideo(); } catch(e){} lecture = null; afficherFin(m); }
 }
-/* fin d'un clip : Rejouer ou Continuer le match */
+/* fin d'un clip : Rejouer, ou Continuer le match (la carte du tag se referme) */
 function afficherFin(m){
   const c = $('#calque'); if (!c || D) return;
   c.hidden = false; c.className = 'calque lecture';
@@ -588,7 +716,7 @@ function afficherFin(m){
   c.onclick = e => {
     const b = e.target.closest('[data-cq]'); if (!b) return;
     if (b.dataset.cq === 'rejouer') jouerClip(m);
-    else { cacherCalque(); if (joueur && joueur.playVideo) joueur.playVideo(); }
+    else { cacherCalque(); M.carte = false; M.regle = false; liste(); if (joueur && joueur.playVideo) joueur.playVideo(); }
   };
 }
 /* les boutons Supériorité / Infériorité disent quand un intervalle est ouvert */
@@ -601,53 +729,36 @@ function majBoutons(){
   });
 }
 
-/* le réglage du tag choisi : − / + et poignées sur une frise zoomée autour du clip */
+/* la carte du tag choisi (Clément, 18.11) : seulement quand on vient de toucher un tag ; ▶ Rejouer · ⏱ Régler · ✏️ Dessin · ✕ ;
+   les − / + n'apparaissent qu'après « Régler », « OK » les referme ; « Continuer » ou un clic ailleurs referment la carte */
 function majReglage(){
   const r = $('#reglage'); if (!r || !M) return;
   const m = M.sel;
-  if (!m || typeof m.id !== 'number' || D){ r.innerHTML = ''; return; }
-  const iv = estIv(m), e = M.ecrire, pas = (champ, sens) => e ? `<button type="button" class="ot" data-rg="${champ}" data-s="${sens}" aria-label="${sens > 0 ? 'Plus' : 'Moins'}">${sens > 0 ? '+' : '−'}</button>` : '';
+  if (!m || typeof m.id !== 'number' || D || !M.carte){ r.innerHTML = ''; return; }
+  const iv = estIv(m), e = M.ecrire, info = analyse(), d = detailTag(m, info);
+  const pas = (champ, sens) => `<button type="button" class="ot" data-rg="${champ}" data-s="${sens}" aria-label="${sens > 0 ? 'Plus' : 'Moins'}">${sens > 0 ? '+' : '−'}</button>`;
   const perso = !iv && (m.av != null || m.ap != null);
-  r.innerHTML = `<div class="rg"><p class="rg-t"><b>${decrire(m)}</b>${m.joueur ? ' · ' + esc(nomJoueur(m.joueur)) : ''}</p>
-    <div class="rg-l">${iv
-      ? `<span class="lb">Début</span>${pas('t', -1)}<b class="rg-v">${hms(m.t)}</b>${pas('t', 1)}<span class="lb">Fin</span>${pas('t2', -1)}<b class="rg-v">${m.t2 == null ? 'en cours' : hms(m.t2)}</b>${pas('t2', 1)}<span class="lb">${m.t2 == null ? '' : 'durée ' + hms(m.t2 - m.t)}</span>`
-      : `<span class="lb">Démarre</span>${pas('av', -1)}<b class="rg-v">${avDe(m)} s</b>${pas('av', 1)}<span class="lb">avant · s'arrête</span>${pas('ap', -1)}<b class="rg-v">${apDe(m)} s</b>${pas('ap', 1)}<span class="lb">après</span>${perso && e ? '<button type="button" class="lien-mini" data-rg="defaut">durées de la catégorie</button>' : ''}`}
-      <span class="esp"></span><button type="button" class="btn btn-ghost" data-rg="lire">▶ Lire le clip</button></div>
-    <div class="mini" id="mini"></div></div>`;
-  miniDessiner();
+  r.innerHTML = `<div class="selc"><span class="q">${titreTag(m)}<small>${d ? d + ' · ' : ''}${hms(m.t)}${m.dessin ? ' · ✏️' : ''}</small></span><span class="esp"></span>
+    <button type="button" class="ot" data-rg="lire">▶ Rejouer</button>
+    ${e ? `<button type="button" class="ot" data-rg="regler" aria-pressed="${!!M.regle}">⏱ Régler</button><button type="button" class="ot" data-rg="dessin">✏️ Dessin</button>` : ''}
+    <button type="button" class="ot x2" data-rg="fermer" aria-label="Fermer">✕</button>
+    ${e && M.regle ? `<div class="rgl">${iv
+      ? `Début ${pas('t', -1)}<b>${hms(m.t)}</b>${pas('t', 1)} · Fin ${m.t2 == null ? '<b>en cours</b>' : `${pas('t2', -1)}<b>${hms(m.t2)}</b>${pas('t2', 1)}`}`
+      : `Démarre ${pas('av', -1)}<b>${avDe(m)} s</b>${pas('av', 1)} avant · s'arrête ${pas('ap', -1)}<b>${apDe(m)} s</b>${pas('ap', 1)} après${perso ? '<button type="button" class="lien-mini" data-rg="defaut">durées de la catégorie</button>' : ''}`}
+      <span class="esp"></span><button type="button" class="btn btn-acid" data-rg="ok">OK</button></div>` : ''}</div>`;
   r.onclick = ev => {
     const b = ev.target.closest('[data-rg]'); if (!b) return;
     const k = b.dataset.rg, s = +b.dataset.s || 0;
     if (k === 'lire') return jouerClip(m);
+    if (k === 'regler'){ M.regle = !M.regle; return majReglage(); }
+    if (k === 'ok'){ M.regle = false; return majReglage(); }
+    if (k === 'fermer'){ M.carte = false; M.regle = false; return liste(); }
+    if (k === 'dessin'){ arreterClip(); cacherCalque(); aller(m.t); setTimeout(ouvrirDessin, 350); return; }
     if (k === 'defaut') return reglerClip(m, {av: null, ap: null});
     if (k === 'av') return reglerClip(m, {av: Math.max(0, Math.min(120, avDe(m) + s))});
     if (k === 'ap') return reglerClip(m, {ap: Math.max(0, Math.min(120, apDe(m) + s))});
     if (k === 't') return reglerClip(m, {t: Math.max(0, Math.min(m.t2 != null ? m.t2 : 1e9, m.t + s))});
     if (k === 't2' && m.t2 != null) return reglerClip(m, {t2: Math.max(m.t, m.t2 + s)});
-  };
-}
-/* la mini-frise : 10 s de marge autour du clip, poignées à tirer (qui peut écrire) */
-function miniDessiner(){
-  const z = $('#mini'), m = M.sel; if (!z || !m) return;
-  const s = debutClip(m), e = finClip(m), a = Math.max(0, s - 10), b = e + 10, x = v => ((v - a) / (b - a) * 100);
-  z.innerHTML = `<i class="mi-clip ${estIv(m) ? m.action : m.camp}" style="left:${x(s)}%;width:${x(e) - x(s)}%"></i>${estIv(m) ? '' : `<i class="mi-tag" style="left:${x(m.t)}%"></i>`}
-    ${M.ecrire ? `<i class="poignee" data-p="debut" style="left:${x(s)}%"></i>${!estIv(m) || m.t2 != null ? `<i class="poignee" data-p="fin" style="left:${x(e)}%"></i>` : ''}` : ''}
-    <span class="mi-a">${hms(a)}</span><span class="mi-b">${hms(b)}</span>`;
-  if (!M.ecrire) return;
-  z.onpointerdown = ev => {
-    const p = ev.target.closest('[data-p]'); if (!p) return;
-    ev.preventDefault(); try { z.setPointerCapture(ev.pointerId); } catch(er){}
-    const r = z.getBoundingClientRect(), quel = p.dataset.p, champs = {};
-    const v = cx => Math.round((a + (cx - r.left) / r.width * (b - a)) * 2) / 2;
-    z.onpointermove = mv => {
-      const t = v(mv.clientX);
-      if (estIv(m)){ if (quel === 'debut') champs.t = Math.max(0, Math.min(m.t2, t)); else champs.t2 = Math.max(m.t, t); }
-      else if (quel === 'debut') champs.av = Math.max(0, Math.min(120, Math.round((m.t - t) * 2) / 2));
-      else champs.ap = Math.max(0, Math.min(120, Math.round((t - m.t) * 2) / 2));
-      Object.assign(m, champs); miniDessiner(); friseDessiner();
-      const rv = document.querySelectorAll('#reglage .rg-v'); if (rv.length === 2) rv[quel === 'debut' ? 0 : 1].textContent = estIv(m) ? hms(quel === 'debut' ? m.t : m.t2) : (quel === 'debut' ? avDe(m) : apDe(m)) + ' s';
-    };
-    z.onpointerup = z.onpointercancel = () => { z.onpointermove = z.onpointerup = z.onpointercancel = null; if (Object.keys(champs).length) reglerClip(m, champs); };
   };
 }
 async function reglerClip(m, champs){
@@ -897,10 +1008,10 @@ const GUIDE = [
   {t: '<em>Nous</em> ou eux, et qui', vis: `<div class="mini-camp"><span>Nous</span><span>Eux</span></div>`,
     p: "Avant de taguer, choisis Nous ou Eux (touche C pour basculer). Après un tag pour nous, la liste des joueurs s'affiche : touche celui qui a fait l'action.",
     m: "Le joueur est facultatif. Sans réponse, le tag reste à l'équipe ; le tag suivant referme la liste."},
-  {t: 'La frise, des <em>clips</em>', vis: `<div class="gfr"><i class="ax"></i><i class="cl n" style="left:8%;width:12%"></i><i class="tg n" style="left:18%"></i><i class="cl n" style="left:52%;width:9%"></i><i class="tg n" style="left:59%"></i>
-        <i class="cl e" style="left:30%;width:10%"></i><i class="tg e" style="left:38%"></i><i class="cl e" style="left:76%;width:8%"></i><i class="tg e" style="left:82%"></i><i class="iv" style="left:40%;width:22%"></i><i class="tt"></i></div>`,
-    p: "Sous la vidéo, la frise du match : nous en haut, eux en bas, supériorités et infériorités au milieu. Chaque tag est un clip : un clic dessus, la vidéo joue l'action puis s'arrête. « Continuer » relance le match.",
-    m: "Un tag touché montre son réglage : − / + ou poignées pour démarrer plus tôt, finir plus tard. Les durées de départ se règlent une fois par catégorie (« Durées par catégorie »). Molette sur la frise : zoom."},
+  {t: 'La frise, des <em>clips</em>', vis: `<div class="gfr"><i class="ax"></i><i class="iv" style="left:56%;width:14%"></i>
+        ${[[10, 'n', 'but', '1-0'], [24, 'n', 'tir'], [33, 'e', 'but', '1-1'], [45, 'n', 'arret'], [52, 'e', 'faute'], [63, 'n', 'but', '2-1'], [78, 'e', 'tir'], [88, 'n', 'faute']].map(([x, c, a, s]) => `<i class="lp ${c} ${a}" style="left:${x}%">${s ? `<em>${s}</em>` : ''}<b></b></i>`).join('')}<i class="tt"></i></div>`,
+    p: "Sous la vidéo, la ligne de vie du match : Cestas au-dessus, l'adversaire en dessous, les buts en grand avec le score, les fautes d'équipe numérotées (la 10e en orange : coup franc direct), les supériorités au milieu. Un clic sur un tag : la vidéo joue l'action puis s'arrête.",
+    m: "Le tag cliqué ouvre une petite carte : ▶ Rejouer, ⏱ Régler (démarrer plus tôt, finir plus tard, puis OK), ✏️ Dessin. Elle se referme avec ✕ ou « Continuer ». Molette sur la frise : zoom ; le score suit les buts tagués."},
   {t: 'Dessine sur <em>l\'action</em>', vis: `<div class="mini-dessin"><svg viewBox="0 0 320 120" aria-hidden="true"><rect width="320" height="120" rx="6" fill="#16201a"/><circle class="j" cx="70" cy="70" r="9" fill="#3fa845"/><circle class="j" cx="250" cy="45" r="9" fill="#3fa845"/><circle class="j" cx="180" cy="88" r="9" fill="#6fa8d8"/>
         <path class="trace" d="M82 66 Q160 20 236 46" fill="none" stroke="#f2e400" stroke-width="5" stroke-linecap="round"/><path class="pointe" d="M236 46 l-14 -8 l2 15 z" fill="#f2e400"/><circle class="rond" cx="180" cy="88" r="20" fill="none" stroke="#ff7a45" stroke-width="4"/></svg></div>`,
     p: "Mets en pause sur l'action et touche ✏️ Dessiner (touche D) : flèche, trait, cercle ou texte, en 5 couleurs. Le dessin se rattache au tag que tu viens de poser ou de toucher, sinon à un tag « Moment » créé à l'instant.",
@@ -911,7 +1022,7 @@ const GUIDE = [
 ];
 /* version du pas-à-pas : qui a vu l'ancien (sans le dessin) voit une fois la nouvelle étape */
 /* v3 (frise) : qui a vu une version d'avant revoit à partir de la frise (puis le dessin) */
-const GUIDE_V = '3', GUIDE_DESSIN = GUIDE.findIndex(s => /clips/.test(s.t));
+const GUIDE_V = '4', GUIDE_DESSIN = GUIDE.findIndex(s => /clips/.test(s.t));
 let gdI = -1;
 function guide(i, sens){
   gdI = i;
