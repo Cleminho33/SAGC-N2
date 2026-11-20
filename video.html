@@ -145,17 +145,17 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .fw-eq b.alerte{color:var(--shot)}
 .fw-z{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted)}
 .fw-z .ot{padding:5px 9px;font-size:12px}
-.fa{position:relative;height:230px;cursor:pointer;user-select:none;-webkit-user-select:none;overflow:hidden;touch-action:pan-y}
+.fa{position:relative;height:162px;cursor:pointer;user-select:none;-webkit-user-select:none;overflow:hidden;touch-action:pan-y}
 .fa i{position:absolute;display:block;font-style:normal}
-.fa-axe{left:0;right:0;top:106px;height:18px;border-radius:9px;background:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
-.fa-iv{top:109px;height:12px;border-radius:6px;z-index:1}
+.fa-axe{left:0;right:0;top:72px;height:18px;border-radius:9px;background:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.fa-iv{top:75px;height:12px;border-radius:6px;z-index:1}
 .fa-iv.sup{background:var(--acid);box-shadow:0 0 0 3px rgba(242,228,0,.18)}
 .fa-iv.inf{background:var(--shot);box-shadow:0 0 0 3px rgba(255,122,69,.18)}
 .fa-iv.ouvert{background-image:repeating-linear-gradient(45deg,rgba(11,15,12,.35) 0 6px,transparent 6px 12px);background-size:17px 17px;animation:raye 1s linear infinite}
 .fa-iv b{position:absolute;left:6px;top:0;font:900 9.5px/12px Inter,sans-serif;color:var(--ink);white-space:nowrap}
 .fa-iv.sel{outline:2px solid var(--bone);outline-offset:2px}
 @keyframes raye{to{background-position:17px 0}}
-.fa-clip{top:106px;height:18px;border-radius:9px;background:rgba(234,240,232,.16);box-shadow:inset 0 0 0 1px rgba(234,240,232,.55);z-index:1;pointer-events:none}
+.fa-clip{top:72px;height:18px;border-radius:9px;background:rgba(234,240,232,.16);box-shadow:inset 0 0 0 1px rgba(234,240,232,.55);z-index:1;pointer-events:none}
 .fa .fa-ev{translate:-50% 0;display:flex;flex-direction:column;align-items:center;z-index:2}
 .fa-ev .tige,.fa-ev .pa,.fa-ev .sc{display:block;flex:none}
 .fa-ev .pa{display:flex}
@@ -174,7 +174,7 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .fa-ev.faute .pa{width:17px;height:17px;background:var(--ink-3);border-color:var(--line-2);color:var(--muted);border-radius:5px}
 .fa-ev.faute.cfd .pa{width:24px;height:24px;background:var(--shot);color:var(--ink);border-color:var(--ink-2);border-radius:6px;font-size:8px}
 .fa-ev.moment .pa{background:var(--ink-3);color:var(--bone);border-color:var(--line-2)}
-.fa-tete{top:84px;height:62px;width:2px;margin-left:-1px;background:var(--bone);pointer-events:none;z-index:6}
+.fa-tete{top:50px;height:62px;width:2px;margin-left:-1px;background:var(--bone);pointer-events:none;z-index:6}
 .fa-tete::before{content:'';position:absolute;top:-7px;left:-5px;border:6px solid transparent;border-top-color:var(--bone)}
 .fw-temps{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:11.5px;color:var(--muted);margin-top:2px;font-variant-numeric:tabular-nums}
 .fw-leg{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;font-size:11.5px}
@@ -304,6 +304,94 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .bientot div{padding:12px;border-radius:var(--r-s);border:1px dashed var(--line-2);font-size:12.5px;color:var(--muted);text-align:left}
 .bientot b{display:block;color:var(--bone);font-size:13.5px;margin-bottom:4px}
 @media (max-width:520px){.gd-vis{height:auto;min-height:130px;gap:6px;padding:10px}.fl{display:none}.nd{padding:8px 4px;font-size:11.5px}.nd b{font-size:12.5px}.gd-t{font-size:26px}}
+/* ---------- le Cockpit (Clément, 20.11) : tout le marquage tient dans un écran d'ordinateur, sans défiler ----------
+   vidéo en haut (16/9, toute la place qui reste), frise dessous, tuiles d'action en bas ; à droite les chiffres du match,
+   nos joueurs et la liste des tags (seule la liste défile). Sous 980 px de large, on revient à la page qui défile. */
+@media (min-width:981px){
+  body.cockpit{height:100vh;overflow:hidden}
+  body.cockpit .wrap{max-width:none;height:100vh;padding:8px 14px 12px;display:flex;flex-direction:column}
+  body.cockpit main{flex:1;min-height:0;display:flex;flex-direction:column}
+  body.cockpit .haut{flex:none}
+  .cockpit .cp{flex:1;min-height:0;display:grid;gap:10px;grid-template-columns:minmax(0,1fr) 340px;grid-template-rows:minmax(0,1fr) auto auto;grid-template-areas:"v c" "f c" "b c"}
+  .cockpit .cp-v{grid-area:v;min-height:0;display:flex;align-items:center;justify-content:center}
+  .cockpit .cp-v .ecran{height:100%;max-width:100%;width:auto}
+  .cockpit .cp-f{grid-area:f;min-width:0}.cockpit .cp-f .fw{margin-top:0;padding:6px 12px 4px}
+  .cockpit .fw-leg{visibility:hidden}  /* la légende reste dans le « ? » ; la place va à la vidéo */
+  .cockpit .fw-haut{margin-bottom:0}
+  .cockpit .cp-b{grid-area:b;min-width:0}
+  .cockpit .cp-c{grid-area:c;min-height:0;display:flex;flex-direction:column;gap:10px}
+  .cockpit .cp-tete{display:flex;align-items:baseline;gap:12px;margin:0 0 8px}
+  .cockpit .cp-tete .h1{font-size:26px;margin:0}
+  .cockpit .barre{margin-top:0;flex-wrap:nowrap}
+  .cockpit .outils{margin-top:0;max-height:34vh;overflow:auto}
+  .cockpit .liste-c{flex:1;min-height:0;display:flex;flex-direction:column}
+  .cockpit .mqs{max-height:none;flex:1;min-height:0}
+}
+/* la carte du tag, le choix du joueur et les durées, posés sur la vidéo (au-dessus des commandes de YouTube) */
+.ecran #reglage,.ecran #qui{position:absolute;left:10px;right:10px;z-index:4}
+.ecran #reglage{top:52px}
+.ecran #qui{bottom:54px}
+.ecran #reglage .selc,.ecran #qui .qui{margin:0;background:rgba(19,26,21,.93);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.ecran #durees{position:absolute;left:10px;right:10px;top:10px;bottom:54px;z-index:5;display:flex;align-items:flex-end;pointer-events:none}
+.ecran #durees .rg{margin:0;width:100%;max-height:100%;overflow:auto;background:rgba(19,26,21,.96);pointer-events:auto}
+.cp-c .card{padding:12px 14px}
+.cp-h{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 8px;font:700 10.5px/1 Inter,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.cp-liens{display:flex;gap:6px;align-items:center}
+.cp-liens .ot{padding:7px 10px;font-size:12.5px}
+/* les chiffres du match : Cestas à gauche, l'adversaire à droite */
+.duel{display:grid;grid-template-columns:22px 1fr 76px 1fr 22px;align-items:center;gap:5px 6px}
+.duel .v{font:800 13px/1 Inter,sans-serif;text-align:center;font-variant-numeric:tabular-nums}
+.duel .l{text-align:center;color:var(--muted);font:600 11.5px/1 Inter,sans-serif;white-space:nowrap}
+.duel .g,.duel .d{height:8px;border-radius:4px;background:var(--ink-3);position:relative;overflow:hidden}
+.duel .g i{position:absolute;right:0;top:0;bottom:0;background:var(--grass);border-radius:4px;transition:width .4s}
+.duel .d i{position:absolute;left:0;top:0;bottom:0;background:var(--away);border-radius:4px;transition:width .4s}
+.jos{display:flex;gap:6px;flex-wrap:wrap}
+.jo{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:var(--r-pill);background:var(--ink-3);font:600 12.5px/1 Inter,sans-serif}
+.jo b{color:var(--acid)}.jo small{color:var(--muted);font-size:11.5px}
+.filtres{display:flex;gap:5px;margin:0 0 8px;flex-wrap:wrap}
+.filtres button{padding:6px 10px;border-radius:var(--r-pill);border:1px solid var(--line-2);font:700 11px/1 Inter,sans-serif;color:var(--muted)}
+.filtres button.on{background:var(--bone);color:var(--ink);border-color:var(--bone)}
+.cockpit .mqs{margin:0;border-top:0}
+.cockpit .mq{padding:5px 4px;border-bottom:0;border-radius:var(--r-s)}
+.cockpit .mq:hover{background:var(--ink-3)}
+.cockpit .mq.sel{background:rgba(242,228,0,.09);box-shadow:inset 3px 0 0 var(--acid)}
+.mq .x{display:grid;place-items:center;font-size:15px;opacity:.6;border-radius:var(--r-s)}
+.mq:hover .x,.mq.sel .x{opacity:1}
+.mq .x:hover{background:rgba(255,122,69,.15);color:var(--shot)}
+.mq.part{opacity:0;transform:translateX(40px);transition:opacity .25s,transform .25s}
+.mq .em{font-size:15px;flex:none}
+/* les tuiles d'action : une couleur, un pictogramme, un compteur */
+.act.tu{position:relative;flex:1 1 0;min-width:0;flex-direction:column;justify-content:center;gap:3px;padding:9px 4px 8px;background:var(--ink-2);border-color:var(--line);color:var(--bone);overflow:hidden}
+.act.tu:hover{border-color:var(--c);transform:translateY(-2px)}
+.act.tu:active,.act.tu.flash{transform:scale(.93)}
+.act.tu .em{font-size:21px;line-height:1;transition:transform .25s}
+.act.tu:hover .em{transform:scale(1.15) rotate(-6deg)}
+.act.tu .nm{font:700 11.5px/1.1 Inter,sans-serif;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.act.tu kbd{position:absolute;left:5px;top:5px;padding:2px 4px;font-size:10px;border:0;background:rgba(255,255,255,.07)}
+.act.tu .nb{position:absolute;right:5px;top:5px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--c);color:var(--ink);font:800 10.5px/18px Inter,sans-serif;text-align:center;font-style:normal}
+.act.tu .nb:empty{display:none}
+.act.tu .nb.bump{animation:bump .4s}
+@keyframes bump{50%{transform:scale(1.5)}}
+.act.tu::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--c);opacity:.85}
+.act.tu.but{background:var(--ink-2);color:var(--bone);border-color:var(--line)}
+.act.tu.but kbd{color:var(--muted)}
+.act.tu.onde::before{content:"";position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px;border-radius:50%;background:var(--c);opacity:.5;animation:onde .5s forwards}
+@keyframes onde{to{transform:scale(18);opacity:0}}
+.act.tu.dess{--c:var(--bone);border-style:dashed}
+.cockpit .camp{flex-direction:column;border-radius:var(--r-s);padding:3px;margin-right:0;flex:none}
+.cockpit .camp button{flex:1;border-radius:7px;padding:6px 12px}
+.plus1{position:fixed;z-index:50;font:400 22px/1 Anton,Impact,sans-serif;color:var(--acid);pointer-events:none;animation:monte .8s forwards}
+@keyframes monte{to{transform:translateY(-60px);opacity:0}}
+/* un but tagué : BUUUT ! par-dessus la vidéo, des confettis pour nous */
+.but-flash{position:absolute;inset:0;z-index:6;display:grid;place-items:center;font:400 clamp(44px,8vw,110px)/1 Anton,Impact,sans-serif;font-style:italic;color:var(--acid);text-shadow:0 6px 30px rgba(0,0,0,.6);pointer-events:none;animation:butf 1.2s forwards}
+.but-flash.eux{color:var(--bone);font-size:clamp(30px,5vw,64px)}
+@keyframes butf{0%{transform:scale(.3);opacity:0}25%{transform:scale(1.1);opacity:1}70%{transform:scale(1);opacity:1}100%{transform:scale(1.4);opacity:0}}
+.confetti{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+.confetti i{position:absolute;top:-12px;width:8px;height:12px;border-radius:2px;animation:pluie 1.4s forwards}
+@keyframes pluie{to{transform:translate(var(--dx),110%) rotate(var(--r));opacity:.2}}
+.bug .sc.flip{animation:flip .5s}
+@keyframes flip{50%{transform:rotateX(90deg)}}
+@media (prefers-reduced-motion:reduce){.but-flash,.confetti,.plus1,.act.tu .nb.bump,.act.tu.onde::before,.bug .sc.flip{animation:none!important;display:none}}
 @media (prefers-reduced-motion:reduce){.mq.neuf{animation:none}.act{transition:none}.mini-dessin *{animation:none!important;stroke-dashoffset:0!important;opacity:1!important}.gd,.gd-pas,.fl::after,.faux-champ span,.mini-acts kbd,.gfrise i,.gfr .tt,.fa-iv.ouvert,.selc,.act.ouvert,.mini-camp::before,.mini-camp span,.mini-liste div{animation:none!important}.faux-champ span{width:auto;border:0}}
 </style>
 </head>
@@ -332,6 +420,9 @@ const ACTIONS = [
   ['recup', 'Récupération'], ['faute', 'Faute'], ['sup', 'Supériorité'], ['inf', 'Infériorité']];
 /* « moment » : le tag posé par Dessiner quand aucun tag n'est là (pas de bouton ni de touche à lui) */
 const NOM_ACTION = {...Object.fromEntries(ACTIONS), moment: 'Moment'};
+/* les tuiles du Cockpit (20.11) : un pictogramme et une couleur par action */
+const TUILE = {but: ['🥅', 'var(--acid)'], tir: ['🎯', 'var(--bone)'], arret: ['🧤', 'var(--away)'], perte: ['💨', 'var(--shot)'],
+  recup: ['🧲', 'var(--grass)'], faute: ['⚠️', 'var(--shot)'], sup: ['⬆️', 'var(--acid)'], inf: ['⬇️', 'var(--shot)'], moment: ['✏️', 'var(--bone)']};
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const lire = k => { try { return localStorage.getItem(k); } catch(e){ return null; } };
@@ -414,6 +505,7 @@ function dessiner(){
   const v = $('#v'), tete = `<div class="eyebrow">Vidéo du match</div><h1 class="h1">${esc(titreMatch(M.k))}</h1><div class="rule"></div>`;
   joueur = null;
   if (!M.video){
+    document.body.classList.remove('cockpit');
     v.innerHTML = tete + (M.ecrire ? `<div class="card"><b>Colle le lien YouTube du match</b>
         <p class="muted" style="margin:4px 0 0;font-size:13.5px">Le match entier, même s'il dure 1h30 : rien n'est téléchargé, la vidéo reste sur YouTube.</p>
         <form class="lien" id="f-lien"><input class="champ" id="yt-lien" placeholder="https://www.youtube.com/watch?v=…" autocomplete="off" required><button class="btn btn-acid">Charger</button></form>
@@ -422,31 +514,41 @@ function dessiner(){
     if (M.ecrire){ $('#yt-lien').focus(); $('#f-lien').onsubmit = e => { e.preventDefault(); poserLien($('#yt-lien').value); }; }
     return;
   }
-  v.innerHTML = tete + `<div class="grille">
-    <section>
-      <div class="ecran"><div id="yt"></div><div class="calque" id="calque" hidden></div><div class="bug" id="bug"></div></div>
-      <div class="outils" id="outils" hidden></div>
+  /* le Cockpit (20.11) : vidéo, frise, tuiles, et à droite les chiffres, nos joueurs, la liste ; la carte du tag,
+     le choix du joueur et les durées se posent sur la vidéo */
+  document.body.classList.add('cockpit');
+  v.innerHTML = `<div class="cp-tete"><h1 class="h1">${esc(titreMatch(M.k))}</h1><span class="esp"></span>${M.ecrire ? `<span class="cp-liens">
+      <button type="button" class="ot" id="ch-lien" title="Changer le lien YouTube">🔗 Lien</button><button type="button" class="ot" id="ch-durees" title="Durées des clips par catégorie">⏱ Durées</button></span>` : ''}</div>
+    <div class="cp">
+    <section class="cp-v">
+      <div class="ecran"><div id="yt"></div><div class="calque" id="calque" hidden></div><div class="bug" id="bug"></div><div id="reglage"></div><div id="qui"></div><div id="durees"></div></div>
+    </section>
+    <section class="cp-f">
       <div class="fw">
         <div class="fw-haut"><span class="fw-eq n" id="eq-n"></span><span class="fw-eq e" id="eq-e"></span><span class="esp"></span>
           <span class="fw-z"><span id="fz-txt"></span><button type="button" class="ot" data-z="moins" aria-label="Dézoomer">−</button><button type="button" class="ot" data-z="plus" aria-label="Zoomer">+</button><button type="button" class="ot" data-z="tout">Tout</button></span></div>
         <div class="fa" id="frise"></div>
         <div class="fw-temps"><span id="fr-a"></span><span class="fw-leg" id="fw-leg"></span><span id="fr-b"></span></div>
       </div>
-      <div id="reglage"></div>
-      ${M.ecrire ? `<div class="barre" id="barre">
+    </section>
+    <section class="cp-b">
+      <div class="outils" id="outils" hidden></div>
+      ${M.ecrire ? `<div class="barre" id="barre" title="Clavier (clique d'abord hors de la vidéo) : 1 à 8 marquer · C Nous / Eux · D dessiner · Espace lecture · ← → 5 s (Maj : 1 s) · Suppr retire le tag choisi">
         <div class="camp" role="group" aria-label="Pour qui">${['nous', 'eux'].map(c => `<button type="button" data-camp="${c}" class="${M.camp === c ? 'on' : ''}" aria-pressed="${M.camp === c}">${c === 'nous' ? 'Nous' : 'Eux'}</button>`).join('')}</div>
-        ${ACTIONS.map(([id, nom], i) => `<button type="button" class="act ${id}" data-act="${id}"><kbd>${i + 1}</kbd>${nom}</button>`).join('')}
-        <button type="button" class="act dess" data-dessin="1"><kbd>D</kbd>✏️ Dessiner</button>
-      </div>
-      <div id="qui"></div>
-      <p class="aide">Clavier (clique d'abord hors de la vidéo) : <kbd>1</kbd> à <kbd>8</kbd> marquer · <kbd>C</kbd> Nous / Eux · <kbd>D</kbd> dessiner · <kbd>Espace</kbd> lecture · <kbd>←</kbd> <kbd>→</kbd> 5 s · <kbd>Maj</kbd>+<kbd>←</kbd> <kbd>→</kbd> 1 s.
-        <button type="button" id="ch-lien" style="text-decoration:underline;color:var(--muted)">Changer le lien</button> ·
-        <button type="button" id="ch-durees" style="text-decoration:underline;color:var(--muted)">Durées par catégorie</button></p>
-      <div id="durees"></div>`
+        ${ACTIONS.map(([id, nom], i) => `<button type="button" class="act tu ${id}" data-act="${id}" style="--c:${TUILE[id][1]}"><kbd>${i + 1}</kbd><i class="nb" data-nb="${id}"></i><span class="em">${TUILE[id][0]}</span><span class="nm">${nom}</span></button>`).join('')}
+        <button type="button" class="act tu dess" data-dessin="1"><kbd>D</kbd><span class="em">✏️</span><span class="nm">Dessiner</span></button>
+      </div>`
       : `<p class="aide">${esc(RAISON[M.pourquoi] || '')}</p>`}
     </section>
-    <aside class="card cote"><h2>Les actions</h2><div id="bilan"></div><ul class="mqs" id="mqs"></ul></aside>
+    <aside class="cp-c">
+      <div class="card"><p class="cp-h"><span>Le match en chiffres</span><span id="cp-tot"></span></p><div class="duel" id="bilan"></div></div>
+      <div class="card"><p class="cp-h"><span>Nos joueurs</span><span>buts · tirs</span></p><div class="jos" id="cp-jos"></div></div>
+      <div class="card liste-c"><p class="cp-h"><span>Les tags</span><span id="cp-nb"></span></p>
+        <div class="filtres" id="cp-fil">${[['tout', 'Tout'], ['nous', 'Cestas'], ['eux', esc(nomCamp('eux'))], ['but', 'Buts'], ['dessin', '✏️']].map(([f, n]) => `<button type="button" data-f="${f}" class="${(M.filtre || 'tout') === f ? 'on' : ''}">${n}</button>`).join('')}</div>
+        <ul class="mqs" id="mqs"></ul></div>
+    </aside>
   </div>`;
+  $('#cp-fil').onclick = e => { const b = e.target.closest('[data-f]'); if (!b) return; M.filtre = b.dataset.f; document.querySelectorAll('#cp-fil [data-f]').forEach(x => x.classList.toggle('on', x === b)); liste(); };
   liste();
   if (M.ecrire){
     $('#barre').onclick = e => {
@@ -476,10 +578,28 @@ async function poserLien(lien){
 function choisirCamp(c){
   M.camp = c;
   document.querySelectorAll('#barre [data-camp]').forEach(b => { b.classList.toggle('on', b.dataset.camp === c); b.setAttribute('aria-pressed', b.dataset.camp === c); });
+  chiffres();
 }
 
+/* le retour visuel d'un tag (Cockpit, 20.11) : une onde et un « +1 » sur la tuile, BUUUT ! et confettis sur un but pour nous */
+function feter(action, camp){
+  const b = document.querySelector(`#barre [data-act="${action}"]`);
+  if (b){
+    b.classList.remove('onde'); void b.offsetWidth; b.classList.add('onde');
+    const r = b.getBoundingClientRect(), p = document.createElement('span'); p.className = 'plus1'; p.textContent = '+1';
+    p.style.left = (r.left + r.width / 2 - 10) + 'px'; p.style.top = r.top + 'px'; document.body.appendChild(p); setTimeout(() => p.remove(), 800);
+  }
+  const e = $('.ecran'); if (action !== 'but' || !e) return;
+  const f = document.createElement('div'); f.className = 'but-flash' + (camp === 'nous' ? '' : ' eux'); f.textContent = camp === 'nous' ? 'BUUUT !' : 'But ' + nomCamp('eux');
+  e.appendChild(f); setTimeout(() => f.remove(), 1300);
+  if (camp !== 'nous') return;
+  const k = document.createElement('div'); k.className = 'confetti';
+  k.innerHTML = Array.from({length: 40}, () => `<i style="left:${Math.random() * 100}%;background:${['#F2E400', '#3FA845', '#EAF0E8'][Math.random() * 3 | 0]};--dx:${((Math.random() - .5) * 120).toFixed(0)}px;--r:${(Math.random() * 720).toFixed(0)}deg;animation-delay:${(Math.random() * .3).toFixed(2)}s"></i>`).join('');
+  e.appendChild(k); setTimeout(() => k.remove(), 1900);
+}
 async function marquer(action){
   const b = document.querySelector(`[data-act="${action}"]`); if (b){ b.classList.add('flash'); setTimeout(() => b.classList.remove('flash'), 140); }
+  if (!(estIv({action}) && M.marqueurs.some(m => m.action === action && m.t2 == null))) feter(action, M.camp);
   /* supériorité, infériorité : la même touche ouvre puis ferme l'intervalle (Clément, 18.11) */
   if (estIv({action})){
     const ouvert = M.marqueurs.find(m => m.action === action && m.t2 == null && typeof m.id === 'number');
@@ -513,9 +633,10 @@ async function marquer(action){
 function demanderJoueur(mq){
   const q = $('#qui'); M.dernier = mq;
   if (mq.camp !== 'nous' || !JOUEURS.length){ q.innerHTML = ''; return; }
-  q.innerHTML = `<div class="qui"><p><b>${esc(NOM_ACTION[mq.action])}</b> à ${hms(mq.t)} : qui ? <span style="opacity:.8">(facultatif)</span></p>
+  q.innerHTML = `<div class="qui"><p style="display:flex;align-items:center;gap:8px"><span><b>${esc(NOM_ACTION[mq.action])}</b> à ${hms(mq.t)} : qui ? <span style="opacity:.8">(facultatif)</span></span><span class="esp"></span><button type="button" class="ot x2" data-j-non="1" aria-label="Personne, fermer">✕</button></p>
     <div class="puces">${JOUEURS.map(j => `<button type="button" class="puce" data-j="${esc(j.id)}">${j.num ? `<em>${esc(j.num)}</em>` : ''}${esc(j.nom)}</button>`).join('')}</div></div>`;
   q.onclick = e => {
+    if (e.target.closest('[data-j-non]')){ q.innerHTML = ''; return; }
     const p = e.target.closest('[data-j]'); if (!p) return;
     const cible = M.dernier; if (!cible) return;
     cible.joueur = p.dataset.j; q.innerHTML = ''; liste();
@@ -523,17 +644,40 @@ function demanderJoueur(mq){
   };
 }
 
+/* filtres de la liste (Cockpit, 20.11) */
+const FILTRE = {tout: () => true, nous: m => m.camp === 'nous', eux: m => m.camp === 'eux', but: m => m.action === 'but', dessin: m => !!m.dessin};
+/* les compteurs des tuiles, les chiffres du match en face à face, nos joueurs (buts · tirs) */
+function chiffres(){
+  const tous = M.marqueurs, compte = (a, c) => tous.filter(x => x.action === a && x.camp === c).length;
+  document.querySelectorAll('#barre [data-nb]').forEach(b => {
+    const n = compte(b.dataset.nb, M.camp), v = n ? String(n) : '';
+    if (b.textContent !== v){ b.textContent = v; b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); }
+  });
+  const bl = $('#bilan');
+  if (bl) bl.innerHTML = ACTIONS.filter(([a]) => !estIv({action: a})).map(([a, nom]) => {
+    const n = compte(a, 'nous'), e = compte(a, 'eux'), mx = Math.max(n, e, 1);
+    return `<span class="v">${n}</span><span class="g"><i style="width:${n / mx * 100}%"></i></span><span class="l">${TUILE[a][0]} ${a === 'recup' ? 'Récup.' : esc(nom.split(' ')[0])}</span><span class="d"><i style="width:${e / mx * 100}%"></i></span><span class="v">${e}</span>`;
+  }).join('');
+  const tot = $('#cp-tot'); if (tot) tot.textContent = tous.length + ' tag' + (tous.length > 1 ? 's' : '');
+  const st = {};
+  tous.filter(m => m.camp === 'nous' && m.joueur).forEach(m => { const s = st[m.joueur] = st[m.joueur] || {b: 0, t: 0};
+    if (m.action === 'but') s.b++; if (m.action === 'tir' || m.action === 'but') s.t++; });
+  const jo = $('#cp-jos');
+  if (jo) jo.innerHTML = Object.entries(st).filter(([, s]) => s.t).sort((a, b) => b[1].b - a[1].b || b[1].t - a[1].t)
+    .map(([id, s]) => `<span class="jo">${esc(nomJoueur(id))} <b>${s.b}</b><small>· ${s.t}</small></span>`).join('') || '<span class="lb">Personne encore : touche un joueur après un tir ou un but.</span>';
+}
 function liste(){
-  const l = M.marqueurs.slice().sort((a, b) => a.t - b.t), ul = $('#mqs'); if (!ul) return;
+  const ul = $('#mqs'); if (!ul) return;
+  const l = M.marqueurs.slice().sort((a, b) => a.t - b.t).filter(FILTRE[M.filtre] || FILTRE.tout);
   const infoListe = analyse();
-  const compte = (a, c) => l.filter(x => x.action === a && x.camp === c).length;
-  const vus = ACTIONS.filter(([a]) => compte(a, 'nous') + compte(a, 'eux'));
-  $('#bilan').innerHTML = vus.length ? `<div class="bilan"><span class="tete">Action</span><span class="tete">Nous</span><span class="tete">Eux</span>${vus.map(([a, n]) => `<span>${n}</span><span>${compte(a, 'nous')}</span><span>${compte(a, 'eux')}</span>`).join('')}</div>` : '';
-  ul.innerHTML = l.length ? l.map(m => `<li class="mq${m.neuf ? ' neuf' : ''}${M.sel === m ? ' sel' : ''}">
-      <button type="button" class="va" data-i="${M.marqueurs.indexOf(m)}" title="Revoir le clip"><time>${hms(m.t)}</time><i class="pt ${m.camp}"></i><span style="min-width:0"><b>${esc(NOM_ACTION[m.action] || m.action)}${m.action === 'but' && infoListe.get(m) ? ' ' + infoListe.get(m).score : ''}${m.action === 'faute' && infoListe.get(m) ? ' n°' + infoListe.get(m).n + (infoListe.get(m).cfd ? ' · CFD' : '') : ''}</b>${m.dessin ? '<span class="crayon" title="Avec un dessin">✏️</span>' : ''}<br><small>${m.camp === 'nous' ? 'Nous' : 'Eux'}${m.joueur ? ' · ' + esc(nomJoueur(m.joueur)) : ''}${estIv(m) ? ' · ' + (m.t2 == null ? 'en cours' : hms(m.t2 - m.t)) : ''}${m.parNom ? ' · par ' + esc(m.parNom) : ''}</small></span></button>
-      ${M.ecrire && typeof m.id === 'number' ? `<button type="button" class="x" data-x="${m.id}" aria-label="Retirer">×</button>` : ''}</li>`).join('')
-    : `<li class="vide">${M.ecrire ? 'Lance la vidéo et touche une action au bon moment.' : 'Rien de marqué pour l\'instant.'}</li>`;
-  l.forEach(m => { delete m.neuf; });
+  chiffres();
+  const nb = $('#cp-nb'); if (nb) nb.textContent = l.length;
+  ul.innerHTML = l.length ? l.map(m => `<li class="mq${m.neuf ? ' neuf' : ''}${M.sel === m ? ' sel' : ''}" data-li="${m.id}">
+      <button type="button" class="va" data-i="${M.marqueurs.indexOf(m)}" title="Revoir le clip"><time>${hms(m.t)}</time><i class="pt ${m.camp}"></i><span class="em">${(TUILE[m.action] || ['•'])[0]}</span><span style="min-width:0"><b>${esc(NOM_ACTION[m.action] || m.action)}${m.action === 'but' && infoListe.get(m) ? ' ' + infoListe.get(m).score : ''}${m.action === 'faute' && infoListe.get(m) ? ' n°' + infoListe.get(m).n + (infoListe.get(m).cfd ? ' · CFD' : '') : ''}</b>${m.dessin ? '<span class="crayon" title="Avec un dessin">✏️</span>' : ''}<br><small>${m.camp === 'nous' ? 'Nous' : 'Eux'}${m.joueur ? ' · ' + esc(nomJoueur(m.joueur)) : ''}${estIv(m) ? ' · ' + (m.t2 == null ? 'en cours' : hms(m.t2 - m.t)) : ''}${m.parNom ? ' · par ' + esc(m.parNom) : ''}</small></span></button>
+      ${M.ecrire && typeof m.id === 'number' ? `<button type="button" class="x" data-x="${m.id}" aria-label="Supprimer ce tag" title="Supprimer ce tag">🗑</button>` : ''}</li>`).join('')
+    : `<li class="vide">${M.marqueurs.length ? 'Rien avec ce filtre.' : M.ecrire ? 'Lance la vidéo et touche une action au bon moment.' : 'Rien de marqué pour l\'instant.'}</li>`;
+  M.marqueurs.forEach(m => { delete m.neuf; });
+  const s = ul.querySelector('.mq.sel'); if (s && s.scrollIntoView) s.scrollIntoView({block: 'nearest'});
   ul.onclick = e => {
     const x = e.target.closest('[data-x]'); if (x){ retirer(+x.dataset.x); return; }
     const va = e.target.closest('[data-i]'); if (!va) return;
@@ -570,8 +714,8 @@ function fenetre(){
    Pastilles sur tiges : Cestas au-dessus de l'axe, l'adversaire en dessous ; buts en grand avec le score ; fautes d'équipe
    numérotées, la 10e (puis 15e, 20e…) en orange : coup franc direct pour l'autre équipe ; supériorités et infériorités dans l'axe.
    Deux pastilles qui se touchent montent d'un cran. Hauteurs en px : axe de 106 à 124 sur 230. */
-const FA_H = 230, FA_AXE = 106;
-const TIGE = {but: 46, arret: 34, tir: 24, recup: 16, perte: 16, moment: 20, faute: 8};
+const FA_H = 162, FA_AXE = 72;   // compacte pour le Cockpit (20.11) : 2 rangs de pastilles au lieu de 3
+const TIGE = {but: 18, arret: 20, tir: 14, recup: 8, perte: 8, moment: 12, faute: 4};
 const IC = {
   but: '<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>',
   tir: '<svg viewBox="0 0 16 16"><path d="M2 14L13 3M13 3H7.5M13 3v5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -623,7 +767,7 @@ function friseDessiner(){
       const x = PX(m.t), but = m.action === 'but';
       let k = 0;
       if (but){ pris[0].push(x); pris[1].push(x); }
-      else { while (k < 2 && touche(k, x, 24)) k++; pris[k].push(x); }
+      else { while (k < 1 && touche(k, x, 24)) k++; pris[k].push(x); }
       const d = info.get(m) || {}, tige = (TIGE[m.action] || 14) + k * 22;
       const pa = `<span class="pa">${m.action === 'faute' ? (d.cfd ? 'CFD' : d.n || '') : IC[m.action] || ''}</span>`, t = `<span class="tige" style="height:${tige}px"></span>`;
       const sc = m.action === 'but' ? `<span class="sc">${d.score}</span>` : '';
@@ -752,8 +896,9 @@ function majReglage(){
   const perso = !iv && (m.av != null || m.ap != null);
   r.innerHTML = `<div class="selc"><span class="q">${titreTag(m)}<small>${d ? d + ' · ' : ''}${hms(m.t)}${m.dessin ? ' · ✏️' : ''}</small></span><span class="esp"></span>
     <button type="button" class="ot" data-rg="lire">▶ Rejouer</button>
-    ${e ? `<button type="button" class="ot" data-rg="regler" aria-pressed="${!!M.regle}">⏱ Régler</button><button type="button" class="ot" data-rg="dessin">✏️ Dessin</button>` : ''}
-    <button type="button" class="ot x2" data-rg="fermer" aria-label="Fermer">✕</button>
+    ${e ? `<button type="button" class="ot" data-rg="regler" aria-pressed="${!!M.regle}">⏱ Régler</button><button type="button" class="ot" data-rg="dessin">✏️ Dessin</button>
+      <button type="button" class="ot sup" data-rg="supprimer" title="Supprimer ce tag (touche Suppr)">🗑 Supprimer</button>` : ''}
+    <button type="button" class="ot x2" data-rg="fermer" aria-label="Fermer la carte" title="Fermer la carte">✕</button>
     ${e && M.regle ? `<div class="rgl">${iv
       ? `Début ${pas('t', -1)}<b>${hms(m.t)}</b>${pas('t', 1)} · Fin ${m.t2 == null ? '<b>en cours</b>' : `${pas('t2', -1)}<b>${hms(m.t2)}</b>${pas('t2', 1)}`}`
       : `Démarre ${pas('av', -1)}<b>${avDe(m)} s</b>${pas('av', 1)} avant · s'arrête ${pas('ap', -1)}<b>${apDe(m)} s</b>${pas('ap', 1)} après${perso ? '<button type="button" class="lien-mini" data-rg="defaut">durées de la catégorie</button>' : ''}`}
@@ -765,6 +910,7 @@ function majReglage(){
     if (k === 'regler'){ M.regle = !M.regle; return majReglage(); }
     if (k === 'ok'){ M.regle = false; return majReglage(); }
     if (k === 'fermer'){ M.carte = false; M.regle = false; return liste(); }
+    if (k === 'supprimer') return retirer(m.id);
     if (k === 'dessin'){ arreterClip(); cacherCalque(); aller(m.t); setTimeout(ouvrirDessin, 350); return; }
     if (k === 'defaut') return reglerClip(m, {av: null, ap: null});
     if (k === 'av') return reglerClip(m, {av: Math.max(0, Math.min(120, avDe(m) + s))});
@@ -1083,14 +1229,25 @@ async function garderDessin(){
   toast(mq.dessin ? 'Dessin enregistré : un clic sur le tag le remontre.' : 'Dessin effacé.');
 }
 
+/* supprimer un tag (Clément, 20.11 : tout de suite, avec « Annuler » 6 secondes) : depuis la carte, la poubelle de la liste
+   ou la touche Suppr. Annuler le recrée tel quel : instant, fin, durées, joueur et dessin */
 async function retirer(id){
+  if (!M) return;
   const i = M.marqueurs.findIndex(m => m.id === id); if (i < 0) return;
-  const [m] = M.marqueurs.splice(i, 1); liste();
+  const li = document.querySelector(`#mqs [data-li="${id}"]`); if (li){ li.classList.add('part'); await new Promise(r => setTimeout(r, 200)); }
+  const j = M.marqueurs.findIndex(m => m.id === id); if (j < 0) return;
+  const [m] = M.marqueurs.splice(j, 1);
+  if (M.sel === m){ M.sel = null; M.carte = false; M.regle = false; }
+  if (M.dernier === m){ M.dernier = null; const q = $('#qui'); if (q) q.innerHTML = ''; }
+  liste();
   const d = await api('/marqueur/retirer', {id});
   if (!d.ok){ M.marqueurs.push(m); liste(); toast(raison(d)); return; }
-  toast(`${NOM_ACTION[m.action]} à ${hms(m.t)} retiré.`, 'Annuler', async () => {
-    const r = await api('/marqueur', {match: M.k, t: m.t, action: m.action, camp: m.camp, joueur: m.joueur || ''});
-    if (r.ok){ M.marqueurs.push({...r.marqueur, neuf: true}); liste(); } else toast(raison(r));
+  toast(`${(TUILE[m.action] || [''])[0]} ${NOM_ACTION[m.action]} à ${hms(m.t)} supprimé.`, 'Annuler', async () => {
+    const r = await api('/marqueur', {match: M.k, t: m.t, action: m.action, camp: m.camp, joueur: m.joueur || '', t2: m.t2, av: m.av, ap: m.ap});
+    if (!r.ok){ toast(raison(r)); return; }
+    const neuf = {...r.marqueur, neuf: true};
+    if (m.dessin){ const dd = await api('/marqueur/dessin', {id: neuf.id, dessin: m.dessin}); if (dd.ok) neuf.dessin = dd.marqueur.dessin; }
+    M.marqueurs.push(neuf); M.sel = neuf; liste();
   });
 }
 
@@ -1126,6 +1283,7 @@ document.addEventListener('keydown', e => {
   const n = +e.key;
   if (n >= 1 && n <= ACTIONS.length && !e.shiftKey){ e.preventDefault(); marquer(ACTIONS[n - 1][0]); return; }
   if (e.key === 'c' || e.key === 'C'){ e.preventDefault(); choisirCamp(M.camp === 'nous' ? 'eux' : 'nous'); return; }
+  if ((e.key === 'Delete' || e.key === 'Backspace') && M.sel && typeof M.sel.id === 'number'){ e.preventDefault(); retirer(M.sel.id); return; }
   if (!joueur || !joueur.getPlayerState) return;
   if (e.key === ' '){ e.preventDefault(); joueur.getPlayerState() === 1 ? joueur.pauseVideo() : joueur.playVideo(); return; }
   if (e.key === 'ArrowLeft' || e.key === 'ArrowRight'){ e.preventDefault(); aller(maintenant() + (e.key === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 1 : 5)); }
@@ -1133,7 +1291,7 @@ document.addEventListener('keydown', e => {
 
 function route(){
   const k = decodeURIComponent(location.hash.slice(1));
-  M = null;
+  M = null; document.body.classList.remove('cockpit');
   if (k){ vueMatch(k); return; }
   $('#retour').textContent = "← SAGC'TOUT";
   vueChoix();
@@ -1162,7 +1320,7 @@ const GUIDE = [
   {t: 'La frise, des <em>clips</em>', vis: `<div class="gfr"><i class="ax"></i><i class="iv" style="left:56%;width:14%"></i>
         ${[[10, 'n', 'but', '1-0'], [24, 'n', 'tir'], [33, 'e', 'but', '1-1'], [45, 'n', 'arret'], [52, 'e', 'faute'], [63, 'n', 'but', '2-1'], [78, 'e', 'tir'], [88, 'n', 'faute']].map(([x, c, a, s]) => `<i class="lp ${c} ${a}" style="left:${x}%">${s ? `<em>${s}</em>` : ''}<b></b></i>`).join('')}<i class="tt"></i></div>`,
     p: "Sous la vidéo, la ligne de vie du match : Cestas au-dessus, l'adversaire en dessous, les buts en grand avec le score, les fautes d'équipe numérotées (la 10e en orange : coup franc direct), les supériorités au milieu. Un clic sur un tag : la vidéo joue l'action puis s'arrête.",
-    m: "Le tag cliqué ouvre une petite carte : ▶ Rejouer, ⏱ Régler (démarrer plus tôt, finir plus tard, puis OK), ✏️ Dessin. Elle se referme avec ✕ ou « Continuer ». Molette sur la frise : zoom ; le score suit les buts tagués."},
+    m: "Le tag cliqué ouvre une petite carte : ▶ Rejouer, ⏱ Régler (démarrer plus tôt, finir plus tard, puis OK), ✏️ Dessin, 🗑 Supprimer (ou la touche Suppr, ou la poubelle de la liste ; « Annuler » le remet). Elle se referme avec ✕ ou « Continuer ». Molette sur la frise : zoom ; le score suit les buts tagués."},
   {t: 'Dessine sur <em>l\'action</em>', vis: `<div class="mini-dessin"><svg viewBox="0 0 320 120" aria-hidden="true"><rect width="320" height="120" rx="6" fill="#16201a"/><circle class="j" cx="70" cy="70" r="9" fill="#3fa845"/><circle class="j" cx="250" cy="45" r="9" fill="#3fa845"/><circle class="j" cx="180" cy="88" r="9" fill="#6fa8d8"/>
         <path class="trace" d="M82 66 Q160 20 236 46" fill="none" stroke="#f2e400" stroke-width="5" stroke-linecap="round"/><path class="pointe" d="M236 46 l-14 -8 l2 15 z" fill="#f2e400"/><circle class="rond" cx="180" cy="88" r="20" fill="none" stroke="#ff7a45" stroke-width="4"/></svg></div>`,
     p: "Mets en pause sur l'action et touche ✏️ Dessiner (touche D) : flèche, trait, cercle ou texte, en 5 couleurs. Le dessin se rattache au tag que tu viens de poser ou de toucher, sinon à un tag « Moment » créé à l'instant.",
