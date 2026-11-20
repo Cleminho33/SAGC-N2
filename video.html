@@ -145,17 +145,17 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .fw-eq b.alerte{color:var(--shot)}
 .fw-z{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted)}
 .fw-z .ot{padding:5px 9px;font-size:12px}
-.fa{position:relative;height:162px;cursor:pointer;user-select:none;-webkit-user-select:none;overflow:hidden;touch-action:pan-y}
+.fa{position:relative;height:130px;cursor:pointer;user-select:none;-webkit-user-select:none;overflow:hidden;touch-action:pan-y}
 .fa i{position:absolute;display:block;font-style:normal}
-.fa-axe{left:0;right:0;top:72px;height:18px;border-radius:9px;background:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
-.fa-iv{top:75px;height:12px;border-radius:6px;z-index:1}
+.fa-axe{left:0;right:0;top:56px;height:18px;border-radius:9px;background:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.fa-iv{top:59px;height:12px;border-radius:6px;z-index:1}
 .fa-iv.sup{background:var(--acid);box-shadow:0 0 0 3px rgba(242,228,0,.18)}
 .fa-iv.inf{background:var(--shot);box-shadow:0 0 0 3px rgba(255,122,69,.18)}
 .fa-iv.ouvert{background-image:repeating-linear-gradient(45deg,rgba(11,15,12,.35) 0 6px,transparent 6px 12px);background-size:17px 17px;animation:raye 1s linear infinite}
 .fa-iv b{position:absolute;left:6px;top:0;font:900 9.5px/12px Inter,sans-serif;color:var(--ink);white-space:nowrap}
 .fa-iv.sel{outline:2px solid var(--bone);outline-offset:2px}
 @keyframes raye{to{background-position:17px 0}}
-.fa-clip{top:72px;height:18px;border-radius:9px;background:rgba(234,240,232,.16);box-shadow:inset 0 0 0 1px rgba(234,240,232,.55);z-index:1;pointer-events:none}
+.fa-clip{top:56px;height:18px;border-radius:9px;background:rgba(234,240,232,.16);box-shadow:inset 0 0 0 1px rgba(234,240,232,.55);z-index:1;pointer-events:none}
 .fa .fa-ev{translate:-50% 0;display:flex;flex-direction:column;align-items:center;z-index:2}
 .fa-ev .tige,.fa-ev .pa,.fa-ev .sc{display:block;flex:none}
 .fa-ev .pa{display:flex}
@@ -174,7 +174,7 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .fa-ev.faute .pa{width:17px;height:17px;background:var(--ink-3);border-color:var(--line-2);color:var(--muted);border-radius:5px}
 .fa-ev.faute.cfd .pa{width:24px;height:24px;background:var(--shot);color:var(--ink);border-color:var(--ink-2);border-radius:6px;font-size:8px}
 .fa-ev.moment .pa{background:var(--ink-3);color:var(--bone);border-color:var(--line-2)}
-.fa-tete{top:50px;height:62px;width:2px;margin-left:-1px;background:var(--bone);pointer-events:none;z-index:6}
+.fa-tete{top:34px;height:62px;width:2px;margin-left:-1px;background:var(--bone);pointer-events:none;z-index:6}
 .fa-tete::before{content:'';position:absolute;top:-7px;left:-5px;border:6px solid transparent;border-top-color:var(--bone)}
 .fw-temps{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:11.5px;color:var(--muted);margin-top:2px;font-variant-numeric:tabular-nums}
 .fw-leg{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;font-size:11.5px}
@@ -308,12 +308,16 @@ button{background:none;border:0;cursor:pointer;padding:0}
    vidéo en haut (16/9, toute la place qui reste), frise dessous, tuiles d'action en bas ; à droite les chiffres du match,
    nos joueurs et la liste des tags (seule la liste défile). Sous 980 px de large, on revient à la page qui défile. */
 @media (min-width:981px){
-  body.cockpit{height:100vh;overflow:hidden}
+  body.cockpit{height:100vh;overflow:hidden auto}  /* la vidéo agrandie à la main plus haut que l'écran : la page défile */
   body.cockpit .wrap{max-width:none;height:100vh;padding:8px 14px 12px;display:flex;flex-direction:column}
   body.cockpit main{flex:1;min-height:0;display:flex;flex-direction:column}
   body.cockpit .haut{flex:none}
-  .cockpit .cp{flex:1;min-height:0;display:grid;gap:10px;grid-template-columns:minmax(0,1fr) 340px;grid-template-rows:minmax(0,1fr) auto auto;grid-template-areas:"v c" "f c" "b c"}
-  .cockpit .cp-v{grid-area:v;min-height:0;display:flex;align-items:center;justify-content:center}
+  .cockpit .cp{flex:1;min-height:0;display:grid;gap:10px;grid-template-columns:minmax(0,1fr) 340px;grid-template-rows:var(--vh,minmax(0,1fr)) auto auto;grid-template-areas:"v c" "f c" "b c"}
+  .cockpit .cp-v{grid-area:v;min-height:0;display:flex;align-items:center;justify-content:center;position:relative}
+  .cockpit .cp-poig{position:absolute;left:0;right:0;bottom:-11px;height:12px;cursor:ns-resize;z-index:3;display:flex;align-items:center;justify-content:center;touch-action:none}
+  .cockpit .cp-poig::before{content:'';width:56px;height:4px;border-radius:2px;background:var(--line-2);transition:background .15s,width .15s}
+  .cockpit .cp-poig:hover::before,body.tire .cp-poig::before{background:var(--acid);width:90px}
+  body.tire{cursor:ns-resize;user-select:none;-webkit-user-select:none}body.tire .ecran iframe{pointer-events:none}
   .cockpit .cp-v .ecran{height:100%;max-width:100%;width:auto}
   .cockpit .cp-f{grid-area:f;min-width:0}.cockpit .cp-f .fw{margin-top:0;padding:6px 12px 4px}
   .cockpit .fw-leg{visibility:hidden}  /* la légende reste dans le « ? » ; la place va à la vidéo */
@@ -522,6 +526,7 @@ function dessiner(){
     <div class="cp">
     <section class="cp-v">
       <div class="ecran"><div id="yt"></div><div class="calque" id="calque" hidden></div><div class="bug" id="bug"></div><div id="reglage"></div><div id="qui"></div><div id="durees"></div></div>
+      <div class="cp-poig" id="cp-poig" title="Glisse pour agrandir ou réduire la vidéo · double-clic : taille automatique"></div>
     </section>
     <section class="cp-f">
       <div class="fw">
@@ -559,7 +564,7 @@ function dessiner(){
     $('#ch-lien').onclick = () => { if (confirm('Changer le lien YouTube de ce match ? Les actions déjà marquées restent, calées sur les mêmes instants.')){ M.video = null; dessiner(); } };
     $('#ch-durees').onclick = () => panneauDurees();
   }
-  friseBrancher(); friseDessiner(); majReglage(); majBoutons();
+  friseBrancher(); friseDessiner(); majReglage(); majBoutons(); poignee();
   ytCharger().then(() => {
     /* la lecture repart (bouton du lecteur, Espace, Continuer) : le dessin affiché s'efface */
     joueur = new YT.Player('yt', {videoId: M.video.yt, playerVars: {rel: 0, playsinline: 1, modestbranding: 1},
@@ -714,8 +719,8 @@ function fenetre(){
    Pastilles sur tiges : Cestas au-dessus de l'axe, l'adversaire en dessous ; buts en grand avec le score ; fautes d'équipe
    numérotées, la 10e (puis 15e, 20e…) en orange : coup franc direct pour l'autre équipe ; supériorités et infériorités dans l'axe.
    Deux pastilles qui se touchent montent d'un cran. Hauteurs en px : axe de 106 à 124 sur 230. */
-const FA_H = 162, FA_AXE = 72;   // compacte pour le Cockpit (20.11) : 2 rangs de pastilles au lieu de 3
-const TIGE = {but: 18, arret: 20, tir: 14, recup: 8, perte: 8, moment: 12, faute: 4};
+const FA_H = 130, FA_AXE = 56;   // compacte pour le Cockpit (20.11) : 2 rangs de pastilles, tiges courtes (frise trop haute, Clément 20.11)
+const TIGE = {but: 6, arret: 12, tir: 8, recup: 4, perte: 4, moment: 6, faute: 2};
 const IC = {
   but: '<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>',
   tir: '<svg viewBox="0 0 16 16"><path d="M2 14L13 3M13 3H7.5M13 3v5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -745,6 +750,22 @@ function detailTag(m, info){
 }
 const titreTag = m => `${esc(NOM_ACTION[m.action] || m.action)} · ${esc(nomCamp(m.camp))}`;
 
+/* la vidéo à la taille voulue (Clément, 20.11) : on tire la poignée sous la vidéo ; plus haute que l'écran, la page défile ;
+   double-clic : taille automatique. Gardée dans ce navigateur seulement */
+function poignee(){
+  const p = $('#cp-poig'), cp = document.querySelector('.cp'), v = document.querySelector('.cp-v'); if (!p) return;
+  const poser = h => h ? cp.style.setProperty('--vh', h + 'px') : cp.style.removeProperty('--vh');
+  const garder = h => { try { h ? localStorage.setItem('sagc-video-haut', h) : localStorage.removeItem('sagc-video-haut'); } catch(e){} };
+  poser(+lire('sagc-video-haut') || 0);
+  p.onpointerdown = e => {
+    e.preventDefault(); p.setPointerCapture(e.pointerId); document.body.classList.add('tire');
+    const y0 = e.clientY, h0 = v.offsetHeight, max = v.clientWidth * 9 / 16;
+    let h = h0;
+    p.onpointermove = m => poser(h = Math.round(Math.max(160, Math.min(max, h0 + m.clientY - y0))));
+    p.onpointerup = p.onpointercancel = () => { p.onpointermove = p.onpointerup = p.onpointercancel = null; document.body.classList.remove('tire'); if (h !== h0) garder(h); };
+  };
+  p.ondblclick = () => { poser(0); garder(0); };
+}
 function friseDessiner(){
   const f = $('#frise'); if (!f || !M) return;
   const [a, b] = fenetre(), W = f.clientWidth || 900, X = s => (s - a) / (b - a) * 100, PX = s => (s - a) / (b - a) * W;
@@ -768,7 +789,7 @@ function friseDessiner(){
       let k = 0;
       if (but){ pris[0].push(x); pris[1].push(x); }
       else { while (k < 1 && touche(k, x, 24)) k++; pris[k].push(x); }
-      const d = info.get(m) || {}, tige = (TIGE[m.action] || 14) + k * 22;
+      const d = info.get(m) || {}, tige = (TIGE[m.action] || 8) + k * 20;
       const pa = `<span class="pa">${m.action === 'faute' ? (d.cfd ? 'CFD' : d.n || '') : IC[m.action] || ''}</span>`, t = `<span class="tige" style="height:${tige}px"></span>`;
       const sc = m.action === 'but' ? `<span class="sc">${d.score}</span>` : '';
       const cls = `fa-ev ${c} ${m.action}${d.cfd ? ' cfd' : ''}${sel === m ? ' sel' : ''}`;
