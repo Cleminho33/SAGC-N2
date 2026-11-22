@@ -203,6 +203,7 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .selc .ot{padding:8px 11px}
 .selc .x2{width:34px;justify-content:center}
 .rgl{display:flex;align-items:center;gap:6px;flex-wrap:wrap;width:100%;padding-top:10px;margin-top:2px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.rgl-l{display:inline-flex;align-items:center;gap:6px;margin-right:8px}.rgl-l .lb{min-width:44px}
 .rgl b{color:var(--bone);min-width:46px;text-align:center;font-variant-numeric:tabular-nums}
 .rgl .ot{padding:6px 10px}
 .rgl .btn{padding:9px 14px}
@@ -305,37 +306,46 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .bientot b{display:block;color:var(--bone);font-size:13.5px;margin-bottom:4px}
 @media (max-width:520px){.gd-vis{height:auto;min-height:130px;gap:6px;padding:10px}.fl{display:none}.nd{padding:8px 4px;font-size:11.5px}.nd b{font-size:12.5px}.gd-t{font-size:26px}}
 /* ---------- le Cockpit (Clément, 20.11) : tout le marquage tient dans un écran d'ordinateur, sans défiler ----------
-   vidéo en haut (16/9, toute la place qui reste), frise dessous, tuiles d'action en bas ; à droite les chiffres du match,
-   nos joueurs et la liste des tags (seule la liste défile). Sous 980 px de large, on revient à la page qui défile. */
+   22.11 (Clément : la carte du tag cachait l'image, et la vidéo agrandie poussait les outils hors de l'écran) : les tuiles
+   passent dans une colonne à gauche de la vidéo, avec dessous le choix du joueur et la carte du tag ; la vidéo au centre,
+   la frise dessous ; à droite les chiffres du match, nos joueurs et la liste des tags. Sous 980 px, la page qui défile. */
 @media (min-width:981px){
   body.cockpit{height:100vh;overflow:hidden auto}  /* la vidéo agrandie à la main plus haut que l'écran : la page défile */
   body.cockpit .wrap{max-width:none;height:100vh;padding:8px 14px 12px;display:flex;flex-direction:column}
   body.cockpit main{flex:1;min-height:0;display:flex;flex-direction:column}
-  body.cockpit .haut{flex:none}
-  .cockpit .cp{flex:1;min-height:0;display:grid;gap:10px;grid-template-columns:minmax(0,1fr) 340px;grid-template-rows:var(--vh,minmax(0,1fr)) auto auto;grid-template-areas:"v c" "f c" "b c"}
+  body.cockpit .wrap{position:relative}  /* le retour et le « ? » sur la ligne du titre : la hauteur va à la vidéo */
+  body.cockpit .haut{position:absolute;top:8px;left:14px;right:14px;pointer-events:none}body.cockpit .haut>*{pointer-events:auto}
+  .cockpit .cp{flex:1;min-height:0;display:grid;gap:10px;grid-template-columns:clamp(196px,15vw,248px) minmax(0,1fr) 340px;grid-template-rows:var(--vh,minmax(0,1fr)) auto;grid-template-areas:"r v c" "r f c"}
   .cockpit .cp-v{grid-area:v;min-height:0;display:flex;align-items:center;justify-content:center;position:relative}
   .cockpit .cp-poig{position:absolute;left:0;right:0;bottom:-11px;height:12px;cursor:ns-resize;z-index:3;display:flex;align-items:center;justify-content:center;touch-action:none}
   .cockpit .cp-poig::before{content:'';width:56px;height:4px;border-radius:2px;background:var(--line-2);transition:background .15s,width .15s}
   .cockpit .cp-poig:hover::before,body.tire .cp-poig::before{background:var(--acid);width:90px}
   body.tire{cursor:ns-resize;user-select:none;-webkit-user-select:none}body.tire .ecran iframe{pointer-events:none}
-  .cockpit .cp-v .ecran{height:100%;max-width:100%;width:auto}
+  .cockpit .cp-v{container-type:size}.cockpit .cp-v .ecran{width:min(100cqw,177.78cqh);height:auto}  /* 16/9 dans la case, qu'elle soit trop large ou trop haute */
   .cockpit .cp-f{grid-area:f;min-width:0}.cockpit .cp-f .fw{margin-top:0;padding:6px 12px 4px}
   .cockpit .fw-leg{visibility:hidden}  /* la légende reste dans le « ? » ; la place va à la vidéo */
   .cockpit .fw-haut{margin-bottom:0}
-  .cockpit .cp-b{grid-area:b;min-width:0}
+  .cockpit .cp-r{grid-area:r;min-height:0;min-width:0;display:flex;flex-direction:column;gap:8px;overflow:auto}.cockpit .cp-r>.barre{flex:none}
+  .cockpit .barre:not([hidden]){display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .cockpit .barre .camp{grid-column:1/-1;flex-direction:row}
+  .cockpit .act.tu{min-height:56px;padding:16px 3px 6px}
+  .cockpit .act.tu .nm{white-space:normal;font-size:11px;line-height:1.05}
+  .cockpit .cp-ctx{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:8px}
+  .cockpit .cp-ctx .qui{margin:0;padding:10px}.cockpit .cp-ctx .qui p{font-size:12.5px}
+  .cockpit .cp-ctx .puce{padding:5px 8px;font-size:12px}
+  .cockpit .cp-ctx .selc{margin:0;padding:10px;gap:6px}
+  .cockpit .cp-ctx .selc .q{flex:1 1 calc(100% - 46px);min-width:0}.cockpit .cp-ctx .selc>.esp{display:none}
+  .cockpit .cp-ctx .selc>.ot:not(.x2){order:2;flex:1 1 calc(50% - 3px);justify-content:center;padding:8px 4px;font-size:12.5px}
+  .cockpit .cp-ctx .rgl{order:3}.cockpit .cp-ctx .rgl-l{width:100%;margin:0}
+  .cockpit .cp-f:has(#outils:not([hidden])) .fw{display:none}
   .cockpit .cp-c{grid-area:c;min-height:0;display:flex;flex-direction:column;gap:10px}
-  .cockpit .cp-tete{display:flex;align-items:baseline;gap:12px;margin:0 0 8px}
+  .cockpit .cp-tete{display:flex;align-items:center;gap:12px;min-height:40px;margin:0 0 8px;padding:0 48px 0 128px}
   .cockpit .cp-tete .h1{font-size:26px;margin:0}
-  .cockpit .barre{margin-top:0;flex-wrap:nowrap}
   .cockpit .outils{margin-top:0;max-height:34vh;overflow:auto}
   .cockpit .liste-c{flex:1;min-height:0;display:flex;flex-direction:column}
   .cockpit .mqs{max-height:none;flex:1;min-height:0}
 }
-/* la carte du tag, le choix du joueur et les durées, posés sur la vidéo (au-dessus des commandes de YouTube) */
-.ecran #reglage,.ecran #qui{position:absolute;left:10px;right:10px;z-index:4}
-.ecran #reglage{top:52px}
-.ecran #qui{bottom:54px}
-.ecran #reglage .selc,.ecran #qui .qui{margin:0;background:rgba(19,26,21,.93);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 10px 30px rgba(0,0,0,.5)}
+/* les durées par catégorie, posées sur la vidéo (au-dessus des commandes de YouTube) */
 .ecran #durees{position:absolute;left:10px;right:10px;top:10px;bottom:54px;z-index:5;display:flex;align-items:flex-end;pointer-events:none}
 .ecran #durees .rg{margin:0;width:100%;max-height:100%;overflow:auto;background:rgba(19,26,21,.96);pointer-events:auto}
 .cp-c .card{padding:12px 14px}
@@ -518,14 +528,15 @@ function dessiner(){
     if (M.ecrire){ $('#yt-lien').focus(); $('#f-lien').onsubmit = e => { e.preventDefault(); poserLien($('#yt-lien').value); }; }
     return;
   }
-  /* le Cockpit (20.11) : vidéo, frise, tuiles, et à droite les chiffres, nos joueurs, la liste ; la carte du tag,
-     le choix du joueur et les durées se posent sur la vidéo */
+  /* le Cockpit (20.11, réorganisé le 22.11) : à gauche les tuiles, puis le choix du joueur et la carte du tag ; au centre
+     la vidéo, que rien ne recouvre (sauf les durées) ; dessous la frise, remplacée par les outils pendant un dessin ;
+     à droite les chiffres, nos joueurs, la liste */
   document.body.classList.add('cockpit');
   v.innerHTML = `<div class="cp-tete"><h1 class="h1">${esc(titreMatch(M.k))}</h1><span class="esp"></span>${M.ecrire ? `<span class="cp-liens">
       <button type="button" class="ot" id="ch-lien" title="Changer le lien YouTube">🔗 Lien</button><button type="button" class="ot" id="ch-durees" title="Durées des clips par catégorie">⏱ Durées</button></span>` : ''}</div>
     <div class="cp">
     <section class="cp-v">
-      <div class="ecran"><div id="yt"></div><div class="calque" id="calque" hidden></div><div class="bug" id="bug"></div><div id="reglage"></div><div id="qui"></div><div id="durees"></div></div>
+      <div class="ecran"><div id="yt"></div><div class="calque" id="calque" hidden></div><div class="bug" id="bug"></div><div id="durees"></div></div>
       <div class="cp-poig" id="cp-poig" title="Glisse pour agrandir ou réduire la vidéo · double-clic : taille automatique"></div>
     </section>
     <section class="cp-f">
@@ -535,15 +546,16 @@ function dessiner(){
         <div class="fa" id="frise"></div>
         <div class="fw-temps"><span id="fr-a"></span><span class="fw-leg" id="fw-leg"></span><span id="fr-b"></span></div>
       </div>
-    </section>
-    <section class="cp-b">
       <div class="outils" id="outils" hidden></div>
+    </section>
+    <section class="cp-r">
       ${M.ecrire ? `<div class="barre" id="barre" title="Clavier (clique d'abord hors de la vidéo) : 1 à 8 marquer · C Nous / Eux · D dessiner · Espace lecture · ← → 5 s (Maj : 1 s) · Suppr retire le tag choisi">
         <div class="camp" role="group" aria-label="Pour qui">${['nous', 'eux'].map(c => `<button type="button" data-camp="${c}" class="${M.camp === c ? 'on' : ''}" aria-pressed="${M.camp === c}">${c === 'nous' ? 'Nous' : 'Eux'}</button>`).join('')}</div>
         ${ACTIONS.map(([id, nom], i) => `<button type="button" class="act tu ${id}" data-act="${id}" style="--c:${TUILE[id][1]}"><kbd>${i + 1}</kbd><i class="nb" data-nb="${id}"></i><span class="em">${TUILE[id][0]}</span><span class="nm">${nom}</span></button>`).join('')}
         <button type="button" class="act tu dess" data-dessin="1"><kbd>D</kbd><span class="em">✏️</span><span class="nm">Dessiner</span></button>
       </div>`
       : `<p class="aide">${esc(RAISON[M.pourquoi] || '')}</p>`}
+      <div class="cp-ctx"><div id="qui"></div><div id="reglage"></div></div>
     </section>
     <aside class="cp-c">
       <div class="card"><p class="cp-h"><span>Le match en chiffres</span><span id="cp-tot"></span></p><div class="duel" id="bilan"></div></div>
@@ -921,8 +933,8 @@ function majReglage(){
       <button type="button" class="ot sup" data-rg="supprimer" title="Supprimer ce tag (touche Suppr)">🗑 Supprimer</button>` : ''}
     <button type="button" class="ot x2" data-rg="fermer" aria-label="Fermer la carte" title="Fermer la carte">✕</button>
     ${e && M.regle ? `<div class="rgl">${iv
-      ? `Début ${pas('t', -1)}<b>${hms(m.t)}</b>${pas('t', 1)} · Fin ${m.t2 == null ? '<b>en cours</b>' : `${pas('t2', -1)}<b>${hms(m.t2)}</b>${pas('t2', 1)}`}`
-      : `Démarre ${pas('av', -1)}<b>${avDe(m)} s</b>${pas('av', 1)} avant · s'arrête ${pas('ap', -1)}<b>${apDe(m)} s</b>${pas('ap', 1)} après${perso ? '<button type="button" class="lien-mini" data-rg="defaut">durées de la catégorie</button>' : ''}`}
+      ? `<span class="rgl-l"><span class="lb">Début</span>${pas('t', -1)}<b>${hms(m.t)}</b>${pas('t', 1)}</span><span class="rgl-l"><span class="lb">Fin</span>${m.t2 == null ? '<b>en cours</b>' : `${pas('t2', -1)}<b>${hms(m.t2)}</b>${pas('t2', 1)}`}</span>`
+      : `<span class="rgl-l" title="Le clip démarre ${avDe(m)} s avant l'instant du tag"><span class="lb">Avant</span>${pas('av', -1)}<b>${avDe(m)} s</b>${pas('av', 1)}</span><span class="rgl-l" title="Le clip s'arrête ${apDe(m)} s après l'instant du tag"><span class="lb">Après</span>${pas('ap', -1)}<b>${apDe(m)} s</b>${pas('ap', 1)}</span>${perso ? '<button type="button" class="lien-mini" data-rg="defaut">durées de la catégorie</button>' : ''}`}
       <span class="esp"></span><button type="button" class="btn btn-acid" data-rg="ok">OK</button></div>` : ''}</div>`;
   r.onclick = ev => {
     const b = ev.target.closest('[data-rg]'); if (!b) return;
